@@ -1,0 +1,2742 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Wachstum Rechner (Jahreswerte → CAGR)</title>
+  <style>
+    body{font-family:Arial, sans-serif;background:#f4f4f4;margin:0;padding:28px}
+    .wrap{max-width:980px;margin:0 auto}
+    .card{background:#fff;border-radius:14px;padding:18px 18px 8px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+    h1{margin:0 0 10px;font-size:22px; text-align:center;}
+    h2{margin:0 0 10px;font-size:18px}
+    .muted{color:#666;font-size:13px;line-height:1.35; text-align:center;}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .grid3{display:grid;grid-template-columns:repeat(5, 1fr);gap:10px}
+    label{font-size:13px;color:#333}
+    input,select,button{width:100%;padding:10px;border-radius:10px;border:1px solid #d6d6d6;font-size:14px;box-sizing:border-box}
+    button{background:#2f7dff;color:#fff;border:none;cursor:pointer;margin-top:10px}
+    button:hover{opacity:.92}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .out{background:#fafafa;border:1px dashed #d6d6d6;border-radius:12px;padding:12px;margin-top:12px}
+    .kpi{display:flex;justify-content:space-between;gap:10px;margin:8px 0}
+    .kpi b{font-size:14px}
+    .vol-muted { font-size:12px; color:#888; line-height:1.3; }
+    .vol-subtitle { font-size:12px; color:#999; margin-top:4px; }
+      
+    .err{color:#b00020;font-size:13px;margin-top:8px}
+    table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+    th,td{border:1px solid #e6e6e6;padding:8px;text-align:left}
+    th{background:#f2f2f2}
+    .small{font-size:12px;color:#666}
+    @media (max-width:900px){
+      .grid3{grid-template-columns:repeat(2, 1fr)}
+    }
+      .kpi.highlight b{
+    font-size:16px;   /* etwas größer */
+    font-weight:800;  /* fett */
+  }
+  
+  #nutzenTable th { white-space: nowrap; }
+#nutzenTable td { vertical-align: top; min-width: 140px; }
+#nutzenTable .nutzenCell { white-space: nowrap; }
+
+  
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+
+<!-- STARTSEITE (Menü) -->
+<section id="page-home">
+
+  <div class="card">
+    <h1>Aktienübersicht</h1>
+    <div class="muted">Wichtig bei Aktienkauf</div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <button type="button" onclick="goPage('etf')">Quellensteuerliste</button>
+      <button type="button" onclick="goPage('finanztransaktionssteuer')">Finanztransaktionssteuer</button>
+      <button type="button" onclick="goPage('cagr')">CAGR Rechner</button>
+      <button type="button" onclick="goPage('nutzen')">Nutzen Check</button>
+      <button type="button" onclick="goPage('fairprice')">Fairer Preis Rechner</button>
+      <button type="button" onclick="goPage('fcfpayout')">FCF-Payout Rechner</button>
+      <button type="button" onclick="goPage('icr')">Zinsdeckung (ICR) Rechner</button>
+      <button type="button" onclick="goPage('checks')">Profitabel & FCF Check</button>
+      <button type="button" onclick="goPage('volatility')">Volatilität (Std-Abw.)</button>
+      
+    </div>
+  </div>
+</section>
+
+<section id="page-cagr" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>Jahreswerte → CAGR + Jahr-zu-Jahr Wachstum</h1>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div>
+        <label>Was berechnen?</label>
+        <select id="mode">
+          <option value="revenue">Umsatz </option>
+          <option value="eps">EPS</option>
+          <option value="opmargin">Operative Marge</option>
+          <option value="dividend">Dividende </option>
+          <option value="price5y">Kurs </option>
+          
+        </select>
+      </div>
+      <div>
+ <label>Anzahl Jahre (1–4)</label>
+ <select id="years">
+  <option value="2">1 Jahr</option>   <!-- 2 Datenpunkte => 1 Jahr -->
+  <option value="3">2 Jahre</option>  <!-- 3 Datenpunkte => 2 Jahre -->
+  <option value="4">3 Jahre</option>  <!-- 4 Datenpunkte => 3 Jahre -->
+  <option value="5" selected>4 Jahre</option> <!-- 5 Datenpunkte => 4 Jahre -->
+</select>
+
+    </div>
+    </div>
+
+    <div style="margin-top:14px">
+      <div id="yearInputs" class="grid3" style="margin-top:8px"></div>
+      <div class="small">Erlaubt: 1.250.000 oder 1.250.000,50 oder 1250000</div>
+    </div>
+
+    <!-- Kurs 5Y (CAGR) - extra Eingabebox -->
+<div id="price5yBox" style="display:none; margin-top:14px">
+  <div class="grid">
+    <div>
+      <label>Kurs vor ~4 Jahren</label>
+      <input id="pStart" inputmode="decimal" placeholder="z.B. 25,50" />
+    </div>
+    <div>
+      <label>Kurs heute</label>
+      <input id="pEnd" inputmode="decimal" placeholder="z.B. 40,10" />
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:12px">
+    <div>
+    <label>Jahre</label>
+     <input id="pYears" type="number" min="1" max="4" step="1" value="4" />
+     <div class="small">1–4 Jahre einstellbar (wie bei FY-Logik üblich).</div>
+    </div>
+    <div></div>
+  </div>
+</div>
+
+    <button id="calc" type="button">Berechnen</button>
+
+    <div id="err" class="err" style="display:none"></div>
+<div id="out" class="out" style="display:none"></div>
+
+  </div> <!-- Ende: .card (CAGR) -->
+</section> <!-- Ende: #page-cagr -->
+
+<section id="page-fairprice" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>Fairer Preis Rechner</h1>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <!-- Rechner A: Implizites KGV Target aus Price Target -->
+      <div class="out">
+        <div class="kpi"><span><b>KGV Target berechnen</b></span><span class="small">Price Target / EPS</span></div>
+
+        <label for="fp_epsA">EPS (Diluted, FY)</label>
+        <input id="fp_epsA" inputmode="decimal" placeholder="z.B. 2,50" />
+
+        <label for="fp_priceTarget" style="margin-top:10px">Price Target</label>
+        <input id="fp_priceTarget" inputmode="decimal" placeholder="z.B. 40" />
+
+        <button id="fp_calcPe" type="button" style="margin-top:10px">KGV Target berechnen</button>
+
+        <div id="fp_peOut" class="out" style="display:none; margin-top:10px"></div>
+        <div id="fp_peErr" class="err" style="display:none"></div>
+      </div>
+
+      <!-- Rechner B: Fairer Preis aus EPS & KGV Target -->
+      <div class="out">
+        <div class="kpi"><span><b>Fairer Preis</b></span><span class="small">EPS × KGV Target</span></div>
+
+        <label for="fp_epsB">EPS (Diluted, FY)</label>
+        <input id="fp_epsB" inputmode="decimal" placeholder="z.B. 2,50" />
+
+        <label for="fp_peTarget" style="margin-top:10px">KGV Target</label>
+        <input id="fp_peTarget" inputmode="decimal" placeholder="z.B. 15"  />
+
+        <button id="fp_calcFair" type="button" style="margin-top:10px">Fairen Preis berechnen</button>
+
+        <div id="fp_fairOut" class="out" style="display:none; margin-top:10px"></div>
+        <div id="fp_fairErr" class="err" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-fcfpayout" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>FCF-Payout Rechner</h1>
+    <div class="muted">Dividenden gesamt ÷ Free Cash Flow (FCF)</div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+
+      <!-- Option A: Dividenden gesamt direkt -->
+      <div class="out">
+        <div class="kpi">
+          <span><b>Option A: Dividenden gesamt</b></span>
+          <span class="small">direkt eingeben</span>
+        </div>
+
+        <label for="fcf_divTotal">Dividenden gesamt (z. B. FY/TTM) Common Dividends Paid</label>
+        <input id="fcf_divTotal" inputmode="decimal" placeholder="z.B. 1.250.000.000" />
+
+        <label for="fcf_fcfA" style="margin-top:10px">FCF (gleiche Periode) 1Y</label>
+        <input id="fcf_fcfA" inputmode="decimal" placeholder="z.B. 2.000.000.000" />
+
+        <button id="fcf_calcA" type="button" style="margin-top:10px">FCF-Payout berechnen</button>
+
+        <div id="fcf_outA" class="out" style="display:none; margin-top:10px"></div>
+        <div id="fcf_errA" class="err" style="display:none"></div>
+      </div>
+
+      <!-- Option B: Dividende/Aktie + Aktienanzahl -->
+      <div class="out">
+        <div class="kpi">
+          <span><b>Option B: Dividende/Aktie × Aktien</b></span>
+          <span class="small">Dividenden gesamt berechnen</span>
+        </div>
+
+        <label for="fcf_dps">Dividende je Aktie (DPS)</label>
+        <input id="fcf_dps" inputmode="decimal" placeholder="z.B. 2,10" />
+
+        <label for="fcf_shares" style="margin-top:10px">Aktienanzahl (Shares, avg.)</label>
+        <input id="fcf_shares" inputmode="decimal" placeholder="z.B. 1.100.000.000" />
+
+        <label for="fcf_fcfB" style="margin-top:10px">FCF (gleiche Periode)</label>
+        <input id="fcf_fcfB" inputmode="decimal" placeholder="z.B. 2.000.000.000" />
+
+        <button id="fcf_calcB" type="button" style="margin-top:10px">FCF-Payout berechnen</button>
+
+        <div id="fcf_outB" class="out" style="display:none; margin-top:10px"></div>
+        <div id="fcf_errB" class="err" style="display:none"></div>
+      </div>
+
+    </div>
+
+    <div class="small" style="margin-top:10px">
+      Hinweis: Periode muss identisch sein (FY oder TTM). Wenn FCF ≤ 0, ist „Payout“ nicht sinnvoll (nicht gedeckt).
+    </div>
+  </div>
+</section>
+
+
+<section id="page-icr" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>Zinsdeckung (ICR) Rechner</h1>
+    <div class="muted">Typisch: EBIT ÷ Zinsaufwand (Interest Expense)</div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+      <div class="out">
+        <div class="kpi">
+          <span><b>ICR berechnen</b></span>
+          <span class="small">EBIT / Zinsaufwand</span>
+        </div>
+
+        <label for="icr_ebit">EBIT</label>
+        <input id="icr_ebit" inputmode="decimal" placeholder="z.B. 1.250.000.000" />
+
+        <label for="icr_interest" style="margin-top:10px">Zinsaufwand (Interest Expense)</label>
+        <input id="icr_interest" inputmode="decimal" placeholder="z.B. 150.000.000" />
+
+        <button id="icr_calc" type="button" style="margin-top:10px">Zinsdeckung berechnen</button>
+
+        <div id="icr_out" class="out" style="display:none; margin-top:10px"></div>
+        <div id="icr_err" class="err" style="display:none"></div>
+
+        <div class="small" style="margin-top:10px">
+          Hinweis: In Cashflow/Income Statements ist „Interest Expense“ oft negativ (Vorzeichen). Dieser Rechner nutzt automatisch den Betrag (|Zinsaufwand|).
+        </div>
+      </div>
+
+      <div class="out">
+        <div class="kpi">
+          <span><b>Interpretation (grob)</b></span>
+          <span class="small">Daumenregeln</span>
+        </div>
+        <div class="small">
+          • &lt; 2: kritisch<br/>
+          • 2–4: eher schwach/erhöhtes Risiko<br/>
+          • ≥ 4: eher solide<br/>
+          • ≥ 8: sehr komfortabel (branchenabhängig)
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="page-checks" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>Checks</h1>
+    <div class="muted">Profitabel (Net Income &gt; 0) und FCF positiv (FCF &gt; 0)</div>
+   </div>
+
+   <div class="card">
+    <div class="grid">
+
+      <!-- Rechner 1: Profitabel -->
+      <div class="out">
+        <div class="kpi">
+          <span><b>Profitabel?</b></span>
+          <span class="small">Net Income (FY) &gt; 0</span>
+        </div>
+
+        <label for="chk_netIncome">Net Income (FY)</label>
+        <input id="chk_netIncome" inputmode="decimal" placeholder="z.B. 1250000 oder 1.250.000" />
+
+        <button id="chk_profitBtn" type="button">Prüfen</button>
+
+        <div id="chk_profitErr" class="err" style="display:none"></div>
+        <div id="chk_profitOut" class="out" style="display:none; margin-top:10px"></div>
+      </div>
+
+      <!-- Rechner 2: FCF positiv -->
+      <div class="out">
+        <div class="kpi">
+          <span><b>FCF positiv?</b></span>
+          <span class="small">FCF (FY) &gt; 0</span>
+        </div>
+
+        <label for="chk_fcf">FCF (FY)</label>
+        <input id="chk_fcf" inputmode="decimal" placeholder="z.B. 350000 oder 350.000" />
+
+        <button id="chk_fcfBtn" type="button">Prüfen</button>
+
+        <div id="chk_fcfErr" class="err" style="display:none"></div>
+        <div id="chk_fcfOut" class="out" style="display:none; margin-top:10px"></div>
+      </div>
+
+
+
+      <!-- Rechner 3: FCF aus OCF & CapEx -->
+      <div class="out">
+        <div class="kpi">
+          <span><b>FCF berechnen</b></span>
+          <span class="small">OCF − CapEx (oder + wenn CapEx negativ)</span>
+        </div>
+
+        <label for="chk_ocf">Operating Cash Flow (OCF)</label>
+        <input id="chk_ocf" inputmode="decimal" placeholder="z.B. 1.250.000.000" />
+
+        <label for="chk_capex" style="margin-top:10px">CapEx</label>
+        <input id="chk_capex" inputmode="decimal" placeholder="z.B. 500.000.000 oder -500.000.000" />
+
+        <div class="small" style="margin-top:8px">
+          Regel: Wenn CapEx negativ eingegeben wird (z.B. -500), dann FCF = OCF + CapEx.
+          Wenn CapEx positiv eingegeben wird, dann FCF = OCF − CapEx.
+        </div>
+
+        <button id="chk_fcfFromBtn" type="button" style="margin-top:10px">FCF berechnen → in Check übernehmen</button>
+
+        <div id="chk_fcfFromErr" class="err" style="display:none"></div>
+        <div id="chk_fcfFromOut" class="out" style="display:none; margin-top:10px"></div>
+      </div>
+
+      <!-- Rechner 4: FCF-Payout -->
+<div class="out">
+  <div class="kpi">
+    <span><b>FCF-Payout</b></span>
+    <span class="small">|Dividends Paid| ÷ FCF</span>
+  </div>
+
+  <label for="chk_divPaid">Dividends Paid (gesamt, FY/TTM)</label>
+  <input id="chk_divPaid" inputmode="decimal" placeholder="z.B. -1.250.000.000 oder 1.250.000.000" />
+
+  <label for="chk_fcfPayoutBase" style="margin-top:10px">FCF (gleiche Periode) </label>
+  <input id="chk_fcfPayoutBase" inputmode="decimal" placeholder="z.B. 2.000.000.000" />
+
+  <button id="chk_fcfPayoutBtn" type="button" style="margin-top:10px">FCF-Payout berechnen</button>
+
+  <div id="chk_fcfPayoutErr" class="err" style="display:none"></div>
+  <div id="chk_fcfPayoutOut" class="out" style="display:none; margin-top:10px"></div>
+
+  <div class="small" style="margin-top:8px">
+    Hinweis: Dividends Paid ist oft negativ → wird als Betrag (|…|) gerechnet. Wenn FCF ≤ 0, ist Payout nicht sinnvoll.
+  </div>
+</div>
+</section>
+
+
+<section id="page-volatility" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>Volatilität (Std-Abw.)</h1>
+    <div class="muted">
+      Füge Kurs-Historie ein (z. B. von StockAnalysis: Date, Open, High, Low, Close, Adj Close, Change %, Volume).
+      Der Rechner nutzt standardmäßig <b>Adj Close</b> (falls vorhanden), sonst <b>Close</b>.
+    </div>
+  </div>
+
+  <div class="card">
+    <label for="vol_big">Großes Eingabefeld (Historie)</label>
+    <textarea id="vol_big" rows="10"
+      style="width:100%;padding:10px;border-radius:10px;border:1px solid #d6d6d6;font-size:14px;box-sizing:border-box;resize:vertical"
+      placeholder="Einfach hier reinkopieren…"></textarea>
+
+    <div class="grid" style="margin-top:12px">
+  <details style="margin-top:10px">
+  <summary class="vol-muted" style="cursor:pointer">Erweiterte Optionen (Returns / Annualisierung)</summary>
+
+  <div class="out" style="margin-top:10px">
+    <div class="kpi"><span><b>Return-Definition</b></span><span class="vol-subtitle">optional</span></div>
+
+    <label class="vol-muted" style="display:flex;gap:10px;align-items:center;margin-top:8px">
+      <input type="radio" name="vol_retType" value="simple" checked>
+      <span>Simple Returns</span>
+    </label>
+    <div class="vol-muted">Formel: (Pₜ / Pₜ₋₁ − 1) Simple Return</div>
+
+    <label class="vol-muted" style="display:flex;gap:10px;align-items:center;margin-top:10px">
+      <input type="radio" name="vol_retType" value="log">
+      <span>Log Returns</span>
+    </label>
+    <div class="vol-muted">Formel: ln(Pₜ / Pₜ₋₁)  Log Return</div>
+
+    <div style="margin-top:10px">
+      <label class="vol-muted" for="vol_annualize">Annualisieren?</label>
+      <select id="vol_annualize">
+        <option value="no" selected>Nein (täglich)</option>
+        <option value="yes">Ja (× √252)</option>
+      </select>
+      <div class="vol-muted">252 ≈ typische Handelstage/Jahr.</div>
+    </div>
+  </div>
+</details>
+      <div class="out">
+        <div class="kpi"><span><b>Berechnung</b></span><span class="small">Aktion</span></div>
+        <button type="button" id="vol_calcBtn">Volatilität berechnen</button>
+        <button type="button" id="vol_clearBtn" style="background:#eee;color:#333">Leeren</button>
+        <div id="vol_err" class="err" style="display:none;margin-top:10px"></div>
+      </div>
+    </div>
+
+    <div id="vol_out" class="out" style="display:none;margin-top:12px"></div>
+
+    <div class="small" style="margin-top:10px">
+      Tipp: Wenn du Daten <b>neueste zuerst</b> einfügst, ist das okay – der Rechner sortiert automatisch nach Datum.
+    </div>
+  </div>
+</section>
+
+
+<section id="page-nutzen" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>Nutzen Check</h1>
+    <div class="muted">
+      Tipp: Werte aus Excel/Google Sheets kopieren und hier einfügen (Tabs werden automatisch erkannt).
+      Trennzeichen: Tab (Excel), Semikolon ; oder Zeilenumbrüche.
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="row" style="gap:10px; align-items:flex-end;">
+      <div style="flex:1; min-width:220px;">
+        <label for="nutzen_big">Großes Eingabefeld (40 Werte in Reihenfolge)</label>
+        <textarea id="nutzen_big" rows="4" style="width:100%;padding:10px;border-radius:10px;border:1px solid #d6d6d6;font-size:14px;box-sizing:border-box;resize:vertical"></textarea>
+        <div class="small" style="margin-top:6px">
+          Reihenfolge = exakt die Überschriften (von links nach rechts). Fehlende Werte bleiben leer.
+        </div>
+      </div>
+      <div style="min-width:220px">
+        <button type="button" id="nutzen_parseBtn">Auf Spalten verteilen</button>
+        <button type="button" id="nutzen_clearBtn" style="background:#eee;color:#333">Leeren</button>
+      </div>
+    </div>
+
+    <div style="overflow:auto; margin-top:12px">
+      <table id="nutzenTable" style="min-width:1600px">
+        <thead>
+          <tr id="nutzenHeadRow"></tr>
+        </thead>
+
+        <!-- 1 großes Feld über die gesamte Breite (colspan=31) -->
+        <tbody>
+          <tr>
+            <td id="nutzenBigCell" colspan="40" style="background:#fafafa">
+              <div class="small" style="margin-bottom:6px;color:#666">
+
+              </div>
+              <!-- optionaler Spiegel-Output: wird per JS gesetzt -->
+              <div id="nutzen_bigMirror" class="small" style="white-space:pre-wrap;color:#333"></div>
+            </td>
+          </tr>
+
+          <!-- Ergebnis-Zeile: 31 Zellen -->
+          <tr id="nutzenValueRow"></tr>
+        </tbody>
+      </table>
+      <div id="nutzen_result" class="out" style="display:none; margin-top:12px"></div>
+    </div>
+
+    <div class="small" style="margin-top:10px">
+      Hinweis: Die Werte werden als Text verteilt (z. B. „12,5%“,  ja“, „1.250.000“ bleibt erhalten).
+    </div>
+  </div>
+</section>
+
+
+    </div> <!-- Ende .grid -->
+  </div>   <!-- Ende .card -->
+</section> <!-- Ende #page-checks -->
+
+<section id="page-etf" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+
+      <div class="row" style="align-items:flex-end; margin-top:10px">
+      <div style="flex:1; min-width:220px">
+        <label for="whtSearch">Suche (Land / Text)</label>
+        <input id="whtSearch" type="text" placeholder="z.B. USA, Schweiz, 15%, Rückforderung …" />
+      </div>
+    </div>
+
+    <h1 style="margin-top:10px">Quellensteuerliste</h1>
+    <div class="muted">Übersicht: Standard-WHT, DBA (DE typ.) und DE-Behandlung (Privatanleger).</div>
+    <div class="muted">Dividenden – Privatperson (DE steuerlich ansässig) - als Vergleichbroker wird Scalable genutzt</div>
+  </div>
+
+  <div class="card">
+    <table id="whtTable">
+      <thead>
+        <tr>
+          <th>Land</th>
+          <th>Standard-WHT Dividenden</th>
+          <th>DBA DE (typ.)</th>
+          <th>DE-Behandlung (Privatanleger)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="small">Hinweis: Werte sind vereinfacht und beziehen sich auf die typische Abwicklung bei Scalable Capital. Je Wertpapier, Lagerstelle und Auszahlungsweg sind Abweichungen möglich; ggf. ist Rückforderung nötig.</div>
+  </div>
+</section>
+
+
+
+<section id="page-finanztransaktionssteuer" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+
+    <!-- SUCHFELD GANZ OBEN (nur FTS-Seite) -->
+    <div class="row" style="align-items:flex-end; margin-top:10px">
+      <div style="flex:1; min-width:220px">
+        <label for="ftsSearch">Suche</label>
+        <input id="ftsSearch" type="text" placeholder="z.B. Frankreich, 0,3%, Derivate …" />
+      </div>
+    </div>
+
+    <h1 style="margin-top:10px">Finanztransaktionssteuer</h1>
+    <div class="muted">Übersicht und Hinweise.</div>
+  </div>
+
+<table id="ftsTable">
+  <thead>
+    <tr>
+      <th>Land</th>
+      <th>Steuer (typ.)</th>
+      <th>Wann fällt sie an?</th>
+      <th>Scalable / Hinweis</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<div class="small">
+  Hinweis: FTS-Regeln unterscheiden sich stark je Land und Produkt (Aktie/ETF/Derivat), Handelsplatz und Emittent.
+  Werte sind vereinfacht als Orientierung.
+</div>
+
+
+</section>
+
+
+</div>
+
+<script>
+   let whtSearchBound = false;
+   let ftsSearchBound = false;
+
+
+     const WHT_DATA = [
+   { land:"Deutschland",
+   standard:"25% KapESt + 5,5% Soli auf KapESt (+ ggf. KiSt)",
+   dba:"–",
+   de:"Scalable führt die Abgeltungsteuer (KapESt, Soli, ggf. KiSt) bei steuerpflichtigen Vorgängen automatisch ab; Freistellungsauftrag und Verlustverrechnungstöpfe werden dabei berücksichtigt."}, //  [oai_citation:0‡Scalable Capital Hilfe](https://help.scalable.capital/steuern-de12f868/wie-funktioniert-die-abf%C3%BChrung-der-abgeltungssteuer-d616ad21?utm_source=chatgpt.com)
+
+   { land:"USA",
+   standard:"30%",
+   dba:"15% (mit W-8BEN)",
+   de:"Für US-Dividenden gilt ohne gültiges W-8BEN i. d. R. 30% Quellensteuer. Mit korrekt hinterlegtem W-8BEN wird typischerweise der DBA-Satz von 15% angewendet. Die deutsche Abgeltungsteuer führt Scalable automatisch ab; die anrechenbare US-Quellensteuer wird im Rahmen der deutschen Besteuerung berücksichtigt. Eine Rückforderung ist meist nur nötig, wenn zu viel (z. B. 30% statt 15%) einbehalten wurde."}, //  [oai_citation:1‡de.scalable.capital](https://de.scalable.capital/assets/kcbf79ije7q7/3p8akTjsF4CUDdr7sQvFRS/ed449b9903137fb5e259f2ae17adc6f7/Scalable_Capital_-_Ausfuellhilfe_fuer_das_US-Formular_W-8BEN.pdf?utm_source=chatgpt.com)
+
+   { land:"Kanada",
+   standard:"25%",
+   dba:"15%",
+   de:"Kanada behält ohne DBA-Ermäßigung grundsätzlich 25% Non-Resident Tax ein. Nach DBA Kanada–Deutschland sind Dividenden für den in Deutschland Ansässigen auf max. 15% begrenzt (Portfolio-/Privatanleger-Fall). Scalable führt die deutsche Abgeltungsteuer automatisch ab; ein Über-DBA-Anteil wäre (falls er überhaupt anfällt) nur per Rückforderung in Kanada zu klären."}, //  [oai_citation:2‡canada.ca](https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/t4058/non-residents-income-tax.html?utm_source=chatgpt.com)
+
+   {land:"Mexiko",
+   standard:"10%",
+   dba:"15% (Privatanleger-Fall; 5% nur für qualifizierte Gesellschaften ≥10%)",
+   de:"Mexiko erhebt auf Dividenden an Nichtansässige typischerweise 10% Quellensteuer. Das DBA Deutschland–Mexiko begrenzt Dividenden zwar grundsätzlich auf 15% (Privatanleger), aber weil der mexikanische Standardsatz schon darunter liegt, gibt es hier normalerweise keinen „Über-DBA“-Teil zum Zurückfordern. Scalable führt die deutsche Abgeltungsteuer automatisch ab; Anrechnung nur im Rahmen der deutschen Regeln."}, //  [oai_citation:3‡PwC Steuerübersichten](https://taxsummaries.pwc.com/mexico/corporate/withholding-taxes?utm_source=chatgpt.com)
+ 
+   { land:"Brasilien",
+   standard:"10% (seit 01/2026 auf Dividenden/Profite an Ausländer; zuvor i. d. R. 0%)",
+   dba:"– (kein DBA/DTT Deutschland–Brasilien)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. In Brasilien fällt (seit 01/2026) i. d. R. 10% Quellensteuer auf ins Ausland ausgeschüttete Dividenden/Profite an; eine DBA-Reduktion gibt es mangels DBA nicht. Anrechnung in DE nur im Rahmen der deutschen Anrechnungsregeln und nur, soweit tatsächlich Quellensteuer einbehalten wurde."}, //  [oai_citation:0‡mayerbrown.com](https://www.mayerbrown.com/en/insights/publications/2025/12/enactment-of-law-no-15270-2025-which-establishes-dividend-taxation-expands-the-exemption-threshold-and-introduces-a-minimum-tax-on-high-incomes?utm_source=chatgpt.com)
+
+   { land:"Vereinigtes Königreich (UK)",
+   standard:"0% (normale UK-Aktien-Dividenden); 20% bei REIT/PAIF-‚Property Income Distributions‘",
+   dba:"0% (normale Dividenden); bei REIT/PAIF ggf. Ermäßigung/Erstattung nach DBA möglich",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Bei normalen UK-Dividenden gibt es i. d. R. keine UK-Quellensteuer → keine Anrechnung/Rückforderung. Achtung Sonderfall: UK-REIT/PAIF-Ausschüttungen können mit UK-WHT (typisch 20%) kommen; hier kann je nach DBA/Status ggf. Erstattung/Reduktion relevant sein."}, //  [oai_citation:1‡PwC Steuerübersichten](https://taxsummaries.pwc.com/united-kingdom/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Irland",
+   standard:"25% Dividend Withholding Tax (DWT) – kann für qualifizierte Nicht-Residenten oft vollständig befreit werden (Erklärung/Intermediär nötig)",
+   dba:"15% (Obergrenze, falls überhaupt einbehalten wird; praktisch oft 0% bei korrekter Non-Resident-Befreiung)",
+   de:"Scalable: DE-Steuer automatisch. Irland hat grundsätzlich 25% DWT, aber Nicht-Residenten aus ‚relevant territories‘ (u. a. DE) können bei korrekter Non-Resident-Erklärung (z. B. via Intermediär/Agent, Form V2A-Logik) häufig brutto (0% DWT) erhalten. Wenn dennoch einbehalten wird, ist der DBA-Gedanke typischerweise max. 15% – ein darüber hinausgehender Einbehalt wäre ggf. per Rückforderung in Irland zu klären."}, //  [oai_citation:2‡PwC Steuerübersichten](https://taxsummaries.pwc.com/ireland/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Frankreich",
+   standard:"12,8% (Privatanleger/Individuals)",
+   dba:"15% (DBA-Obergrenze; effektiv meist 12,8% weil Standard darunter)",
+   de:"Scalable: DE-Steuer automatisch. Frankreich behält bei Privatanlegern i. d. R. 12,8% Quellensteuer ein; das liegt unter der typischen DBA-Obergrenze (15%). Rückforderung ist in der Praxis eher ein Thema, wenn ausnahmsweise mehr als 12,8% einbehalten wurde oder besondere Konstellationen vorliegen."}, //  [oai_citation:3‡PwC Steuerübersichten](https://taxsummaries.pwc.com/france/corporate/withholding-taxes?utm_source=chatgpt.com)
+ 
+   { land:"Niederlande",
+   standard:"15% Dividenden-Quellensteuer",
+   dba:"15% (Privatanleger/Portfolio-Dividenden; praktisch i. d. R. keine Reduktion nötig, weil Standard = DBA)",
+   de:"Scalable: DE-Steuer automatisch. Niederlande behalten typischerweise 15% auf Dividenden ein; diese 15% sind in DE grundsätzlich anrechenbar → meist kein Rückforderungsrest."}, //  [oai_citation:0‡business.gov.nl](https://business.gov.nl/regulations/dividend-tax/?utm_source=chatgpt.com)
+
+   { land:"Belgien",
+   standard:"30% Dividenden-Quellensteuer",
+   dba:"15% (typischer DBA-Satz für Privatanleger/Portfolio-Dividenden)",
+   de:"Scalable: DE-Steuer automatisch. Belgien behält standardmäßig 30% ein; in DE ist i. d. R. nur bis zum DBA-Satz (typisch 15%) anrechenbar. Der darüber hinausgehende Teil (typisch 15%-Punkte) wäre – falls du ihn reduzieren willst – nur über Erstattung/Refund in Belgien zu bekommen."}, //  [oai_citation:1‡Bird & Bird](https://www.twobirds.com/en/insights/2025/belgium/belgium-increase-of-the-withholding-tax-on-dividends--does-this-reform-really-undermine-the-attracti?utm_source=chatgpt.com)
+
+   { land:"Luxemburg",
+   standard:"15% Dividenden-Quellensteuer",
+   dba:"15% (Privatanleger; 5% nur für qualifizierte Gesellschaften ≥10%)",
+   de:"Scalable: DE-Steuer automatisch. Luxemburg hat als Standardsatz 15%; für Privatanleger entspricht das i. d. R. auch dem DBA-Satz → in DE grundsätzlich anrechenbar, meist kein Rückforderungsrest."}, //  [oai_citation:2‡Clearstream](https://www.clearstream.com/clearstream-en/res-library/market-coverage/equities-double-taxation-treaties-concluded-by-luxembourg-and-currently-in-force-1313108?utm_source=chatgpt.com)
+
+   { land:"Schweiz",
+   standard:"35% Quellensteuer (Verrechnungssteuer) auf Dividenden",
+   dba:"15% (Restbelastung nach DBA; typischer Refund-Anteil ~20%-Punkte)",
+   de:"Scalable: DE-Steuer automatisch. Schweiz behält 35% ein; in DE sind i. d. R. 15% anrechenbar, der Rest (typisch 20%-Punkte) ist häufig per Rückforderung in der Schweiz erstattbar. Für die CH-Rückforderung wird oft ein ‚Tax Voucher‘ benötigt; bei Scalable ist ein Tax Voucher laut Unterlagen mit 25 € pro Auftrag pro Kunde bepreist (falls benötigt)."}, //  [oai_citation:3‡ESTV](https://www.estv.admin.ch/en/anticipatory-tax?utm_source=chatgpt.com)
+ 
+   { land:"Österreich",
+   standard:"27,5% Quellensteuer auf Dividenden (KESt)",
+   dba:"15% (Privatanleger/Portfolio-Dividenden)",
+   de:"Scalable: DE-Steuer automatisch. Österreich behält grundsätzlich 27,5% ein; in Deutschland ist i. d. R. nur bis 15% anrechenbar. Der Überhang (typisch 12,5%-Punkte) ist – wenn du ihn zurückholen willst – nur über Rückforderung in Österreich möglich."}, //  [oai_citation:0‡Bundesministerium für Finanzen](https://www.bmf.gv.at/en/topics/taxation/double-taxation-agreements/relief-from-austrian-withholding-taxes-under-dtc.html?utm_source=chatgpt.com)
+
+   { land:"Italien",
+   standard:"26% Quellensteuer auf Dividenden (Standard)",
+   dba:"15% (Privatanleger/Portfolio-Dividenden, typischer DBA-Satz)",
+   de:"Scalable: DE-Steuer automatisch. Italien behält standardmäßig 26% ein; in DE ist i. d. R. bis 15% anrechenbar. Der Rest (typisch 11%-Punkte) wäre ggf. nur per Rückforderung in Italien zu holen."}, //  [oai_citation:1‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/italy/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Spanien",
+   standard:"19% Quellensteuer auf Dividenden (Non-Resident Standard)",
+   dba:"15% (Privatanleger/Portfolio-Dividenden nach DBA DE–ES)",
+   de:"Scalable: DE-Steuer automatisch. Spanien behält i. d. R. 19% ein; in DE ist i. d. R. bis 15% anrechenbar. Die Differenz (typisch 4%-Punkte) ist ggf. per Rückforderung in Spanien möglich."}, //  [oai_citation:2‡Dentons](https://www.dentons.com/en/services-and-solutions/global-tax-guide-to-doing-business-in/spain?utm_source=chatgpt.com) 
+
+   { land:"Portugal",
+   standard:"28% Quellensteuer auf Dividenden (Non-Resident Individuals)",
+   dba:"15% (Privatanleger/Portfolio-Dividenden nach DBA DE–PT)",
+   de:"Scalable: DE-Steuer automatisch. Portugal behält für nichtansässige Privatpersonen typischerweise 28% ein; in DE ist i. d. R. nur bis 15% anrechenbar. Der Überhang (typisch 13%-Punkte) wäre ggf. nur per Rückforderung in Portugal zu klären."}, //  [oai_citation:3‡Caiado Guerreiro](https://www.caiadoguerreiro.com/en/taxation-of-dividends-between-companies-and-shareholders-resident-abroad/?utm_source=chatgpt.com)
+  
+   { land:"Dänemark",
+   standard:"27% Dividenden-Quellensteuer (für Nichtansässige grundsätzlich; Reduktion nach DBA möglich)",
+   dba:"15% (typischer DBA-Satz für Privatanleger/Portfolio-Dividenden)",
+   de:"Scalable: DE-Steuer automatisch. Dänemark behält i. d. R. 27% ein; in DE ist typischerweise nur bis zum DBA-Satz (15%) anrechenbar. Der Überhang (typisch 12%-Punkte) ist – wenn du ihn zurückholen willst – nur über Rückforderung/Entlastungsverfahren in Dänemark möglich."}, //  [oai_citation:0‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/denmark/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Schweden",
+   standard:"30% Quellensteuer auf Dividenden an Nichtansässige",
+   dba:"15% (nach DBA, sofern anwendbar)",
+   de:"Scalable: DE-Steuer automatisch. Schweden behält für Nichtansässige normalerweise 30% ein; mit DBA kann der Satz reduziert sein (typisch 15%). In DE ist i. d. R. nur bis 15% anrechenbar; darüber hinausgehende Quellensteuer wäre ggf. per Rückforderung in Schweden zu klären."}, //  [oai_citation:1‡skatteverket.se](https://www.skatteverket.se/servicelankar/otherlanguages/englishengelska/businessesandemployers/nonestablishedforeignbusinesses/swedishwithholdingtaxondividends.4.34a801ea1041d54f9e28000452.html?utm_source=chatgpt.com)
+
+   { land:"Norwegen",
+   standard:"25% Quellensteuer auf Dividenden an ausländische Aktionäre",
+   dba:"15% (Deutschland; 0% nur für qualifizierte Beteiligungen/Unternehmen)",
+   de:"Scalable: DE-Steuer automatisch. Norwegen behält grundsätzlich 25% ein; nach DBA mit Deutschland gilt für Privatanleger typischerweise 15%. In DE i. d. R. nur bis 15% anrechenbar; der Überhang (typisch 10%-Punkte) wäre ggf. per Rückforderung in Norwegen zu holen."}, //  [oai_citation:2‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/norway/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Finnland",
+   standard:"30% Quellensteuer auf Dividenden an Nichtansässige (35% bei nominee-registered, falls Begünstigter nicht identifizierbar)",
+   dba:"oft 15% (je nach DBA; für Deutschland typischerweise 15%)", 
+   de:"Scalable: DE-Steuer automatisch. Finnland behält bei Nichtansässigen typischerweise 30% ein (in Sonderfällen 35%); das DBA begrenzt häufig auf 15%. In DE ist i. d. R. nur bis 15% anrechenbar; ein Überhang wäre ggf. per Rückforderung in Finnland zu klären."}, //  [oai_citation:3‡vero.fi](https://www.vero.fi/en/individuals/tax-cards-and-tax-returns/moving_away_from_finland/paying_dividends_interest_and_royalties/?utm_source=chatgpt.com)
+
+   { land:"Polen",
+   standard:"19% Quellensteuer auf Dividenden (Standard, Non-Resident)",
+   dba:"15% (DBA DE–PL: 15% „in allen anderen Fällen“; 5% nur für qualifizierte Gesellschaften ≥10%)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Polen behält i. d. R. 19% ein; in Deutschland ist typischerweise nur bis 15% anrechenbar. Der Überhang (typisch 4%-Punkte) ist – wenn du ihn zurückholen willst – nur über Rückforderung/Entlastungsverfahren in Polen möglich."}, //  [oai_citation:0‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/poland/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Tschechien",
+   standard:"15% Quellensteuer auf Dividenden (Standard)",
+   dba:"15% (Privatanleger-Fall; niedrigere Sätze betreffen typischerweise nur qualifizierte Gesellschaften/Beteiligungen)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Tschechien behält i. d. R. 15% ein; diese 15% sind in DE grundsätzlich anrechenbar → meist kein Rückforderungsrest."}, //  [oai_citation:1‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/czech-republic/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Ungarn",
+   standard:"15% Quellensteuer/Income Tax auf Dividenden (Standard)",
+   dba:"15% (Privatanleger-Fall; niedrigere Sätze betreffen typischerweise nur qualifizierte Gesellschaften/Beteiligungen)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Ungarn behält typischerweise 15% ein; diese 15% sind in DE grundsätzlich anrechenbar → meist kein Rückforderungsrest (sofern tatsächlich einbehalten)."}, //  [oai_citation:2‡Clearstream](https://www.clearstream.com/clearstream-en/res-library/market-coverage/equities-double-taxation-treaties-concluded-by-hungary-and-currently-in-force-1278696?utm_source=chatgpt.com)
+
+   { land:"Griechenland",
+   standard:"5% Quellensteuer auf Dividenden (Standard)",
+   dba:"meist 10–15% (DBA-Obergrenze ist i. d. R. höher, praktisch aber irrelevant, weil GR-Standard bereits 5% ist)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Griechenland behält i. d. R. 5% ein; diese 5% sind in DE grundsätzlich anrechenbar → normalerweise kein Rückforderungsrest."}, //  [oai_citation:3‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/greece/individual/income-determination?utm_source=chatgpt.com)
+  
+   { land:"Türkei",
+   standard:"15% Quellensteuer auf Dividenden (Standard, Non-Resident)",
+   dba:"15% (Privatanleger/Portfolio-Dividenden; 5% nur für qualifizierte Gesellschaften mit hoher Beteiligung)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. In der Türkei beträgt die Dividenden-Quellensteuer für Nichtansässige grundsätzlich 15%. Für Privatanleger ist der DBA-Satz i. d. R. ebenfalls 15% → normalerweise kein Rückforderungsrest; relevant wird Rückforderung eher nur bei Fehlabzug/Abweichungen."}, //  [oai_citation:0‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/turkey/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Russland",
+   standard:"15% Quellensteuer auf Dividenden an Nichtansässige (nach russischem Recht; operative Abwicklung kann stark eingeschränkt sein)",
+   dba:"– (DTA/DBA DE–RU von Russland seit 08/2023 für wesentliche Artikel ausgesetzt; Treaty-Entlastung praktisch i. d. R. nicht verlässlich)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt, soweit Zahlungen/Abwicklung überhaupt stattfinden. Die Anrechnung in DE hängt davon ab, ob tatsächlich Quellensteuer einbehalten wurde und ob belastbare Nachweise/Tax-Voucher vorhanden sind. Rückforderung/Entlastung in Russland ist praktisch oft schwierig (und kann je nach Wertpapier/Lagerstelle/Sanktionen faktisch nicht durchführbar sein)."}, //  [oai_citation:1‡Jarnias Cyril](https://www.jarniascyril.com/expatriation/guide-moving-to-russia-expat/russia-non-resident-taxation-filing-obligations/?utm_source=chatgpt.com)
+
+   { land:"China",
+   standard:"20% (Privatanleger/Individuals nach IIT-Logik; ohne Treaty-Entlastung)",
+   dba:"10% (DBA DE–CN begrenzt Dividenden typischerweise auf 10%)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Bei China-Dividenden ist der entscheidende Punkt, ob über die Verwahrkette/Treaty-Prozesse der DBA-Satz (typisch 10%) tatsächlich angewendet wird; ohne wirksame Treaty-Anwendung kann (bei Individuals) eine höhere Belastung auftreten. In DE ist die Quellensteuer grundsätzlich nur im Rahmen der deutschen Anrechnungsgrenzen anrechenbar."}, //  [oai_citation:2‡Lorenz & Partners](https://www.lorenz-partners.com/dividend-tax-german/?utm_source=chatgpt.com)
+ 
+   { land:"Hongkong",
+   standard:"0% (keine Quellensteuer auf Dividenden)",
+   dba:"0% (praktisch, da keine WHT erhoben wird)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Hongkong erhebt aktuell keine Quellensteuer auf Dividenden → keine ausländische Quellensteuer, daher keine Anrechnung/Rückforderung nötig."}, //  [oai_citation:3‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/hong-kong-sar/corporate/withholding-taxes?utm_source=chatgpt.com)
+  
+   { land:"Singapur",
+   standard:"0% (keine Quellensteuer auf Dividenden)",
+   dba:"0% (praktisch, da keine WHT erhoben wird)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Singapur erhebt keine Quellensteuer auf Dividenden → keine ausländische Quellensteuer, daher keine Anrechnung/Rückforderung nötig."}, //  [oai_citation:0‡Default](https://www.iras.gov.sg/taxes/withholding-tax/payments-to-non-resident-company/payments-that-are-not-subject-to-withholding-tax?utm_source=chatgpt.com)
+
+   { land:"Taiwan",
+   standard:"21% Quellensteuer auf Dividenden an Nichtansässige (Standard)",
+   dba:"10% (nach DE–Taiwan-Abkommen; Treaty-Entlastung erfordert i. d. R. Nachweise/Prozess in der Verwahrkette)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Ohne Treaty-Entlastung wird bei Taiwan-Dividenden typischerweise 21% einbehalten. Das DE–Taiwan-Abkommen begrenzt Dividenden grundsätzlich auf 10%; wenn über die Verwahrkette keine Treaty-Entlastung greift, bleibt der höhere Einbehalt bestehen und der Überhang wäre nur über Erstattungsverfahren/Entlastung in Taiwan lösbar."}, //  [oai_citation:1‡Ministerium für Landwirtschaft](https://www.mof.gov.tw/eng/singlehtml/264?cntId=82776&utm_source=chatgpt.com)
+
+   { land:"Japan",
+   standard:"typisch 15,315% auf Dividenden aus börsennotierten Aktien (Portfolio-Privatanleger; inkl. 2,1% Surtax auf den nationalen Anteil); in Sonderfällen auch ~20,42%",
+   dba:"meist 15% (DBA-Obergrenze für Portfolio-Dividenden; ob/wie der kleine Zuschlagsanteil reduziert wird, hängt vom konkreten Entlastungsverfahren ab)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. In Japan wird bei Portfolio-Dividenden häufig ~15,315% einbehalten (typischer Börsenfall). In DE ist die Quellensteuer grundsätzlich nur bis zur Anrechnungsgrenze anrechenbar; ein eventueller Überhang wäre – falls relevant – nur über japanische Entlastung/Refund-Prozesse zu klären."}, //  [oai_citation:2‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/japan/corporate/income-determination?utm_source=chatgpt.com)
+
+   { land:"Südkorea",
+   standard:"22% Quellensteuer auf Dividenden an Nichtansässige (20% national + 10% Local Surtax auf die WHT = effektiv 22%)",
+   dba:"15% (typischer DBA-Satz für Portfolio-Privatanleger; niedrigere Sätze nur für qualifizierte Beteiligungen/Unternehmen)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Südkorea behält bei Nichtansässigen typischerweise effektiv 22% ein; in DE ist i. d. R. nur bis zum DBA-Satz (typisch 15%) anrechenbar. Der Überhang (typisch 7%-Punkte) wäre – wenn du ihn zurückholen willst – nur über Entlastungs-/Erstattungsverfahren in Korea möglich."}, //  [oai_citation:3‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/republic-of-korea/corporate/withholding-taxes?utm_source=chatgpt.com)
+  
+   { land:"Indien",
+   standard:"20% Quellensteuer/TDS auf Dividenden an Nichtansässige (+ ggf. Zuschläge/Surcharge & Cess) – wenn kein Treaty-Satz angewendet wird",
+   dba:"10% (DBA Indien–Deutschland, Art. 10: max. 10% wenn Empfänger beneficial owner)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Bei Indien ist ohne Treaty-Anwendung häufig 20% (+ Zuschläge/Cess) Einbehalt möglich. Nach DBA Indien–Deutschland sind Dividenden grundsätzlich auf 10% begrenzt; ob das in der Verwahrkette direkt als 10% durchläuft, hängt von den indischen/Intermediär-Prozessen und Nachweisen ab. In DE ist Quellensteuer i. d. R. nur bis zur Anrechnungsgrenze (typisch DBA-Satz) anrechenbar; ein Überhang wäre ggf. nur über Entlastung/Erstattung in Indien zu klären."}, //  [oai_citation:0‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/india/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Indonesien",
+   standard:"20% Quellensteuer auf Dividenden an Nichtansässige (ohne DBA)",
+   dba:"15% (DBA Indonesien–Deutschland: Portfolio-Dividenden 15%; niedrigere Sätze nur für qualifizierte Beteiligungen/Unternehmen)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Indonesien behält ohne Treaty i. d. R. 20% ein. Für DE-Privatanleger begrenzt das DBA die Dividenden-Quellensteuer typischerweise auf 15%; in Deutschland ist entsprechend i. d. R. nur bis 15% anrechenbar. Ein eventueller Überhang (z. B. wenn 20% einbehalten wurden) wäre nur über Erstattung/Entlastung in Indonesien zu klären."}, //  [oai_citation:1‡tax2win.in](https://tax2win.in/guide/dtaa-between-india-and-germany?utm_source=chatgpt.com)
+
+   { land:"Malaysia",
+   standard:"0% (keine Quellensteuer auf Dividenden)",
+   dba:"0% (praktisch, da keine Dividenden-WHT erhoben wird)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Malaysia erhebt aktuell keine Quellensteuer auf Dividenden → keine ausländische Quellensteuer, daher keine Anrechnung/Rückforderung nötig."}, //  [oai_citation:2‡hasil.gov.my](https://www.hasil.gov.my/en/international/double-taxation-avoidance-agreement-dtadtaa/withholding-tax-rates/?utm_source=chatgpt.com)
+
+   { land:"Thailand",
+   standard:"10% Quellensteuer auf Dividenden",
+   dba:"15% (DBA-Obergrenze; praktisch meist irrelevant, weil TH-Standard bereits 10% ist)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Thailand behält bei Dividenden typischerweise 10% ein; diese 10% sind in DE grundsätzlich anrechenbar (im Rahmen der deutschen Anrechnungsgrenzen). Rückforderung ist normalerweise kein Thema, weil die Quellensteuer nicht über einer typischen DBA-Obergrenze liegt."}, //  [oai_citation:3‡set.or.th](https://www.set.or.th/en/market/information/tax?utm_source=chatgpt.com)
+   
+   { land:"Vietnam",
+   standard:"5% (Dividenden an Privatpersonen; für Corporate-Empfänger i. d. R. 0%)",
+   dba:"–/praktisch selten relevant (Standard 5% liegt i. d. R. bereits unter typischen DBA-Obergrenzen)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Vietnam besteuert Dividendenausschüttungen an Privatpersonen typischerweise mit 5% (PIT auf Investment Income). Wenn überhaupt Quellensteuer anfällt, ist sie in DE nur im Rahmen der Anrechnungsgrenzen anrechenbar; bei 5% entsteht normalerweise kein Rückforderungsrest."}, //  [oai_citation:0‡Andersen in Vietnam](https://vn.andersen.com/wp-content/uploads/2025/03/Andersen-in-Vietnam-Tax-Booklet_2025.pdf?utm_source=chatgpt.com)
+
+   { land:"Philippinen", 
+   standard:"25% (Dividenden an Nichtansässige nach Grundregel; in der Praxis über DBA reduzierbar)",
+   dba:"15% (Privatanleger/„all other cases“ im DBA DE–PH; 5%/10% nur für qualifizierte Unternehmen mit hoher Beteiligung)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Ohne DBA-Entlastung wird in den Philippinen häufig ein höherer Satz einbehalten; nach DBA DE–PH sind Dividenden für Privatanleger typischerweise auf 15% begrenzt. In DE ist i. d. R. nur bis 15% anrechenbar; ein darüber hinausgehender Einbehalt wäre ggf. nur per Rückforderung/Entlastungsverfahren in den Philippinen lösbar."}, //  [oai_citation:1‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/philippines/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Australien",
+   standard:"30% auf unfranked Dividenden (sofern keine Treaty-Reduktion greift); 0% auf franked Dividenden",
+   dba:"15% (Privatanleger/„all other dividends“ im DBA AU–DE; 5% nur für Unternehmen ≥10% Beteiligung)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Franked Dividenden sind für Nichtansässige i. d. R. quellensteuerfrei (0%). Unfranked Dividenden unterliegen grundsätzlich WHT und können nach DBA AU–DE typischerweise auf 15% begrenzt sein (Privatanleger-Fall). In DE ist Quellensteuer nur im Rahmen der Anrechnungsgrenzen anrechenbar; Überhänge wären ggf. nur über Entlastung/Refund zu klären."}, //  [oai_citation:2‡ato.gov.au](https://www.ato.gov.au/forms-and-instructions/you-and-your-shares-2021/dividends-paid-or-credited-to-non-resident-shareholders?utm_source=chatgpt.com)
+
+   { land:"Neuseeland", 
+   standard:"30% NRWT auf Dividenden (ohne DBA/ohne korrekte DTA-Anwendung; Sonderregeln bei imputed dividends möglich)",
+   dba:"15% (Privatanleger/Standard-DTA-Logik; 5% nur für qualifizierte Unternehmen ≥10%)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Neuseeland wendet bei Dividenden ohne Treaty-Anwendung typischerweise 30% NRWT an. Unter DBA/DTA ist für Privatanleger regelmäßig eine Begrenzung (typisch 15%) vorgesehen; in DE ist i. d. R. nur bis zur DBA-Anrechnungsgrenze anrechenbar. Ein Überhang (z. B. 30% statt 15%) wäre ggf. nur über Entlastung/Refund in NZ zu klären."}, //  [oai_citation:3‡ird.govt.nz](https://www.ird.govt.nz/income-tax/withholding-taxes/non-resident-withholding-tax-nrwt/deduct-nrwt-at-the-right-rate/nrwt-rates-for-dta-countries?utm_source=chatgpt.com)
+  
+   { land:"Israel",
+   standard:"25% (Privatanleger); 30% bei „substantial shareholder“ (typisch ≥10%)",
+   dba:"10% (DBA DE–IL; 5% nur für Gesellschaften ≥10% Beteiligung; REIT-/Immobilien-ähnliche Ausschüttungen teils 15%)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Israel behält bei Dividenden an ausländische Privatpersonen i. d. R. 25% ein (30% bei „substantial shareholder“). Nach dem DBA DE–IL liegt die Quellensteuer-Obergrenze für Privatanleger typischerweise bei 10% (wenn Treaty-Entlastung in der Verwahrkette greift); ein darüber hinausgehender Einbehalt wäre ggf. nur über Entlastung/Erstattung in Israel zu klären."}, //  [oai_citation:0‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/israel/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Saudi-Arabien",
+   standard:"5% Quellensteuer auf Dividenden",
+   dba:"– (kein allgemeines DBA DE–Saudi für Dividenden; nur sehr begrenztes DBA für Luftfahrt/Arbeitnehmer existiert)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Saudi-Arabien erhebt auf Dividenden an Nichtansässige grundsätzlich 5% Quellensteuer. Da es mit Deutschland kein allgemeines DBA für Dividenden gibt, läuft das in der Praxis i. d. R. ohne DBA-Reduktion."}, //  [oai_citation:1‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/saudi-arabia/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"VAE (UAE)",
+   standard:"0% Quellensteuer (derzeit; WHT-Satz ist gesetzlich auf 0% gesetzt)",
+   dba:"0% (praktisch, weil UAE-WHT = 0%)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Die VAE erheben derzeit 0% Quellensteuer auf relevante UAE-Einkünfte an Nichtansässige → keine ausländische Quellensteuer, daher keine Anrechnung/Rückforderung nötig."}, //  [oai_citation:2‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/united-arab-emirates/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+   { land:"Südafrika",
+   standard:"20% Dividends Tax (Quellensteuer auf Dividenden an Nichtansässige)",
+   dba:"15% (Privatanleger/„other beneficial owners“ nach DBA; niedrigere Sätze nur für qualifizierte Unternehmen/Beteiligungen)",
+   de:"Scalable: DE-Steuer wird automatisch abgeführt. Südafrika behält grundsätzlich 20% ein; nach DBA ist für Privatanleger typischerweise 15% vorgesehen. In DE ist i. d. R. nur bis 15% anrechenbar; der Überhang (typisch 5%-Punkte) wäre – wenn du ihn zurückholen willst – nur über Entlastung/Erstattung in Südafrika möglich."}, //  [oai_citation:3‡PwC Steuerzusammenfassungen](https://taxsummaries.pwc.com/south-africa/corporate/withholding-taxes?utm_source=chatgpt.com)
+
+];
+
+const FTS_DATA = [
+  {
+    land: "Deutschland",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe wie z. B. in Frankreich/Italien.",
+    note: "Scalable: i. d. R. keine FTS; nur Börsen-/Handelsplatzkosten/Spreads sind etwas anderes."
+  },
+  {
+    land: "USA",
+    steuer: "– (keine FTS; teils regulatorische Gebühren möglich)",
+    wann: "Keine FTS auf Aktienkäufe; teils kleine regulatorische/SEC-bezogene Fees (nicht FTS) v. a. bei Verkäufen.",
+    note: "Scalable: falls Gebühren anfallen, stehen sie in der Abrechnung (keine echte FTS)."
+  },
+  {
+    land: "Kanada",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe/Verkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Mexiko",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Börsentransaktionen.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Brasilien",
+    steuer: "i. d. R. keine klassische FTS (produkt-/strukturabhängig möglich)",
+    wann: "Keine typische EU-ähnliche Aktienkauf-FTS; einzelne Abgaben können je Produkt/Route vorkommen.",
+    note: "Scalable: abhängig von Produkt/Abwicklung; meist keine ausgewiesene FTS."
+  },
+  {
+    land: "Vereinigtes Königreich (UK)",
+    steuer: "0,5% Stamp Duty / SDRT (typisch, auf Käufe UK-Aktien)",
+    wann: "Beim Kauf vieler UK-aktienähnlicher Titel (nicht auf Verkäufe); Ausnahmen je Instrument/Handelsweg.",
+    note: "Scalable: wenn betroffen, erscheint es typischerweise als Steuer/Abgabe in der Abrechnung."
+  },
+  {
+    land: "Irland",
+    steuer: "1% Irish Stamp Duty (typisch, auf Käufe irischer Aktien)",
+    wann: "Beim Kauf vieler irischer Aktien (nicht auf Verkäufe); Ausnahmen möglich.",
+    note: "Scalable: wenn betroffen, wird es i. d. R. automatisch belastet."
+  },
+  {
+    land: "Frankreich",
+    steuer: "0,3% (typisch; französische Aktien-FTT)",
+    wann: "Beim Kauf bestimmter französischer Aktien großer Unternehmen (schwellen-/listenbasiert).",
+    note: "Scalable: wenn betroffen, wird es i. d. R. über die Abwicklung berechnet und ausgewiesen."
+  },
+  {
+    land: "Niederlande",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Belgien",
+    steuer: "Börsensteuer (TOB) – produktabhängig, teils gedeckelt",
+    wann: "Je nach Wertpapier-Typ (Aktie/ETF/Fonds/Anleihe etc.) bei Kauf und/oder Verkauf; mit Höchstbeträgen.",
+    note: "Scalable: hängt stark von Produkt & Abwicklung ab; Belgien ist besonders regel-/produktabhängig."
+  },
+  {
+    land: "Luxemburg",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Schweiz",
+    steuer: "Umsatzabgabe (Stempelsteuer) – nur falls CH-Effektenhändler beteiligt",
+    wann: "Kann anfallen, wenn ein Schweizer Effektenhändler als Intermediär gilt; ansonsten oft nicht.",
+    note: "Scalable: in DE-Depotstruktur häufig nicht relevant; abhängig von Verwahr-/Intermediär-Kette."
+  },
+  {
+    land: "Österreich",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Italien",
+    steuer: "0,1% / 0,2% (typisch; je nach Handelsplatz) + ggf. Derivate-FTT",
+    wann: "Beim Kauf bestimmter italienischer Aktien; Derivate separat nach eigenen Tabellen/Regeln.",
+    note: "Scalable: Aktien-Teil i. d. R. automatisch; Derivate nur relevant, wenn du diese handelst."
+  },
+  {
+    land: "Spanien",
+    steuer: "0,2% (typisch; spanische Aktien-FTT)",
+    wann: "Beim Kauf bestimmter spanischer Aktien großer Unternehmen (listen-/schwellenbasiert).",
+    note: "Scalable: wenn betroffen, wird es typischerweise automatisch berücksichtigt."
+  },
+  {
+    land: "Portugal",
+    steuer: "– (keine allgemeine Aktien-FTS)",
+    wann: "Keine typische, landesweite Aktienkauf-FTS wie FR/IT/ES.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Dänemark",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Schweden",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Norwegen",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Finnland",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Polen",
+    steuer: "– (keine typische Börsen-FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer wie in FR/IT/ES.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Tschechien",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Ungarn",
+    steuer: "– (keine allgemeine Börsen-FTS auf Aktienkäufe)",
+    wann: "Keine typische Aktienkauf-FTS wie FR/IT.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Griechenland",
+    steuer: "– / ggf. Börsenabgaben je Markt möglich (nicht standardisierte FTS)",
+    wann: "Keine klassische, allgemeine Aktienkauf-FTS wie FR/IT/ES.",
+    note: "Scalable: i. d. R. keine FTS; im Zweifel Abrechnung prüfen."
+  },
+  {
+    land: "Türkei",
+    steuer: "– (keine allgemeine Aktien-FTS; teils Gebühren je Markt möglich)",
+    wann: "Keine EU-ähnliche Aktienkauf-FTS als Standard.",
+    note: "Scalable: i. d. R. keine FTS; abhängig von Produkt/Handelsweg."
+  },
+  {
+    land: "Russland",
+    steuer: "– (keine allgemein verlässliche FTS; Markt/Abwicklung stark eingeschränkt möglich)",
+    wann: "Keine typische, stabile FTS-Logik für Privatanleger; Abwicklung kann eingeschränkt sein.",
+    note: "Scalable: praktische Handelbarkeit/Abrechnung abhängig von Sanktionen/Handelsmöglichkeit."
+  },
+  {
+    land: "China",
+    steuer: "0,1% Stempelsteuer (typisch; auf Aktien-Transaktionen, i. d. R. Verkaufseite A-Shares)",
+    wann: "Typisch als Stamp Duty auf bestimmte Börsentransfers (häufig auf Verkäufe; marktabhängig).",
+    note: "Scalable: abhängig von Markt (A/H/ADR) und Abwicklung; erscheint ggf. als Stamp Duty."
+  },
+  {
+    land: "Hongkong",
+    steuer: "0,1% Stamp Duty je Seite (typisch)",
+    wann: "Bei Kauf und Verkauf von HK-Aktien (jeweils auf den Transaktionswert; Rundungsregeln möglich).",
+    note: "Scalable: wenn betroffen, erscheint es typischerweise als Stamp Duty."
+  },
+  {
+    land: "Singapur",
+    steuer: "– (keine allgemeine FTS/Stamp Duty auf Börsenaktienkäufe)",
+    wann: "Keine typische Finanztransaktionssteuer auf börsliche Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Taiwan",
+    steuer: "0,3% Securities Transaction Tax (typisch; oft Verkaufseite bei Aktien)",
+    wann: "Typisch als STT auf Aktien-Transaktionen (häufig auf Verkäufe; je Produkt ggf. andere Sätze).",
+    note: "Scalable: abhängig von Instrument/Markt; erscheint ggf. als Transaction Tax."
+  },
+  {
+    land: "Japan",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe/Verkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Südkorea",
+    steuer: "Securities Transaction Tax (STT) auf Verkäufe (Sätze je Markt/Produkt variieren)",
+    wann: "Typisch auf Verkaufstransaktionen; Sätze unterscheiden sich (KOSPI/KOSDAQ/ETFs etc.).",
+    note: "Scalable: abhängig von Markt/Produkt; wird ggf. in der Abrechnung ausgewiesen."
+  },
+  {
+    land: "Indien",
+    steuer: "Securities Transaction Tax (STT) (Sätze je Produkt/Seite variieren)",
+    wann: "Auf Börsentransaktionen; je nach Instrument (Aktien, Optionen, Futures) und Kauf/Verkauf unterschiedlich.",
+    note: "Scalable: nur relevant, wenn du indische Börsenprodukte handelst; erscheint ggf. als STT."
+  },
+  {
+    land: "Indonesien",
+    steuer: "Börsenabgaben/Levy möglich (keine „klassische“ FTS wie FR/IT)",
+    wann: "Je nach Handelsplatz/Markt können Abgaben/Levy in Gebühren stecken.",
+    note: "Scalable: abhängig vom Handelsweg; i. d. R. keine separate „FTS“-Position."
+  },
+  {
+    land: "Malaysia",
+    steuer: "Stamp Duty auf Contract Notes (typisch; gedeckelt, modellabhängig)",
+    wann: "Bei Börsentransaktionen (häufig als Stempelsteuer auf Kontraktnoten; Caps möglich).",
+    note: "Scalable: abhängig von Abwicklung/Markt; kann als Stamp Duty erscheinen."
+  },
+  {
+    land: "Thailand",
+    steuer: "– (keine allgemeine Aktien-FTS als Standard)",
+    wann: "Keine typische Finanztransaktionssteuer auf Aktienkäufe wie in FR/IT.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Vietnam",
+    steuer: "0,1% auf Verkäufe (typisch; marktabhängig)",
+    wann: "Häufig als Abgabe auf Verkaufstransaktionen am Aktienmarkt (Regeln können je Markt variieren).",
+    note: "Scalable: abhängig von Marktzugang/Produkt; erscheint ggf. als Transaction Tax/Fee."
+  },
+  {
+    land: "Philippinen",
+    steuer: "0,6% Stock Transaction Tax (typisch; auf Verkäufe börsennotierter Aktien)",
+    wann: "Typisch auf Verkauf von an der lokalen Börse gehandelten Aktien.",
+    note: "Scalable: abhängig von Marktzugang; erscheint ggf. als Stock Transaction Tax."
+  },
+  {
+    land: "Australien",
+    steuer: "– (keine allgemeine Aktien-Stamp Duty auf Börsenkäufe; historisch abgeschafft)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe an der Börse.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Neuseeland",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe/Verkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Israel",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe wie FR/IT.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Saudi-Arabien",
+    steuer: "– (keine allgemeine FTS als Standard)",
+    wann: "Keine typische Finanztransaktionssteuer auf Aktienkäufe wie in FR/IT/ES.",
+    note: "Scalable: i. d. R. keine FTS; abhängig von Produkt/Markt."
+  },
+  {
+    land: "VAE (UAE)",
+    steuer: "– (keine allgemeine FTS)",
+    wann: "Keine allgemeine Finanztransaktionssteuer auf Aktienkäufe.",
+    note: "Scalable: i. d. R. keine FTS."
+  },
+  {
+    land: "Südafrika",
+    steuer: "0,25% Securities Transfer Tax (typisch; auf Käufe/Transfers)",
+    wann: "Typisch bei Kauf/Übertragung südafrikanischer Wertpapiere (Aktien/ähnliche).",
+    note: "Scalable: wenn betroffen, wird es i. d. R. automatisch belastet und ausgewiesen."
+  }
+];
+
+
+    // --- Seiten Navigation ---
+  function goPage(page){
+  const home = document.getElementById("page-home");
+  const cagr = document.getElementById("page-cagr");
+  const etf  = document.getElementById("page-etf");
+  const finanztas = document.getElementById("page-finanztransaktionssteuer");
+  const fair = document.getElementById("page-fairprice");
+  const fcfp = document.getElementById("page-fcfpayout");
+  const icr = document.getElementById("page-icr");
+  const checks = document.getElementById("page-checks");
+  const nutzen = document.getElementById("page-nutzen");
+  const vol = document.getElementById("page-volatility");
+
+
+
+
+  if (home) home.style.display = (page === "home") ? "block" : "none";
+  if (cagr) cagr.style.display = (page === "cagr") ? "block" : "none";
+  if (etf)  etf.style.display  = (page === "etf")  ? "block" : "none";
+  if (finanztas) finanztas.style.display = (page === "finanztransaktionssteuer") ? "block" : "none";
+  if (fair) fair.style.display = (page === "fairprice") ? "block" : "none";
+  if (fcfp) fcfp.style.display = (page === "fcfpayout") ? "block" : "none";
+  if (icr) icr.style.display = (page === "icr") ? "block" : "none";
+  if (checks) checks.style.display = (page === "checks") ? "block" : "none";
+  if (nutzen) nutzen.style.display = (page === "nutzen") ? "block" : "none";
+  if (vol) vol.style.display = (page === "volatility") ? "block" : "none";
+
+
+if(page === "etf") {
+  renderWhtTable(document.getElementById("whtSearch")?.value || "");
+  if(!whtSearchBound){
+    bindWhtSearch();
+    whtSearchBound = true;
+  }
+}
+
+if(page === "finanztransaktionssteuer") {
+  renderFtsTable(document.getElementById("ftsSearch")?.value || "");
+  if(!ftsSearchBound){
+    bindFtsSearch();
+    ftsSearchBound = true;
+  }
+}
+     
+
+}
+ document.addEventListener("DOMContentLoaded", () => goPage("home"));
+
+
+function renderWhtTable(filterText = ""){
+  const tbody = document.querySelector("#whtTable tbody");
+  if(!tbody) return;
+
+  const q = String(filterText || "").trim().toLowerCase();
+
+  const rows = WHT_DATA.filter(r => {
+    if(!q) return true;
+    const hay = `${r.land} ${r.standard} ${r.dba} ${r.de}`.toLowerCase();
+    return hay.includes(q);
+  });
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${r.land}</td>
+      <td>${r.standard}</td>
+      <td>${r.dba}</td>
+      <td>${r.de}</td>
+    </tr>
+  `).join("");
+
+  if(rows.length === 0){
+    tbody.innerHTML = `<tr><td colspan="4" class="small">Keine Treffer.</td></tr>`;
+  }
+}
+
+
+
+function renderFtsTable(filterText = ""){
+  const tbody = document.querySelector("#ftsTable tbody");
+  if(!tbody) return;
+
+  const q = String(filterText || "").trim().toLowerCase();
+
+  const rows = FTS_DATA.filter(r => {
+    if(!q) return true;
+    const hay = `${r.land} ${r.steuer} ${r.wann} ${r.note}`.toLowerCase();
+    return hay.includes(q);
+  });
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${r.land}</td>
+      <td>${r.steuer}</td>
+      <td>${r.wann}</td>
+      <td>${r.note}</td>
+    </tr>
+  `).join("");
+
+  if(rows.length === 0){
+    tbody.innerHTML = `<tr><td colspan="4" class="small">Keine Treffer.</td></tr>`;
+  }
+}
+
+ 
+
+function bindWhtSearch(){
+  const input = document.getElementById("whtSearch");
+  if(!input) return;
+
+  input.addEventListener("input", () => {
+    renderWhtTable(input.value);
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") e.preventDefault();
+  });
+}
+
+ 
+function bindFtsSearch(){
+  const input = document.getElementById("ftsSearch");
+  if(!input) return;
+
+  input.addEventListener("input", () => {
+    renderFtsTable(input.value);
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") e.preventDefault();
+  });
+}
+
+
+
+
+  // --- Helpers (DE/EN Zahlformate) ---
+function parseNumberSmart(raw){
+  if(raw == null) return NaN;
+  let s = String(raw).trim();
+  if(!s) return NaN;
+
+  s = s.replace(/\s+/g, "");
+
+  // --- Suffix (K/M/B/T) erkennen ---
+  // Beispiele: 12,106M | 13,75B | 550,11M | 1.2T | 120k
+  let mult = 1;
+  const m = s.match(/^(.*?)([kKmMbBtT])$/);
+  if(m){
+    s = m[1];
+    const suf = m[2].toUpperCase();
+    mult = (suf === "K") ? 1e3
+         : (suf === "M") ? 1e6
+         : (suf === "B") ? 1e9
+         : (suf === "T") ? 1e12
+         : 1;
+  }
+
+  // Prozentzeichen entfernen, falls mal drin
+  s = s.replace(/%/g, "");
+
+  const hasComma = s.includes(",");
+  const hasDot = s.includes(".");
+
+  // de-DE Tausenderpunkte ohne Komma (z.B. "1.234.567")
+  if(hasDot && !hasComma && /^\d{1,3}(\.\d{3})+(\.\d+)?$/.test(s)){
+    s = s.replace(/\./g, "");
+    const n = Number(s);
+    return Number.isFinite(n) ? n * mult : NaN;
+  }
+
+  if(hasComma && hasDot){
+    const lastComma = s.lastIndexOf(",");
+    const lastDot = s.lastIndexOf(".");
+    if(lastComma > lastDot){
+      s = s.replace(/\./g, "");
+      s = s.replace(",", ".");
+    } else {
+      s = s.replace(/,/g, "");
+    }
+  } else if(hasComma && !hasDot){
+    if(/^\d{1,3}(,\d{3})+$/.test(s)) s = s.replace(/,/g, "");
+    else s = s.replace(",", ".");
+  } else {
+    s = s.replace(/,/g, "");
+  }
+
+  const n = Number(s);
+  return Number.isFinite(n) ? n * mult : NaN;
+}
+
+function parse52wRange(raw){
+  // akzeptiert: "21,03-32,07" | "21.03 - 32.07" | "21,03 - 32,07"
+  if(raw == null) return { low: NaN, high: NaN };
+  let s = String(raw).trim();
+  if(!s) return { low: NaN, high: NaN };
+
+  // normalize: replace en dash etc.
+  s = s.replace(/–/g, "-");
+
+  const parts = s.split("-").map(x => x.trim()).filter(Boolean);
+  if(parts.length < 2) return { low: NaN, high: NaN };
+
+  const a = parseNumberSmart(parts[0]);
+  const b = parseNumberSmart(parts[1]);
+  if(!Number.isFinite(a) || !Number.isFinite(b)) return { low: NaN, high: NaN };
+
+  return { low: Math.min(a,b), high: Math.max(a,b) };
+}
+
+
+ // Speziell für Prozent-Eingaben (Operative Marge):
+// - "12,106" => 12.106
+// - "12.106" => 12.106  (ein einzelner Punkt = Dezimalpunkt)
+// - "1.234.567" => 1234567 (mehrere Punkte = Tausender)
+function parsePercentSmart(raw){
+  if(raw == null) return NaN;
+  let s = String(raw).trim();
+  if(!s) return NaN;
+
+  s = s.replace(/\s+/g, "").replace(/%/g, "");
+
+  const dotCount = (s.match(/\./g) || []).length;
+  const hasComma = s.includes(",");
+
+  // Wenn Komma vorhanden: Komma = Dezimal, Punkte = Tausender
+  if(hasComma){
+    s = s.replace(/\./g, "");
+    s = s.replace(",", ".");
+    const n = Number(s);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  // Wenn genau EIN Punkt vorhanden: als Dezimalpunkt behandeln (typisch bei Margen)
+  if(dotCount === 1){
+    const n = Number(s);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  // Wenn mehrere Punkte: Tausendertrennzeichen
+  if(dotCount > 1){
+    s = s.replace(/\./g, "");
+    const n = Number(s);
+    return Number.isFinite(n) ? n : NaN;
+  }
+
+  // Kein Komma/kein Punkt
+  const n = Number(s);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+
+  function fmtPct(x){
+    if(!Number.isFinite(x)) return "–";
+    return (x*100).toFixed(2).replace(".", ",") + " %";
+  }
+  function fmtNum(x){
+    if(!Number.isFinite(x)) return "–";
+    return x.toLocaleString("de-DE", {maximumFractionDigits: 2});
+  }
+
+  function cagr(start, end, years){
+    return Math.pow(end / start, 1 / years) - 1;
+  }
+
+  function showErr(msg){
+    const el = document.getElementById("err");
+    el.style.display = "block";
+    el.textContent = msg;
+  }
+  function hideErr(){
+    const el = document.getElementById("err");
+    el.style.display = "none";
+    el.textContent = "";
+  }
+
+  function showInlineErr(id, msg){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.display = "block";
+  el.textContent = msg; 
+}
+function hideInlineErr(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.style.display = "none";
+  el.textContent = "";
+}
+
+function calcICR(ebit, interestExpense){
+  const e = ebit;
+  const iAbs = Math.abs(interestExpense); // Interest Expense kann negativ gelistet sein
+
+  if(!Number.isFinite(e)) return { ok:false, err:"Bitte EBIT korrekt eingeben." };
+  if(!Number.isFinite(iAbs)) return { ok:false, err:"Bitte Zinsaufwand korrekt eingeben." };
+
+  if(iAbs === 0){
+    return { ok:false, err:"Zinsaufwand ist 0 → ICR ist nicht sinnvoll (theoretisch unendlich)." };
+  }
+
+  const icr = e / iAbs;
+
+  // Wenn EBIT negativ ist, ist Zinsdeckung faktisch schlecht (trotz Rechnung).
+  return { ok:true, icr, e, iAbs };
+}
+
+function bindICRUI(){
+  const btn = document.getElementById("icr_calc");
+  if(!btn) return;
+
+  btn.addEventListener("click", () => {
+    hideInlineErr("icr_err");
+
+    const ebit = parseNumberSmart(document.getElementById("icr_ebit")?.value);
+    const intE = parseNumberSmart(document.getElementById("icr_interest")?.value);
+
+    const res = calcICR(ebit, intE);
+    if(!res.ok) return showInlineErr("icr_err", res.err);
+
+    const out = document.getElementById("icr_out");
+    if(!out) return;
+
+    const warn = (res.e < 0)
+      ? `<div class="small" style="margin-top:6px;color:#b00020">Hinweis: EBIT ist negativ → Zinsdeckung ist praktisch kritisch.</div>`
+      : "";
+
+    out.innerHTML = `
+      <div class="kpi"><span>EBIT</span><span><b>${fmtNum(res.e)}</b></span></div>
+      <div class="kpi"><span>Zinsaufwand (|…|)</span><span><b>${fmtNum(res.iAbs)}</b></span></div>
+      <div class="kpi"><span><b>Zinsdeckung (ICR)</b></span><span><b>${fmtNum(res.icr)}</b></span></div>
+      ${warn}
+    `;
+    out.style.display = "block";
+  });
+
+  // Enter = berechnen
+  ["icr_ebit","icr_interest"].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("keydown", (e) => {
+if(e.key === "Enter" && !e.shiftKey){
+  e.preventDefault();
+  btn.click();
+}
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", bindICRUI);
+
+function calcFcfPayout(divTotal, fcf){
+  const divAbs = Math.abs(divTotal); // ok: Dividends Paid oft negativ
+  const f = fcf;                    // NICHT abs!
+
+  if(!Number.isFinite(divAbs)) return { ok:false, err:"Dividenden bitte korrekt eingeben." };
+  if(!Number.isFinite(f)) return { ok:false, err:"FCF bitte korrekt eingeben." };
+  if(f <= 0) return { ok:false, err:"FCF ist ≤ 0 → Payout nicht sinnvoll / nicht gedeckt." };
+
+  const ratio = (divAbs / f) * 100;
+  return { ok:true, ratio, divAbs, fcf: f };
+}
+
+function bindFcfPayoutUI(){
+  const btnA = document.getElementById("fcf_calcA");
+  const btnB = document.getElementById("fcf_calcB");
+
+  if(btnA){
+    btnA.addEventListener("click", () => {
+      hideInlineErr("fcf_errA");
+
+      const divT = parseNumberSmart(document.getElementById("fcf_divTotal")?.value);
+      const fcf  = parseNumberSmart(document.getElementById("fcf_fcfA")?.value);
+
+      const res = calcFcfPayout(divT, fcf);
+      if(!res.ok) return showInlineErr("fcf_errA", res.err);
+
+      const out = document.getElementById("fcf_outA");
+      out.innerHTML = `
+        <div class="kpi"><span>Dividenden gesamt</span><span><b>${fmtNum(res.divAbs)}</b></span></div>
+        <div class="kpi"><span>FCF</span><span><b>${fmtNum(res.fcf)}</b></span></div>
+        <div class="kpi"><span><b>FCF-Payout</b></span><span><b>${res.ratio.toFixed(2).replace(".", ",")} %</b></span></div>
+      `;
+      out.style.display = "block";
+    });
+  }
+
+  if(btnB){
+    btnB.addEventListener("click", () => {
+      hideInlineErr("fcf_errB");
+
+      const dps    = parseNumberSmart(document.getElementById("fcf_dps")?.value);
+      const shares = parseNumberSmart(document.getElementById("fcf_shares")?.value);
+      const fcf    = parseNumberSmart(document.getElementById("fcf_fcfB")?.value);
+
+      if(!Number.isFinite(dps)) return showInlineErr("fcf_errB", "Bitte Dividende je Aktie korrekt eingeben.");
+      if(!Number.isFinite(shares) || shares <= 0) return showInlineErr("fcf_errB", "Bitte Aktienanzahl korrekt (> 0) eingeben.");
+
+      const divTotal = dps * shares;
+      const res = calcFcfPayout(divTotal, fcf);
+      if(!res.ok) return showInlineErr("fcf_errB", res.err);
+
+      const out = document.getElementById("fcf_outB");
+      out.innerHTML = `
+        <div class="kpi"><span>DPS</span><span><b>${fmtNum(dps)}</b></span></div>
+        <div class="kpi"><span>Shares</span><span><b>${fmtNum(shares)}</b></span></div>
+        <div class="kpi"><span>Dividenden gesamt (berechnet)</span><span><b>${fmtNum(res.divAbs)}</b></span></div>
+        <div class="kpi"><span>FCF</span><span><b>${fmtNum(res.fcf)}</b></span></div>
+        <div class="kpi"><span><b>FCF-Payout</b></span><span><b>${res.ratio.toFixed(2).replace(".", ",")} %</b></span></div>
+      `;
+      out.style.display = "block";
+    });
+  }
+
+  // Enter = berechnen
+  const enterIds = ["fcf_divTotal","fcf_fcfA","fcf_dps","fcf_shares","fcf_fcfB"];
+  enterIds.forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("keydown", (e) => {
+   if(e.key === "Enter" && !e.shiftKey){
+  e.preventDefault();
+  btn.click();
+}
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", bindFcfPayoutUI);
+
+
+
+
+function calcPeTarget(){
+  hideInlineErr("fp_peErr");
+
+  const eps = parseNumberSmart(document.getElementById("fp_epsA")?.value);
+  const pt  = parseNumberSmart(document.getElementById("fp_priceTarget")?.value);
+
+  if(!Number.isFinite(eps)) return showInlineErr("fp_peErr", "Bitte EPS korrekt eingeben.");
+  if(eps === 0) return showInlineErr("fp_peErr", "EPS darf nicht 0 sein.");
+  if(!Number.isFinite(pt) || pt <= 0) return showInlineErr("fp_peErr", "Bitte Price Target korrekt (> 0) eingeben.");
+
+  const pe = pt / eps;
+
+  const out = document.getElementById("fp_peOut");
+  if(!out) return;
+
+  const warn = (eps < 0)
+    ? `<div class="small" style="margin-top:6px;color:#b00020">Hinweis: EPS ist negativ → KGV ist i. d. R. nicht sinnvoll (Turnaround/anderes Modell).</div>`
+    : "";
+
+  out.innerHTML = `
+    <div class="kpi"><span>EPS</span><span><b>${fmtNum(eps)}</b></span></div>
+    <div class="kpi"><span>Price Target</span><span><b>${fmtNum(pt)}</b></span></div>
+    <div class="kpi"><span><b>KGV Target</b></span><span><b>${fmtNum(pe)}</b></span></div>
+    ${warn}
+    <div class="small" style="margin-top:6px">Tipp: Du kannst dieses KGV rechts übernehmen.</div>
+  `;
+  out.style.display = "block";
+
+  // Komfort: übernehme KGV in Rechner B
+  const peB = document.getElementById("fp_peTarget");
+  if(peB) peB.value = String(Math.round(pe * 100) / 100).replace(".", ",");
+}
+
+
+function calcFairPriceStandalone(){
+  hideInlineErr("fp_fairErr");
+
+  const eps = parseNumberSmart(document.getElementById("fp_epsB")?.value);
+  const pe  = parseNumberSmart(document.getElementById("fp_peTarget")?.value);
+
+  if(!Number.isFinite(eps)) return showInlineErr("fp_fairErr", "Bitte EPS korrekt eingeben.");
+  if(!Number.isFinite(pe) || pe <= 0) return showInlineErr("fp_fairErr", "Bitte KGV Target korrekt (> 0) eingeben.");
+
+  const fair = eps * pe;
+
+  const out = document.getElementById("fp_fairOut");
+  if(!out) return;
+
+  const warn = (eps < 0)
+    ? `<div class="small" style="margin-top:6px;color:#b00020">Hinweis: EPS ist negativ → Fair-Price via KGV ist i. d. R. nicht sinnvoll.</div>`
+    : "";
+
+  out.innerHTML = `
+    <div class="kpi"><span>EPS</span><span><b>${fmtNum(eps)}</b></span></div>
+    <div class="kpi"><span>KGV Target</span><span><b>${fmtNum(pe)}</b></span></div>
+    <div class="kpi"><span><b>Fairer Preis</b></span><span><b>${fmtNum(fair)}</b></span></div>
+    ${warn}
+  `;
+  out.style.display = "block";
+}
+
+function bindFairPriceUI(){
+  const btnPe   = document.getElementById("fp_calcPe");
+  const btnFair = document.getElementById("fp_calcFair");
+
+  if(btnPe) btnPe.addEventListener("click", calcPeTarget);
+  if(btnFair) btnFair.addEventListener("click", calcFairPriceStandalone);
+
+  // Enter = berechnen
+  const a = ["fp_epsA","fp_priceTarget"].map(id => document.getElementById(id)).filter(Boolean);
+  const b = ["fp_epsB","fp_peTarget"].map(id => document.getElementById(id)).filter(Boolean);
+
+  a.forEach(el => el.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); calcPeTarget(); } }));
+  b.forEach(el => el.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ e.preventDefault(); calcFairPriceStandalone(); } }));
+}
+
+document.addEventListener("DOMContentLoaded", bindFairPriceUI);
+
+  function applyModeUI(){
+  const mode = document.getElementById("mode")?.value;
+
+  const yearInputsWrap = document.getElementById("yearInputs")?.parentElement; // der Wrapper <div style="margin-top:14px">
+  const priceBox = document.getElementById("price5yBox");
+
+  // Years-Select Wrapper (das div, wo "Anzahl Jahre" drin ist)
+  const yearsSelect = document.getElementById("years");
+  const yearsSelectWrap = yearsSelect ? yearsSelect.closest("div") : null;
+
+  if(mode === "price5y"){
+    if(yearInputsWrap) yearInputsWrap.style.display = "none";
+    if(yearsSelectWrap) yearsSelectWrap.style.display = "none";
+    if(priceBox) priceBox.style.display = "block";
+  } else {
+    if(yearInputsWrap) yearInputsWrap.style.display = "block";
+    if(yearsSelectWrap) yearsSelectWrap.style.display = "block";
+    if(priceBox) priceBox.style.display = "none";
+    buildYearInputs(true); // beim normalen UI-Refresh Werte behalten
+  }
+
+  bindEnterToCalculate(); // Enter-Binding nach UI-Umschalten erneuern
+}
+
+// --- Bewertung: KGV Target + Fairer Preis ---
+
+
+
+
+
+
+
+
+  // --- Dynamic Inputs ---
+function buildYearInputs(keepValues = true){
+  const n = Number(document.getElementById("years").value);
+  const box = document.getElementById("yearInputs");
+
+  const prev = keepValues
+    ? [...box.querySelectorAll("input")].map(i => i.value)
+    : [];
+
+  box.innerHTML = "";
+
+  for(let i=1;i<=n;i++){
+    const wrap = document.createElement("div");
+    const lab = document.createElement("label");
+    lab.textContent = `Jahr ${i}`;
+    lab.style.display = "block";
+    lab.style.marginBottom = "6px";
+
+    const inp = document.createElement("input");
+    inp.id = "y" + i;
+    inp.placeholder = (i===1) ? "Start" : (i===n ? "Ende" : "");
+    inp.inputMode = "decimal";
+    inp.value = keepValues ? (prev[i-1] ?? "") : "";
+
+    wrap.appendChild(lab);
+    wrap.appendChild(inp);
+    box.appendChild(wrap);
+  }
+}
+
+  
+
+  function bindEnterToCalculate(){
+  const calcBtn = document.getElementById("calc");
+
+  // alle Inputs/Selects, die Enter auslösen sollen
+ const fields = document.querySelectorAll("#yearInputs input, #mode, #years, #pStart, #pEnd, #pYears");
+
+  fields.forEach(el => {
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        calcBtn.click();     // rechnet
+      }
+     });
+   });
+ }
+
+if (document.getElementById("years")) {
+  document.getElementById("years").addEventListener("change", () => buildYearInputs(true));
+  buildYearInputs();
+  bindEnterToCalculate();
+  applyModeUI();
+}
+document.getElementById("mode").addEventListener("change", () => {
+  hideErr();
+  const out = document.getElementById("out");
+  if(out){ out.style.display="none"; out.innerHTML=""; }
+
+  buildYearInputs(false); // << löscht die Jahreswerte beim Moduswechsel
+  applyModeUI();
+});
+
+
+  // --- Compute ---
+  document.getElementById("calc").addEventListener("click", ()=>{
+    hideErr();
+    const out = document.getElementById("out");
+    out.style.display = "none";
+    out.innerHTML = "";
+
+    const n = Number(document.getElementById("years").value);
+    const mode = document.getElementById("mode").value;
+    const label =
+   (mode === "revenue") ? "Umsatz" :
+   (mode === "eps") ? "EPS" :
+   (mode === "opmargin") ? "Operative Marge" :
+   (mode === "dividend") ? "Dividende" :
+
+   "Kurs";
+
+    // values
+  const vals = [];
+for(let i=1;i<=n;i++){
+  const raw = document.getElementById("y"+i).value;
+  const v = (mode === "opmargin") ? parsePercentSmart(raw) : parseNumberSmart(raw);
+  vals.push(v);
+}
+    
+
+// --- Sondermodus: Kurs CAGR (fix 4 Jahre) ---
+if(mode === "price5y"){
+  const pStart = parseNumberSmart(document.getElementById("pStart").value);
+  const pEnd   = parseNumberSmart(document.getElementById("pEnd").value);
+
+  const pYearsRaw = parseNumberSmart(document.getElementById("pYears").value);
+const pYears = Math.round(pYearsRaw);
+
+if(!Number.isFinite(pYearsRaw)) return showErr("Bitte Jahre korrekt eingeben.");
+if(pYears < 1 || pYears > 4) return showErr("Jahre müssen zwischen 1 und 4 liegen.");
+  
+
+
+  // UI-Wert sicher setzen (falls Browser cached o.ä.)
+  
+  const pYearsEl = document.getElementById("pYears");
+  if (pYearsEl) pYearsEl.value = String(pYears);
+
+  if(!Number.isFinite(pStart) || pStart <= 0) return showErr("Bitte Kurs vor ~4 Jahren korrekt (> 0) eingeben.");
+  if(!Number.isFinite(pEnd)   || pEnd <= 0)   return showErr("Bitte Kurs heute korrekt (> 0) eingeben.");
+
+  const g = cagr(pStart, pEnd, pYears);
+  const rel = (pEnd / pStart) - 1;
+  const abs = pEnd - pStart;
+
+  let html = "";
+  html += `<div class="kpi"><span><b>Kurs CAGR (${pYears} Jahre)</b></span><span><b>${fmtPct(g)}</b></span></div>`;
+  html += `<div class="kpi highlight"><span><b>Gesamtwachstum</b></span><span><b>${fmtPct(rel)}</b></span></div>`;
+  html += `<div class="kpi"><span>Absolute Veränderung</span><span>${fmtNum(abs)}</span></div>`;
+  html += `<div class="kpi"><span>Kurs (Start → Ende)</span><span>${fmtNum(pStart)} → ${fmtNum(pEnd)}</span></div>`;
+
+  out.innerHTML = html;
+  out.style.display = "block";
+  return;
+}
+
+    // validate: all filled + finite
+    for(let i=0;i<n;i++){
+      if(!Number.isFinite(vals[i])){
+        return showErr(`Bitte Wert für Jahr ${i+1} korrekt eingeben.`);
+      }
+    }
+
+    // CAGR needs start > 0 and end > 0
+const start = vals[0];
+const end = vals[n-1];
+
+// --- Sondermodus: Operative Marge (Eingabe in %) ---
+// Regeln:
+// - CAGR nur sinnvoll, wenn Start% > 0 und Ende% > 0
+// - Sonst: Veränderung in Prozentpunkten (pp)
+if(mode === "opmargin"){
+  const valsPct = vals.slice();              // z.B. 12,5 = 12,5%
+  const valsRatio = valsPct.map(v => v/100); // für CAGR-Rechnung als Anteil
+
+  const startPct = valsPct[0];
+  const endPct   = valsPct[n-1];
+  const startR   = valsRatio[0];
+  const endR     = valsRatio[n-1];
+
+  const yearsSpan = n - 1;
+
+  // CAGR nur wenn Start & Ende > 0
+  let g = NaN;
+  let cagrOk = false;
+  if(startPct > 0 && endPct > 0){
+    g = cagr(startR, endR, yearsSpan);
+    cagrOk = true;
+  }
+
+  // Veränderung in Prozentpunkten
+  const deltaPP = endPct - startPct;
+  const ppPerYear = deltaPP / yearsSpan;
+
+  // YoY in pp
+  const yoyPP = [];
+  for(let i=1;i<n;i++){
+    yoyPP.push(valsPct[i] - valsPct[i-1]);
+  }
+
+  // render
+  let html = "";
+  if(cagrOk){
+    html += `<div class="kpi"><span><b>${label} CAGR (${yearsSpan} Jahre)</b></span><span><b>${fmtPct(g)}</b></span></div>`;
+  } else {
+    html += `<div class="kpi"><span><b>${label} CAGR (${yearsSpan} Jahre)</b></span><span><b>–</b></span></div>`;
+    html += `<div class="small" style="margin-top:6px;color:#b00020">Hinweis: Operative Marge ist in Jahr 1 oder Jahr ${n} ≤ 0 → CAGR ist i. d. R. nicht sinnvoll. Stattdessen: Veränderung (pp).</div>`;
+  }
+
+  html += `<div class="kpi"><span>Veränderung (gesamt)</span><span><b>${fmtNum(deltaPP)} pp</b></span></div>`;
+  html += `<div class="kpi"><span>Veränderung pro Jahr</span><span><b>${fmtNum(ppPerYear)} pp/Jahr</b></span></div>`;
+  html += `<div class="kpi"><span>Jahr 1 / Jahr ${n}</span><span>${fmtNum(startPct)} % → ${fmtNum(endPct)} %</span></div>`;
+
+  html += `<table>
+    <thead>
+      <tr>
+        <th>Jahr</th>
+        <th>${label} (%)</th>
+        <th>Δ ggü. Vorjahr (pp)</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
+
+  for(let i=0;i<n;i++){
+    const dpp = (i===0) ? "–" : `${fmtNum(yoyPP[i-1])} pp`;
+    html += `<tr>
+      <td>Jahr ${i+1}</td>
+      <td>${fmtNum(valsPct[i])} %</td>
+      <td>${dpp}</td>
+    </tr>`;
+  }
+
+  html += `</tbody></table>`;
+
+  out.innerHTML = html;
+  out.style.display = "block";
+  return; // wichtig: verhindert, dass die "normale" CAGR-Logik unten weiterläuft
+}
+
+// Für Umsatz/Dividende bleibt die harte Regel (keine negativen/0 Startwerte)
+if(mode !== "eps"){
+  if(start <= 0) return showErr(`Jahr 1 (${label}) muss > 0 sein, sonst ist CAGR nicht sinnvoll.`);
+  if(end < 0) return showErr(`Letztes Jahr (${label}) darf nicht negativ sein.`);
+}
+
+// Für EPS: negative Werte sind erlaubt.
+// CAGR ist aber nur sinnvoll, wenn Start und Ende > 0 (klassische CAGR-Definition).
+
+ 
+// YoY
+const yoy = [];
+for(let i=1;i<n;i++){
+  const prev = vals[i-1];
+  const cur = vals[i];
+  if(prev === 0){
+    yoy.push(NaN);
+  } else {
+    yoy.push((cur / prev) - 1);
+  }
+}
+
+    const yearsSpan = n - 1; // Jahr1->JahrN
+
+     let g = NaN;              // CAGR (nur wenn sinnvoll) 
+     let cagrOk = false;
+ 
+     if(mode !== "eps"){
+     g = cagr(start, end, yearsSpan);
+     cagrOk = true;
+} else {
+  // EPS: CAGR nur wenn Start & Ende > 0
+  if(start > 0 && end > 0){
+    g = cagr(start, end, yearsSpan);
+    cagrOk = true;
+  }
+}
+
+     // Ø YoY (geometrisch), nur wenn alle Jahre gültig und > -100%
+    let geoAvgYoy = NaN;
+    let ok = true;
+    let factor = 1;
+
+    for (let i = 1; i < n; i++) {
+    const prev = vals[i-1];
+    const cur  = vals[i];
+
+     if (!(prev > 0) || !(cur >= 0)) { ok = false; break; }
+    factor *= (cur / prev);
+   }
+
+    if (ok) {
+    geoAvgYoy = Math.pow(factor, 1/(n-1)) - 1;
+ }
+
+    // total growth
+    let rel = NaN;
+if(start !== 0){
+  rel = (end / start) - 1; // bei EPS mit negativem Start interpretierbar, aber ok als Mathe-Wert
+}
+    const abs = end - start;
+
+    // render
+    let html = "";
+    if(cagrOk){
+  html += `<div class="kpi"><span><b>${label} CAGR (${yearsSpan} Jahre)</b></span><span><b>${fmtPct(g)}</b></span></div>`;
+} else if(mode === "eps"){
+  html += `<div class="kpi"><span><b>EPS CAGR (${yearsSpan} Jahre)</b></span><span><b>–</b></span></div>`;
+  html += `<div class="small" style="margin-top:6px;color:#b00020">Hinweis: EPS ist in Jahr 1 oder Jahr ${n} ≤ 0 → CAGR ist i. d. R. nicht sinnvoll. Stattdessen: EPS-Veränderung.</div>`;
+}
+if(mode === "eps"){
+  const delta = end - start;
+  const perYear = delta / yearsSpan;
+  html += `<div class="kpi"><span>EPS Veränderung (gesamt)</span><span>${fmtNum(delta)}</span></div>`;
+  html += `<div class="kpi"><span>EPS Veränderung pro Jahr</span><span>${fmtNum(perYear)}</span></div>`;
+}
+    html += `<div class="kpi highlight"><span><b>Gesamtwachstum (Jahr 1 → Jahr ${n})</b></span><span><b>${fmtPct(rel)}</b></span></div>`;
+    html += `<div class="kpi"><span>Absolute Veränderung</span><span>${fmtNum(abs)}</span></div>`;
+    html += `<div class="kpi"><span>Jahr 1 / Jahr ${n}</span><span>${fmtNum(start)} → ${fmtNum(end)}</span></div>`;
+    html += `<div class="kpi"><span>Ø Jahr-zu-Jahr Wachstum (geo)</span><span>${fmtPct(geoAvgYoy)}</span></div>`;
+
+    html += `<table>
+      <thead>
+        <tr>
+          <th>Jahr</th>
+          <th>${label}</th>
+          <th>Wachstum ggü. Vorjahr</th>
+        </tr>
+      </thead>
+      <tbody>
+    `;
+
+    for(let i=0;i<n;i++){
+      const growth = (i===0) ? "–" : (Number.isFinite(yoy[i-1]) ? fmtPct(yoy[i-1]) : "– (Vorjahr ≤ 0)");
+      html += `<tr>
+        <td>Jahr ${i+1}</td>
+        <td>${fmtNum(vals[i])}</td>
+        <td>${growth}</td>
+      </tr>`;
+    }
+
+    html += `</tbody></table>`;
+
+    out.innerHTML = html;
+    out.style.display = "block";
+  });
+
+
+
+
+
+  function calcProfitCheck(){
+  hideInlineErr("chk_profitErr");
+  const out = document.getElementById("chk_profitOut");
+  if(out){ out.style.display="none"; out.innerHTML=""; }
+
+  const ni = parseNumberSmart(document.getElementById("chk_netIncome")?.value);
+  if(!Number.isFinite(ni)) return showInlineErr("chk_profitErr","Bitte Net Income korrekt eingeben.");
+
+  const ok = ni > 0;
+
+  out.innerHTML = `
+    <div class="kpi"><span>Net Income</span><span><b>${fmtNum(ni)}</b></span></div>
+    <div class="kpi"><span><b>Profitabel?</b></span><span><b>${ok ? "✅ ja" : "❌ nein"}</b></span></div>
+    ${ni === 0 ? `<div class="small" style="margin-top:6px;color:#666">Hinweis: 0 ist weder Gewinn noch Verlust.</div>` : ""}
+  `;
+  out.style.display = "block";
+}
+
+function calcFcfCheck(){
+  hideInlineErr("chk_fcfErr");
+  const out = document.getElementById("chk_fcfOut");
+  if(out){ out.style.display="none"; out.innerHTML=""; }
+
+  const fcf = parseNumberSmart(document.getElementById("chk_fcf")?.value);
+  if(!Number.isFinite(fcf)) return showInlineErr("chk_fcfErr","Bitte FCF korrekt eingeben.");
+
+  const ok = fcf > 0;
+
+  out.innerHTML = `
+    <div class="kpi"><span>FCF</span><span><b>${fmtNum(fcf)}</b></span></div>
+    <div class="kpi"><span><b>FCF positiv?</b></span><span><b>${ok ? "✅ ja" : "❌ nein"}</b></span></div>
+    ${fcf === 0 ? `<div class="small" style="margin-top:6px;color:#666">Hinweis: 0 bedeutet kein freier Cashflow übrig.</div>` : ""}
+  `;
+  out.style.display = "block";
+}
+
+
+function calcFcfFromOcfCapex(){
+  hideInlineErr("chk_fcfFromErr");
+  const out = document.getElementById("chk_fcfFromOut");
+  if(out){ out.style.display="none"; out.innerHTML=""; }
+
+  const ocf = parseNumberSmart(document.getElementById("chk_ocf")?.value);
+  const capex = parseNumberSmart(document.getElementById("chk_capex")?.value);
+
+  if(!Number.isFinite(ocf)) return showInlineErr("chk_fcfFromErr","Bitte OCF korrekt eingeben.");
+  if(!Number.isFinite(capex)) return showInlineErr("chk_fcfFromErr","Bitte CapEx korrekt eingeben.");
+
+  // Logik:
+  // CapEx negativ (z.B. -500) => FCF = OCF + CapEx
+  // CapEx positiv (z.B. 500)  => FCF = OCF - CapEx
+  const fcf = (capex < 0) ? (ocf + capex) : (ocf - capex);
+
+  out.innerHTML = `
+    <div class="kpi"><span>OCF</span><span><b>${fmtNum(ocf)}</b></span></div>
+    <div class="kpi"><span>CapEx</span><span><b>${fmtNum(capex)}</b></span></div>
+    <div class="kpi highlight"><span><b>FCF (berechnet)</b></span><span><b>${fmtNum(fcf)}</b></span></div>
+    <div class="small" style="margin-top:6px">Übernommen in „FCF (FY)“ → du kannst direkt „Prüfen“ klicken.</div>
+  `;
+  out.style.display = "block";
+
+  // In den bestehenden FCF-Check übernehmen
+  const fcfInput = document.getElementById("chk_fcf");
+  if(fcfInput) fcfInput.value = String(Math.round(fcf * 100) / 100).replace(".", ",");
+
+  // Optional: direkt checken
+  // calcFcfCheck();
+}
+
+
+function calcFcfPayoutInChecks(){
+  hideInlineErr("chk_fcfPayoutErr");
+  const out = document.getElementById("chk_fcfPayoutOut");
+  if(out){ out.style.display="none"; out.innerHTML=""; }
+
+  const divPaidRaw = parseNumberSmart(document.getElementById("chk_divPaid")?.value);
+  const fcfRaw     = parseNumberSmart(document.getElementById("chk_fcfPayoutBase")?.value);
+
+  if(!Number.isFinite(divPaidRaw)) return showInlineErr("chk_fcfPayoutErr","Bitte Dividends Paid korrekt eingeben.");
+  if(!Number.isFinite(fcfRaw))     return showInlineErr("chk_fcfPayoutErr","Bitte FCF korrekt eingeben.");
+  if(fcfRaw <= 0)                 return showInlineErr("chk_fcfPayoutErr","FCF ist ≤ 0 → Payout nicht sinnvoll / nicht gedeckt.");
+
+  const divAbs = Math.abs(divPaidRaw);
+  const payout = (divAbs / fcfRaw) * 100;
+
+  out.innerHTML = `
+    <div class="kpi"><span>Dividends Paid (|…|)</span><span><b>${fmtNum(divAbs)}</b></span></div>
+    <div class="kpi"><span>FCF</span><span><b>${fmtNum(fcfRaw)}</b></span></div>
+    <div class="kpi highlight"><span><b>FCF-Payout</b></span><span><b>${payout.toFixed(2).replace(".", ",")} %</b></span></div>
+  `;
+  out.style.display = "block";
+}
+
+
+
+function bindChecksUI(){
+  const b1 = document.getElementById("chk_profitBtn");
+  const b2 = document.getElementById("chk_fcfBtn");
+  const b3 = document.getElementById("chk_fcfFromBtn");
+  const b4 = document.getElementById("chk_fcfPayoutBtn");
+
+  if(b1) b1.addEventListener("click", calcProfitCheck);
+  if(b2) b2.addEventListener("click", calcFcfCheck);
+  if(b3) b3.addEventListener("click", calcFcfFromOcfCapex);
+  if(b4) b4.addEventListener("click", calcFcfPayoutInChecks);
+  
+
+  const i1 = document.getElementById("chk_netIncome");
+  const i2 = document.getElementById("chk_fcf");
+  const i3 = document.getElementById("chk_ocf");
+  const i4 = document.getElementById("chk_capex");
+
+  if(i1) i1.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); calcProfitCheck(); }});
+  if(i2) i2.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); calcFcfCheck(); }});
+  if(i3) i3.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); calcFcfFromOcfCapex(); }});
+  if(i4) i4.addEventListener("keydown",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); calcFcfFromOcfCapex(); }});
+}
+
+document.addEventListener("DOMContentLoaded", bindChecksUI);
+
+
+
+function bindShiftEnterDelegation(selector){
+  document.addEventListener("keydown", (e) => {
+    if (!(e.key === "Enter" && e.shiftKey)) return;
+
+    const el = e.target;
+    if (!(el instanceof HTMLElement)) return;
+
+    // nur für Felder, die zu deinem Selector passen
+    if (!el.matches(selector)) return;
+
+    e.preventDefault();
+
+    // aktuelles Feld-Set live holen (wichtig bei dynamischen Inputs!)
+    const fields = Array.from(document.querySelectorAll(selector))
+      .filter(x => !x.disabled && x.offsetParent !== null);
+
+    const idx = fields.indexOf(el);
+    const next = fields[idx + 1];
+    if (next) next.focus();
+  }, true); // capture=true, damit es nicht von anderen Enter-Handlern "geschluckt" wird
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  bindShiftEnterDelegation(
+    "#yearInputs input, #pStart, #pEnd, #pYears, " +
+    "#chk_netIncome, #chk_fcf, #chk_ocf, #chk_capex, " +
+    "#chk_divPaid, #chk_fcfPayoutBase, " +
+    "#icr_ebit, #icr_interest, " +
+    "#fp_epsA, #fp_priceTarget, #fp_epsB, #fp_peTarget, " +
+    "#fcf_divTotal, #fcf_fcfA, #fcf_dps, #fcf_shares, #fcf_fcfB"
+  );
+});
+
+
+// ---------- NUTZEN CHECK (31 Spalten + 1 großes Feld) ----------
+const NUTZEN_HEADERS = [
+  // --- Financials (24) ---
+  "Revenue (FY)",
+  "Revenue Growth 4Y (CAGR)",
+  "Revenue Growth 1Y (YoY)",
+  "EPS (Diluted, FY)",
+  "EPS Growth 4Y (CAGR)",
+  "Operating Margin 4Y (CAGR)",
+  "Operating Margin 1Y",
+  "Beta",
+  "52 Week Range",
+  "Volatilität annualisiert (Std-Abw.) 1Y",
+  "FCF 1Y",
+  "FCF-Margin",
+  "Debt/ FCF",
+  "Net Dept/ EBITDA",
+  "EBITDA 1Y",
+  "EBIDTA Margin 1Y",
+  "Interest Expense 1Y",
+  "Zinsdeckung (ICR)",
+  "ROIC",
+  "ROCE",
+  "FCF Yield 1Y",
+  "Net Income 1Y",
+  "Net income positiv (ja/nein)",
+  "FCF Positiv (ja/nein)",
+
+  // --- Dividenden (10) ---
+  "Dividende (p.a)",
+  "Div- Frequency",
+  "Div.-Rendite aktuell (%)",
+  "Shares out",
+  "Repurchase of Common stock",
+  "Dividende (DPS) 4Y (CAGR)",
+  "Payout Ratio 1Y",
+  "FCF-Payout",
+  "Dividend Growth Years",
+  "Dividend growth",
+
+  // --- Bewertung (6) ---
+  "Kurs aktuell",
+  "Kurs 4Y (CAGR)",
+  "Marktkapitalisierung",
+  "KGV (PE Ratio) 1Y",
+  "KGV Target",
+  "Fairer Preis"
+];
+
+function nutzenRenderTable(){
+  const headRow = document.getElementById("nutzenHeadRow");
+  const valRow  = document.getElementById("nutzenValueRow");
+  if(!headRow || !valRow) return;
+
+  headRow.innerHTML = NUTZEN_HEADERS.map(h => `<th>${h}</th>`).join("");
+  valRow.innerHTML  = NUTZEN_HEADERS.map(() => `<td class="nutzenCell"></td>`).join("");
+}
+
+function nutzenSplitValues(raw){
+  let s = String(raw ?? "").trim();
+  if(!s) return [];
+
+  // Normalisieren
+  s = s.replace(/\r/g, "\n").trim();
+
+  // Split auf: Tabs, Semikolon, Zeilenumbrüche oder 2+ Leerzeichen
+  const parts = s
+    .split(/[\t;\n]+| {2,}/g)
+    .map(x => x.trim())
+    .filter(x => x !== "");
+
+  return parts;
+}
+
+function nutzenApply(){
+  const ta = document.getElementById("nutzen_big");
+ 
+  const valRow = document.getElementById("nutzenValueRow");
+  if(!ta || !valRow) return;
+
+  const parts = nutzenSplitValues(ta.value);
+
+  // Spiegel (optional)
+  
+
+  const tds = Array.from(valRow.querySelectorAll("td"));
+  for(let i=0;i<tds.length;i++){
+    tds[i].textContent = parts[i] ?? "";
+      const data = nutzenGetData();
+  if(data){
+    const res = evaluateCompany(data);
+    renderNutzenResult(data, res);
+  }
+  console.log("Werte erkannt:", parts.length, parts);
+
+  }
+}
+
+
+
+
+function nutzenClear(){
+  const ta = document.getElementById("nutzen_big");
+
+  const valRow = document.getElementById("nutzenValueRow");
+  if(ta) ta.value = "";
+  
+  if(valRow){
+    valRow.querySelectorAll("td").forEach(td => td.textContent = "");
+  }
+}
+
+function bindNutzenUI(){
+  nutzenRenderTable();
+
+  const ta = document.getElementById("nutzen_big");
+  const btn = document.getElementById("nutzen_parseBtn");
+  const clr = document.getElementById("nutzen_clearBtn");
+
+  if(btn) btn.addEventListener("click", nutzenApply);
+  if(clr) clr.addEventListener("click", nutzenClear);
+
+  // Live-Update beim Tippen/Pasten
+  if(ta){
+    ta.addEventListener("input", () => nutzenApply());
+
+    // Enter im Textarea soll normal Zeilenumbruch machen → NICHT berechnen.
+    // (Live-Update macht es ohnehin)
+  }
+}
+
+
+function nutzenGetData(){
+  const valRow = document.getElementById("nutzenValueRow");
+  if(!valRow) return null;
+
+  const tds = Array.from(valRow.querySelectorAll("td")).map(td => (td.textContent || "").trim());
+
+  // Helfer: % Felder
+  const pct = (i) => parsePercentSmart(tds[i]);      // ergibt Zahl wie 12,5 (nicht 0,125)
+  const num = (i) => parseNumberSmart(tds[i]);
+  const yes = (i) => String(tds[i]).toLowerCase().includes("ja");
+
+  // Indexe passend zu NUTZEN_HEADERS
+  const idx = {
+    revFY: 0,
+    revCagr: 1,
+    revYoy: 2,
+    epsFY: 3,
+    epsCagr: 4,
+    opmCagr: 5,
+    opmYoy: 6,
+    beta: 7,
+    range52: 8,
+    vol1y: 9,
+    fcf: 10,
+    fcfMargin: 11,
+    debtFcf: 12,
+    netDebtEbitda: 13,
+    ebitda: 14,
+    ebitdaMargin: 15,
+    interestExp: 16,
+    icr: 17,
+    roic: 18,
+    roce: 19,
+    fcfYield: 20,
+    netIncome: 21,
+    profitYes: 22,
+    fcfYes: 23,
+
+    divPA: 24,
+    divFreq: 25,
+    divYield: 26,
+    sharesOut: 27,
+    repurchase: 28,
+    dpsCagr: 29,
+    payout: 30,
+    fcfPayout: 31,
+    divYears: 32,
+    divGrowth: 33,
+
+    price: 34,
+    priceCagr: 35,
+    mcap: 36,
+    pe: 37,
+    peTarget: 38,
+    fair: 39
+  };
+
+  const r52 = parse52wRange(tds[idx.range52]);
+
+  return {
+    revenueFY: num(idx.revFY),
+    revCagr: pct(idx.revCagr),
+    revYoy: pct(idx.revYoy),
+    epsFY: num(idx.epsFY),
+    epsCagr: pct(idx.epsCagr),
+    opmCagr: pct(idx.opmCagr),
+    opmYoy: pct(idx.opmYoy),
+
+    beta: num(idx.beta),
+    range52Low: r52.low,
+    range52High: r52.high,
+    vol1y: pct(idx.vol1y),
+
+    fcf: num(idx.fcf),
+    fcfMargin: pct(idx.fcfMargin),
+    debtFcf: num(idx.debtFcf),
+    netDebtEbitda: num(idx.netDebtEbitda),
+    ebitda: num(idx.ebitda),
+    ebitdaMargin: pct(idx.ebitdaMargin),
+    interestExp: num(idx.interestExp),
+    icr: num(idx.icr),
+    roic: pct(idx.roic),
+    roce: pct(idx.roce),
+    fcfYield: pct(idx.fcfYield),
+    netIncome: num(idx.netIncome),
+    profitYes: yes(idx.profitYes),
+    fcfYes: yes(idx.fcfYes),
+
+    divPA: num(idx.divPA),
+    divFreq: tds[idx.divFreq],
+    divYield: pct(idx.divYield),
+    sharesOut: num(idx.sharesOut),
+    repurchase: num(idx.repurchase),
+    dpsCagr: pct(idx.dpsCagr),
+    payout: pct(idx.payout),
+    fcfPayout: pct(idx.fcfPayout),
+    divYears: num(idx.divYears),
+    divGrowth: pct(idx.divGrowth),
+
+    price: num(idx.price),
+    priceCagr: pct(idx.priceCagr),
+    mcap: num(idx.mcap),
+    pe: num(idx.pe),
+    peTarget: num(idx.peTarget),
+    fair: num(idx.fair)
+  };
+}
+
+function evaluateCompany(d){
+  const notes = [];
+  const roles = [];
+
+  // --- Derived ---
+  const price = d.price;
+  let fair = d.fair;
+  if(!Number.isFinite(fair) && Number.isFinite(d.epsFY) && Number.isFinite(d.peTarget) && d.peTarget > 0){
+    fair = d.epsFY * d.peTarget;
+  }
+
+  const r52ok = Number.isFinite(d.range52Low) && Number.isFinite(d.range52High) && d.range52Low > 0;
+  const rangePct = r52ok ? (d.range52High - d.range52Low) / d.range52Low : NaN;
+  const ddFromHigh = (r52ok && Number.isFinite(price) && d.range52High > 0) ? (d.range52High - price) / d.range52High : NaN;
+
+  // --- Stress Flag ---
+  let stress = "grün";
+
+  const redTriggers = [];
+  const yellowTriggers = [];
+
+  if(!d.profitYes) redTriggers.push("Net Income negativ/kein Gewinn");
+  if(!d.fcfYes) redTriggers.push("FCF negativ");
+  if(Number.isFinite(d.icr) && d.icr < 2) redTriggers.push("ICR < 2");
+  if(Number.isFinite(d.netDebtEbitda) && d.netDebtEbitda > 4) redTriggers.push("Net Debt/EBITDA > 4");
+  if(Number.isFinite(d.debtFcf) && d.debtFcf > 6) redTriggers.push("Debt/FCF > 6");
+  if(Number.isFinite(d.fcfPayout) && d.fcfPayout > 120) redTriggers.push("FCF-Payout > 120%");
+
+  if(redTriggers.length){
+    stress = "rot";
+  } else {
+    if(Number.isFinite(d.icr) && d.icr < 4) yellowTriggers.push("ICR 2–4");
+    if(Number.isFinite(d.netDebtEbitda) && d.netDebtEbitda > 3) yellowTriggers.push("Net Debt/EBITDA > 3");
+    if(Number.isFinite(d.debtFcf) && d.debtFcf > 4) yellowTriggers.push("Debt/FCF > 4");
+    if(Number.isFinite(d.fcfPayout) && d.fcfPayout > 90) yellowTriggers.push("FCF-Payout > 90%");
+    if(Number.isFinite(d.payout) && d.payout > 80) yellowTriggers.push("Payout > 80%");
+    if(yellowTriggers.length) stress = "gelb";
+  }
+
+  // --- Rollen (einfach & robust) ---
+  if(stress === "rot") roles.push("Krisenfall");
+
+  // Dividend roles
+  if(Number.isFinite(d.divYears) && d.divYears >= 25 && Number.isFinite(d.divPA) && d.divPA > 0){
+    roles.push("Dividenden-Aristokrat");
+  } else if(Number.isFinite(d.divYears) && d.divYears >= 5 && Number.isFinite(d.dpsCagr) && d.dpsCagr > 0){
+    roles.push("Dividenden-Wachstum");
+  }
+
+  if(Number.isFinite(d.divYield) && d.divYield >= 5){
+    roles.push("High Dividend");
+    if(Number.isFinite(d.fcfPayout) && d.fcfPayout > 100) notes.push("Achtung: hohe Rendite + FCF-Payout > 100% → Yield-Trap möglich");
+  }
+
+  // Quality
+  const quality =
+    d.profitYes && d.fcfYes &&
+    Number.isFinite(d.icr) && d.icr >= 4 &&
+    Number.isFinite(d.netDebtEbitda) && d.netDebtEbitda <= 3 &&
+    Number.isFinite(d.roic) && d.roic >= 10;
+
+  if(quality) roles.push("Quality");
+
+  // Wachstum
+  const growth =
+    (Number.isFinite(d.revCagr) && d.revCagr >= 10) ||
+    (Number.isFinite(d.epsCagr) && d.epsCagr >= 10);
+
+  if(growth) roles.push("Wachstum");
+
+  // Value / Value+Div
+  const undervalued =
+    Number.isFinite(price) && Number.isFinite(fair) && fair > 0 && (price <= fair * 0.9);
+
+  const valueLike =
+    undervalued ||
+    (Number.isFinite(d.pe) && d.pe > 0 && d.pe <= 15) ||
+    (Number.isFinite(d.fcfYield) && d.fcfYield >= 5);
+
+  if(valueLike) roles.push("Value");
+  if(valueLike && Number.isFinite(d.divYield) && d.divYield >= 2 && Number.isFinite(d.fcfPayout) && d.fcfPayout <= 90){
+    roles.push("Value+ Dividende");
+  }
+
+  // GARP
+  const notTooExpensive =
+    (Number.isFinite(d.peTarget) && Number.isFinite(d.pe) && d.peTarget > 0 && d.pe <= d.peTarget * 1.1) ||
+    (Number.isFinite(price) && Number.isFinite(fair) && fair > 0 && price <= fair * 1.1);
+
+  if(growth && notTooExpensive) roles.push("GARP (Wachstum, preis ist nicht teuer)");
+
+  // Zykliker / Spekulation (Heuristik)
+  const cyc = (Number.isFinite(d.beta) && d.beta >= 1.3) || (Number.isFinite(d.vol1y) && d.vol1y >= 35) || (Number.isFinite(rangePct) && rangePct >= 0.5);
+  if(cyc) roles.push("Zykliker");
+
+  const spec = (Number.isFinite(d.vol1y) && d.vol1y >= 45) || (Number.isFinite(d.beta) && d.beta >= 1.8) ||
+               (Number.isFinite(d.pe) && d.pe >= 45) || (!d.fcfYes && growth);
+  if(spec) roles.push("Spekulation");
+
+  // Turnaround (wenn Stress gelb/rot + YoY bessert)
+  const turnaround = (stress !== "grün") && (Number.isFinite(d.revYoy) && d.revYoy > 0) && (Number.isFinite(d.opmYoy) && d.opmYoy > 0);
+  if(turnaround) roles.push("Turnaround");
+
+  // Dedup
+  const uniqRoles = Array.from(new Set(roles));
+
+  // --- Preisrange ---
+  let buyMax = NaN, addMax = NaN;
+  if(Number.isFinite(fair) && fair > 0){
+    if(stress === "grün"){ buyMax = fair * 0.90; addMax = fair * 0.80; }
+    if(stress === "gelb"){ buyMax = fair * 0.80; addMax = fair * 0.70; }
+    if(stress === "rot"){  buyMax = fair * 0.70; addMax = fair * 0.60; }
+  }
+
+  return {
+    stress,
+    triggers: (stress === "rot") ? redTriggers : yellowTriggers,
+    roles: uniqRoles,
+    notes,
+    fair,
+    rangePct,
+    ddFromHigh,
+    buyMax,
+    addMax
+  };
+}
+
+function renderNutzenResult(d, res){
+  const box = document.getElementById("nutzen_result");
+  if(!box) return;
+
+  const stressBadge =
+    res.stress === "grün" ? "✅ Grün" :
+    res.stress === "gelb" ? "⚠️ Gelb" : "🛑 Rot";
+
+  const rolesHtml = (res.roles.length ? res.roles : ["–"]).map(r => `<span style="display:inline-block;padding:4px 8px;border:1px solid #e6e6e6;border-radius:999px;margin:3px 6px 0 0;background:#fff">${r}</span>`).join("");
+
+  const why = (res.triggers && res.triggers.length)
+    ? `<ul style="margin:8px 0 0 18px">${res.triggers.map(x => `<li>${x}</li>`).join("")}</ul>`
+    : `<div class="small" style="margin-top:6px;color:#666">Keine Stress-Trigger.</div>`;
+
+  const fairTxt = Number.isFinite(res.fair) ? fmtNum(res.fair) : "–";
+  const buyTxt  = Number.isFinite(res.buyMax) ? `≤ ${fmtNum(res.buyMax)}` : "–";
+  const addTxt  = Number.isFinite(res.addMax) ? `≤ ${fmtNum(res.addMax)}` : "–";
+
+  const extraNotes = (res.notes && res.notes.length)
+    ? `<div class="small" style="margin-top:8px;color:#b00020">${res.notes.join("<br>")}</div>`
+    : "";
+
+  box.innerHTML = `
+    <div class="kpi"><span><b>Stress-Flag</b></span><span><b>${stressBadge}</b></span></div>
+    <div style="margin-top:6px"><b>Rollen</b><div style="margin-top:6px">${rolesHtml}</div></div>
+
+    <div style="margin-top:10px"><b>Warum?</b>${why}</div>
+
+    <div style="margin-top:10px">
+      <div class="kpi"><span>Fairer Preis</span><span><b>${fairTxt}</b></span></div>
+      <div class="kpi"><span>Kaufen (max)</span><span><b>${buyTxt}</b></span></div>
+      <div class="kpi"><span>Nachkaufen (max)</span><span><b>${addTxt}</b></span></div>
+    </div>
+
+    ${extraNotes}
+  `;
+  box.style.display = "block";
+}
+
+
+
+// ---------- VOLATILITÄT (Std-Abw.) ----------
+function parseVolLines(raw){
+  let s = String(raw ?? "").trim();
+  if(!s) return [];
+
+  // Zeilen normalisieren
+  s = s.replace(/\r/g, "\n");
+  const lines = s.split("\n").map(x => x.trim()).filter(Boolean);
+
+  const out = [];
+  for(const line of lines){
+    // Header-Zeilen überspringen
+    const low = line.toLowerCase();
+    if(low.includes("date") && (low.includes("close") || low.includes("adj"))) continue;
+
+    // 1) bevorzugt Tab-splitting (Excel/Copy-Paste)
+    let parts = line.includes("\t") ? line.split("\t") : null;
+
+    // 2) fallback: mehrere Spaces
+    if(!parts){
+      parts = line.split(/\s{2,}|\s+\t|\t+\s+/).filter(Boolean);
+      if(parts.length < 6){
+        // noch robuster: alles nach "Volume" / etc. per single-space
+        parts = line.split(/\s+/).filter(Boolean);
+      }
+    }
+
+    // StockAnalysis: Date hat Komma -> meist als 3 Tokens wenn per single-space
+    // Wir versuchen, ein Datum zu rekonstruieren:
+    // Varianten:
+    // A) parts[0] == "Feb", parts[1]=="20,", parts[2]=="2026"
+    // B) parts[0] == "Feb 20, 2026" (wenn Tab)
+    let dateStr = parts[0];
+
+    if(/^[A-Za-z]{3,}$/.test(parts[0]) && parts.length >= 3 && parts[1].includes(",") && /^\d{4}$/.test(parts[2])){
+      dateStr = `${parts[0]} ${parts[1]} ${parts[2]}`;
+      parts = [dateStr, ...parts.slice(3)];
+    }
+
+    // Wenn es ein Tab-Paste war, ist date meist komplett in parts[0]
+    // Numerische Felder: Open, High, Low, Close, Adj Close, Change%, Volume
+    // Wir brauchen nur Close/AdjClose. Typisch sind mindestens 6 Zahlen.
+    const dt = new Date(dateStr);
+    if(!Number.isFinite(dt.getTime())) continue;
+
+    // Versuche Close und Adj Close anhand typischer Position:
+    // Nach Date kommen meist: Open High Low Close AdjClose Change% Volume
+    // => closeIndex 3, adjIndex 4 (0-based in "parts" nach dem Datum)
+    const open  = parseNumberSmart(parts[1]);
+    const high  = parseNumberSmart(parts[2]);
+    const lowP  = parseNumberSmart(parts[3]);
+    const close = parseNumberSmart(parts[4]);
+    const adj   = parseNumberSmart(parts[5]); // kann NaN sein, falls nicht vorhanden
+
+    // Wenn Tab-Paste exakt ist, passt das. Wenn nicht, fallback: nimm die letzten 3-4 numerischen Spalten
+    let closeUse = close;
+    let adjUse = adj;
+
+    // Fallback-Heuristik: finde alle parsebaren Zahlen (ohne Prozent)
+    if(!Number.isFinite(closeUse)){
+      const nums = parts
+        .map(p => String(p).replace("%",""))
+        .map(p => parseNumberSmart(p))
+        .filter(n => Number.isFinite(n));
+
+      // Bei StockAnalysis sind die ersten 5 nums typischerweise O/H/L/C/Adj
+      if(nums.length >= 4) closeUse = nums[3];
+      if(nums.length >= 5) adjUse = nums[4];
+    }
+
+    out.push({
+      date: dt,
+      dateStr,
+      close: closeUse,
+      adjClose: adjUse
+    });
+  }
+
+  return out;
+}
+
+function stdevSample(arr){
+  const n = arr.length;
+  if(n < 2) return NaN;
+  let mean = 0;
+  for(const x of arr) mean += x;
+  mean /= n;
+
+  let ss = 0;
+  for(const x of arr){
+    const d = x - mean;
+    ss += d*d;
+  }
+  return Math.sqrt(ss / (n - 1));
+}
+
+function mean(arr){
+  if(!arr.length) return NaN;
+  let s=0; for(const x of arr) s+=x;
+  return s/arr.length;
+}
+
+function bindVolUI(){
+  const ta = document.getElementById("vol_big");
+  const btn = document.getElementById("vol_calcBtn");
+  const clr = document.getElementById("vol_clearBtn");
+  const err = document.getElementById("vol_err");
+  const out = document.getElementById("vol_out");
+
+  if(!btn || !ta || !out || !err) return;
+
+  function showVolErr(m){
+    err.style.display="block";
+    err.textContent=m;
+  }
+  function hideVolErr(){
+    err.style.display="none";
+    err.textContent="";
+  }
+
+  function getRetType(){
+    const r = document.querySelector('input[name="vol_retType"]:checked');
+    return r ? r.value : "simple";
+  }
+
+  btn.addEventListener("click", () => {
+    hideVolErr();
+    out.style.display="none";
+    out.innerHTML="";
+
+    const rows = parseVolLines(ta.value);
+    if(rows.length < 3) return showVolErr("Zu wenig Daten erkannt. Bitte mehrere Tage einfügen (mind. 3 Zeilen).");
+
+    // Preis wählen: Adj Close wenn vorhanden und >0, sonst Close
+    const usable = rows
+      .map(r => ({
+        date: r.date,
+        px: (Number.isFinite(r.adjClose) && r.adjClose > 0) ? r.adjClose : r.close
+      }))
+      .filter(r => Number.isFinite(r.px) && r.px > 0);
+
+    if(usable.length < 3) return showVolErr("Konnte keine gültigen Close/Adj Close Preise erkennen.");
+
+    // Sortiere nach Datum aufsteigend
+    usable.sort((a,b)=>a.date - b.date);
+
+    // Returns berechnen
+    const retType = getRetType();
+    const rets = [];
+    for(let i=1;i<usable.length;i++){
+      const p0 = usable[i-1].px;
+      const p1 = usable[i].px;
+      if(p0 <= 0 || p1 <= 0) continue;
+      const r = (retType === "log") ? Math.log(p1/p0) : (p1/p0 - 1);
+      if(Number.isFinite(r)) rets.push(r);
+    }
+
+    if(rets.length < 2) return showVolErr("Zu wenige gültige Returns (nach Filterung).");
+
+    const sd = stdevSample(rets);
+    const mu = mean(rets);
+    const minR = Math.min(...rets);
+    const maxR = Math.max(...rets);
+
+    const annualize = document.getElementById("vol_annualize")?.value === "yes";
+    const factor = annualize ? Math.sqrt(252) : 1;
+    const sdAdj = sd * factor;
+
+    const fmtPctLocal = (x) => (x*100).toFixed(2).replace(".", ",") + " %";
+    const from = usable[0].date.toLocaleDateString("de-DE");
+    const to   = usable[usable.length-1].date.toLocaleDateString("de-DE");
+
+    out.innerHTML = `
+      <div class="kpi"><span>Datenpunkte (Preise)</span><span><b>${usable.length}</b></span></div>
+      <div class="kpi"><span>Datenpunkte (Returns)</span><span><b>${rets.length}</b></span></div>
+      <div class="kpi"><span>Zeitraum</span><span><b>${from} → ${to}</b></span></div>
+
+      <hr style="border:none;border-top:1px solid #e6e6e6;margin:10px 0">
+
+      <div class="kpi highlight"><span><b>Volatilität (Std-Abw.) ${annualize ? "annualisiert" : "täglich"}</b></span><span><b>${fmtPctLocal(sdAdj)}</b></span></div>
+      <div class="kpi"><span>Ø Return ${annualize ? "(täglich)" : "(täglich)"}</span><span><b>${fmtPctLocal(mu)}</b></span></div>
+      <div class="kpi"><span>Min Return</span><span>${fmtPctLocal(minR)}</span></div>
+      <div class="kpi"><span>Max Return</span><span>${fmtPctLocal(maxR)}</span></div>
+
+      <div class="small" style="margin-top:10px">
+        Hinweis: Std-Abw. ist <b>Sample</b> (n−1). Annualisierung = × √252.
+      </div>
+    `;
+    out.style.display="block";
+  });
+
+  if(clr){
+    clr.addEventListener("click", () => {
+      ta.value = "";
+      hideVolErr();
+      out.style.display="none";
+      out.innerHTML="";
+      ta.focus();
+    });
+  }
+
+  // Enter im Textarea soll normal Zeilenumbruch machen (kein Berechnen).
+}
+
+document.addEventListener("DOMContentLoaded", bindVolUI);
+
+document.addEventListener("DOMContentLoaded", bindNutzenUI);
+
+
+
+</script>
+</body>
+</html>
+
+
+
