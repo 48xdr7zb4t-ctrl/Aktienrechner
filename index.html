@@ -2207,25 +2207,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ---------- NUTZEN CHECK (31 Spalten + 1 großes Feld) ----------
 const NUTZEN_HEADERS = [
-  // --- Financials (24) ---
+  // --- Financials ---
   "Revenue (FY)",
   "Revenue Growth 1Y (CAGR)",
   "Revenue Growth 2Y (CAGR)",
   "Revenue Growth 3Y (CAGR)",
   "Revenue Growth 4Y (CAGR)",
   "Revenue Growth 1Y (YoY)",
+
   "EPS (Diluted, FY)",
   "EPS Growth 1Y (CAGR)",
-  "EPS Growth 2Y (CAGR)", 
+  "EPS Growth 2Y (CAGR)",
   "EPS Growth 3Y (CAGR)",
   "EPS Growth 4Y (CAGR)",
+
   "Operating Margin pp 1Y (CAGR)",
   "Operating Margin pp 2Y (CAGR)",
   "Operating Margin pp 3Y (CAGR)",
   "Operating Margin pp 4Y (CAGR)",
+  "Operating Margin 1Y",
+
   "Beta",
   "52 Week Range",
   "Volatilität annualisiert (Std-Abw.) 1Y",
+
   "FCF 1Y",
   "FCF-Margin",
   "Debt/ FCF",
@@ -2241,23 +2246,27 @@ const NUTZEN_HEADERS = [
   "Net income positiv (ja/nein)",
   "FCF Positiv (ja/nein)",
 
-  // --- Dividenden (10) ---
+  // --- Dividenden ---
   "Dividende (p.a)",
   "Div- Frequency",
   "Div.-Rendite aktuell (%)",
   "Shares out",
   "Repurchase of Common stock",
+
   "Dividende (DPS) 1Y (CAGR)",
   "Dividende (DPS) 2Y (CAGR)",
-  "Dividende (DPS) 3Y (CAGR)", 
+  "Dividende (DPS) 3Y (CAGR)",
   "Dividende (DPS) 4Y (CAGR)",
   "Payout Ratio 1Y",
   "FCF-Payout",
   "Dividend Growth Years",
   "Dividend growth",
 
-  // --- Bewertung (6) ---
+  // --- Bewertung ---
   "Kurs aktuell",
+  "Kurs 1Y (CAGR)",
+  "Kurs 2Y (CAGR)",
+  "Kurs 3Y (CAGR)",
   "Kurs 4Y (CAGR)",
   "Marktkapitalisierung",
   "KGV (PE Ratio) 1Y",
@@ -2368,7 +2377,14 @@ function nutzenApply(){
       idxOf("Dividende (DPS) 2Y (CAGR)"),
       idxOf("Dividende (DPS) 3Y (CAGR)"),
       idxOf("Dividende (DPS) 4Y (CAGR)")
+    ],
+        [
+      idxOf("Kurs 1Y (CAGR)"),
+      idxOf("Kurs 2Y (CAGR)"),
+      idxOf("Kurs 3Y (CAGR)"),
+      idxOf("Kurs 4Y (CAGR)")
     ]
+
   ];
 
   // Safety: falls irgendein Label nicht gefunden wurde, abbrechen
@@ -2512,7 +2528,7 @@ const idx = {
   divGrowth: must("Dividend growth"),
 
   price: must("Kurs aktuell"),
-  priceCagr: must("Kurs 4Y (CAGR)"),
+  priceCagr: must(`Kurs ${y}Y (CAGR)`),
   mcap: must("Marktkapitalisierung"),
   pe: must("KGV (PE Ratio) 1Y"),
   peTarget: must("KGV Target"),
