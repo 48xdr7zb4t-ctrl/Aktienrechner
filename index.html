@@ -63,11 +63,11 @@
       <button type="button" onclick="goPage('cagr')">CAGR Rechner</button>
       <button type="button" onclick="goPage('nutzen')">Nutzen Check</button>
       <button type="button" onclick="goPage('fairprice')">Fairer Preis Rechner</button>
-      <button type="button" onclick="goPage('fcfpayout')">FCF-Payout Rechner</button>
+      <button type="button" onclick="goPage('fcfpayout')">(FCF-Payout Rechner)-in FCF Check</button>
       <button type="button" onclick="goPage('icr')">Zinsdeckung (ICR) Rechner</button>
       <button type="button" onclick="goPage('checks')">Profitabel & FCF Check</button>
       <button type="button" onclick="goPage('volatility')">Volatilität (Std-Abw.)</button>
-      
+      <button type="button" onclick="goPage('fx')">USD ⇄ EUR Rechner</button>
     </div>
   </div>
 </section>
@@ -463,6 +463,79 @@
   </div>
 </section>
 
+<section id="page-fx" style="display:none">
+  <div class="card">
+    <button type="button" onclick="goPage('home')" style="background:#e9eefc;color:#1c3f99">← Zurück</button>
+  </div>
+
+  <div class="card">
+    <h1>USD ⇄ EUR Rechner</h1>
+    <div class="muted">Standard: Offline-Kurs (vorgegeben). Optional kannst du den Kurs ändern oder per Button aktualisieren.</div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+
+      <div class="out">
+        <div class="kpi">
+          <span><b>Umrechnen</b></span>
+          <span class="small">USD ↔ EUR</span>
+        </div>
+
+        <label for="fx_amount">Betrag</label>
+        <input id="fx_amount" inputmode="decimal" placeholder="z.B. 100" />
+
+        <div class="grid" style="margin-top:10px">
+          <div>
+            <label for="fx_from">Von</label>
+            <select id="fx_from">
+              <option value="USD" selected>USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+          <div>
+            <label for="fx_to">Nach</label>
+            <select id="fx_to">
+              <option value="EUR" selected>EUR</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button type="button" id="fx_swapBtn" style="background:#eee;color:#333">↔ Swap</button>
+          <button type="button" id="fx_refreshBtn">Kurs aktualisieren</button>
+        </div>
+
+<label for="fx_manualRate" style="margin-top:10px">Kurs (Standard = Offline-Default, optional anpassen)</label>
+<input id="fx_manualRate" inputmode="decimal" placeholder="z.B. 0,92" />
+<div class="small">Bedeutung: <b>1 (Von)</b> = Kurs in <b>(Nach)</b>. Beispiel: 1 USD = 0,92 EUR.</div>
+
+        <button type="button" id="fx_calcBtn" style="margin-top:10px">Umrechnen</button>
+
+        <div id="fx_err" class="err" style="display:none"></div>
+        <div id="fx_out" class="out" style="display:none; margin-top:10px"></div>
+
+        <div class="small" style="margin-top:10px">
+          Hinweis: Frankfurter liefert i. d. R. Tageskurse (ECB, werktags aktualisiert).  [oai_citation:1‡Frankfurter](https://frankfurter.dev/?utm_source=chatgpt.com)
+        </div>
+      </div>
+
+      <div class="out">
+        <div class="kpi">
+          <span><b>Aktueller Kurs</b></span>
+          <span class="small">Auto</span>
+        </div>
+
+        <div id="fx_rateBox" class="small" style="line-height:1.5">
+          Kurs noch nicht geladen.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
 <section id="page-nutzen" style="display:none">
   <div class="card">
@@ -477,6 +550,18 @@
     </div>
   </div>
 
+  <div class="row" style="gap:10px; align-items:flex-end; margin-top:10px">
+  <div style="min-width:220px">
+    <label for="nutzen_cagrYears">CAGR Jahre (1–4)</label>
+    <select id="nutzen_cagrYears">
+      <option value="1">1 Jahr</option>
+      <option value="2">2 Jahre</option>
+      <option value="3">3 Jahre</option>
+      <option value="4" selected>4 Jahre</option>
+    </select>
+    <div class="small">Nutzt automatisch die passenden CAGR-Spalten.</div>
+  </div>
+</div>
 
   <div class="card">
     <div class="row" style="gap:10px; align-items:flex-end;">
@@ -494,7 +579,7 @@
     </div>
 
     <div style="overflow:auto; margin-top:12px">
-      <table id="nutzenTable" style="min-width:1600px">
+      <table id="nutzenTable" style="min-width:2600px">
         <thead>
           <tr id="nutzenHeadRow"></tr>
         </thead>
@@ -502,7 +587,7 @@
         <!-- 1 großes Feld über die gesamte Breite (colspan=31) -->
         <tbody>
           <tr>
-            <td id="nutzenBigCell" colspan="40" style="background:#fafafa">
+            <td id="nutzenBigCell" colspan="52" style="background:#fafafa">
               <div class="small" style="margin-bottom:6px;color:#666">
 
               </div>
@@ -524,10 +609,6 @@
   </div>
 </section>
 
-
-    </div> <!-- Ende .grid -->
-  </div>   <!-- Ende .card -->
-</section> <!-- Ende #page-checks -->
 
 <section id="page-etf" style="display:none">
   <div class="card">
@@ -1109,6 +1190,7 @@ const FTS_DATA = [
   const checks = document.getElementById("page-checks");
   const nutzen = document.getElementById("page-nutzen");
   const vol = document.getElementById("page-volatility");
+  const fx = document.getElementById("page-fx");
 
 
 
@@ -1122,7 +1204,10 @@ const FTS_DATA = [
   if (icr) icr.style.display = (page === "icr") ? "block" : "none";
   if (checks) checks.style.display = (page === "checks") ? "block" : "none";
   if (nutzen) nutzen.style.display = (page === "nutzen") ? "block" : "none";
+  if(page === "nutzen"){
+  nutzenUpdateCagrVisibility();}
   if (vol) vol.style.display = (page === "volatility") ? "block" : "none";
+  if (fx) fx.style.display = (page === "fx") ? "block" : "none";
 
 
 if(page === "etf") {
@@ -1462,6 +1547,8 @@ function bindFcfPayoutUI(){
   const btnA = document.getElementById("fcf_calcA");
   const btnB = document.getElementById("fcf_calcB");
 
+  const enterIds = ["fcf_divTotal","fcf_fcfA","fcf_dps","fcf_shares","fcf_fcfB"];
+
   if(btnA){
     btnA.addEventListener("click", () => {
       hideInlineErr("fcf_errA");
@@ -1509,18 +1596,19 @@ function bindFcfPayoutUI(){
     });
   }
 
-  // Enter = berechnen
-  const enterIds = ["fcf_divTotal","fcf_fcfA","fcf_dps","fcf_shares","fcf_fcfB"];
-  enterIds.forEach(id => {
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.addEventListener("keydown", (e) => {
-   if(e.key === "Enter" && !e.shiftKey){
-  e.preventDefault();
-  btn.click();
-}
-    });
+enterIds.forEach(id => {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" && !e.shiftKey){
+      e.preventDefault();
+      // Option A Felder
+      if(["fcf_divTotal","fcf_fcfA"].includes(id) && btnA) btnA.click();
+      // Option B Felder
+      if(["fcf_dps","fcf_shares","fcf_fcfB"].includes(id) && btnB) btnB.click();
+    }
   });
+});
 }
 
 document.addEventListener("DOMContentLoaded", bindFcfPayoutUI);
@@ -2111,7 +2199,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "#chk_divPaid, #chk_fcfPayoutBase, " +
     "#icr_ebit, #icr_interest, " +
     "#fp_epsA, #fp_priceTarget, #fp_epsB, #fp_peTarget, " +
-    "#fcf_divTotal, #fcf_fcfA, #fcf_dps, #fcf_shares, #fcf_fcfB"
+    "#fcf_divTotal, #fcf_fcfA, #fcf_dps, #fcf_shares, #fcf_fcfB, " +
+     "#fx_amount, #fx_from, #fx_to, #fx_manualRate"
   );
 });
 
@@ -2120,12 +2209,20 @@ document.addEventListener("DOMContentLoaded", () => {
 const NUTZEN_HEADERS = [
   // --- Financials (24) ---
   "Revenue (FY)",
+  "Revenue Growth 1Y (CAGR)",
+  "Revenue Growth 2Y (CAGR)",
+  "Revenue Growth 3Y (CAGR)",
   "Revenue Growth 4Y (CAGR)",
   "Revenue Growth 1Y (YoY)",
   "EPS (Diluted, FY)",
+  "EPS Growth 1Y (CAGR)",
+  "EPS Growth 2Y (CAGR)", 
+  "EPS Growth 3Y (CAGR)",
   "EPS Growth 4Y (CAGR)",
-  "Operating Margin 4Y (CAGR)",
-  "Operating Margin 1Y",
+  "Operating Margin pp 1Y (CAGR)",
+  "Operating Margin pp 2Y (CAGR)",
+  "Operating Margin pp 3Y (CAGR)",
+  "Operating Margin pp 4Y (CAGR)",
   "Beta",
   "52 Week Range",
   "Volatilität annualisiert (Std-Abw.) 1Y",
@@ -2150,6 +2247,9 @@ const NUTZEN_HEADERS = [
   "Div.-Rendite aktuell (%)",
   "Shares out",
   "Repurchase of Common stock",
+  "Dividende (DPS) 1Y (CAGR)",
+  "Dividende (DPS) 2Y (CAGR)",
+  "Dividende (DPS) 3Y (CAGR)", 
   "Dividende (DPS) 4Y (CAGR)",
   "Payout Ratio 1Y",
   "FCF-Payout",
@@ -2202,15 +2302,87 @@ function nutzenApply(){
   
 
   const tds = Array.from(valRow.querySelectorAll("td"));
-  for(let i=0;i<tds.length;i++){
-    tds[i].textContent = parts[i] ?? "";
-      const data = nutzenGetData();
-  if(data){
-    const res = evaluateCompany(data);
-    renderNutzenResult(data, res);
-  }
-  console.log("Werte erkannt:", parts.length, parts);
+for(let i=0;i<tds.length;i++){
+  tds[i].textContent = parts[i] ?? "";
+}
+  nutzenUpdateCagrVisibility();
+const data = nutzenGetData();
+if(data){
+  const res = evaluateCompany(data);
+  renderNutzenResult(data, res);
+}
+console.log("Werte erkannt:", parts.length, parts);
 
+  }
+
+
+  
+
+  function nutzenUpdateCagrVisibility(){
+  const years = Number(document.getElementById("nutzen_cagrYears")?.value || 4);
+
+  const headRow = document.getElementById("nutzenHeadRow");
+  const valRow  = document.getElementById("nutzenValueRow");
+  const bigCell = document.getElementById("nutzenBigCell");
+  if(!headRow || !valRow) return;
+
+  const ths = Array.from(headRow.querySelectorAll("th"));
+  const tds = Array.from(valRow.querySelectorAll("td"));
+
+  // Index-Lookup nach Header-Text
+  const idxOf = (label) => NUTZEN_HEADERS.indexOf(label);
+
+  const groups = [
+    [
+      idxOf("Revenue Growth 1Y (CAGR)"),
+      idxOf("Revenue Growth 2Y (CAGR)"),
+      idxOf("Revenue Growth 3Y (CAGR)"),
+      idxOf("Revenue Growth 4Y (CAGR)")
+    ],
+    [
+      idxOf("EPS Growth 1Y (CAGR)"),
+      idxOf("EPS Growth 2Y (CAGR)"),
+      idxOf("EPS Growth 3Y (CAGR)"),
+      idxOf("EPS Growth 4Y (CAGR)")
+    ],
+    [
+      idxOf("Operating Margin pp 1Y (CAGR)"),
+      idxOf("Operating Margin pp 2Y (CAGR)"),
+      idxOf("Operating Margin pp 3Y (CAGR)"),
+      idxOf("Operating Margin pp 4Y (CAGR)")
+    ],
+    [
+      idxOf("Dividende (DPS) 1Y (CAGR)"),
+      idxOf("Dividende (DPS) 2Y (CAGR)"),
+      idxOf("Dividende (DPS) 3Y (CAGR)"),
+      idxOf("Dividende (DPS) 4Y (CAGR)")
+    ]
+  ];
+
+  // Safety: falls irgendein Label nicht gefunden wurde, abbrechen
+  if(groups.flat().some(i => i < 0)) return;
+
+  const keepPos = Math.min(Math.max(years, 1), 4) - 1; // 0..3
+
+  // Erst mal alles zeigen
+  for(let i=0;i<NUTZEN_HEADERS.length;i++){
+    if(ths[i]) ths[i].style.display = "";
+    if(tds[i]) tds[i].style.display = "";
+  }
+
+  // Dann in jeder Gruppe alles außer ausgewähltem Jahr verstecken
+  for(const g of groups){
+    g.forEach((colIndex, pos) => {
+      const show = (pos === keepPos);
+      if(ths[colIndex]) ths[colIndex].style.display = show ? "" : "none";
+      if(tds[colIndex]) tds[colIndex].style.display = show ? "" : "none";
+    });
+  }
+
+  // colspan vom großen Feld an sichtbare Spalten anpassen
+  if(bigCell){
+    const visibleCount = ths.filter(th => th.style.display !== "none").length;
+    bigCell.colSpan = visibleCount;
   }
 }
 
@@ -2230,6 +2402,7 @@ function nutzenClear(){
 
 function bindNutzenUI(){
   nutzenRenderTable();
+   nutzenUpdateCagrVisibility();
 
   const ta = document.getElementById("nutzen_big");
   const btn = document.getElementById("nutzen_parseBtn");
@@ -2244,8 +2417,20 @@ function bindNutzenUI(){
 
     // Enter im Textarea soll normal Zeilenumbruch machen → NICHT berechnen.
     // (Live-Update macht es ohnehin)
+    const sel = document.getElementById("nutzen_cagrYears");
+   if(sel){
+   sel.addEventListener("change", () => {
+    nutzenUpdateCagrVisibility();
+    const data = nutzenGetData();
+    if(data){
+      const res = evaluateCompany(data);
+      renderNutzenResult(data, res);
+    }
+  });
+}
   }
 }
+
 
 
 function nutzenGetData(){
@@ -2253,58 +2438,74 @@ function nutzenGetData(){
   if(!valRow) return null;
 
   const tds = Array.from(valRow.querySelectorAll("td")).map(td => (td.textContent || "").trim());
+  const cagrYears = Number(document.getElementById("nutzen_cagrYears")?.value || 4);
 
   // Helfer: % Felder
   const pct = (i) => parsePercentSmart(tds[i]);      // ergibt Zahl wie 12,5 (nicht 0,125)
   const num = (i) => parseNumberSmart(tds[i]);
   const yes = (i) => String(tds[i]).toLowerCase().includes("ja");
+  
 
   // Indexe passend zu NUTZEN_HEADERS
-  const idx = {
-    revFY: 0,
-    revCagr: 1,
-    revYoy: 2,
-    epsFY: 3,
-    epsCagr: 4,
-    opmCagr: 5,
-    opmYoy: 6,
-    beta: 7,
-    range52: 8,
-    vol1y: 9,
-    fcf: 10,
-    fcfMargin: 11,
-    debtFcf: 12,
-    netDebtEbitda: 13,
-    ebitda: 14,
-    ebitdaMargin: 15,
-    interestExp: 16,
-    icr: 17,
-    roic: 18,
-    roce: 19,
-    fcfYield: 20,
-    netIncome: 21,
-    profitYes: 22,
-    fcfYes: 23,
+ // Index-Lookup über Header-Text (robust, egal wie du Spalten verschiebst)
+const idxOf = (h) => NUTZEN_HEADERS.indexOf(h);
+const must = (h) => {
+  const i = idxOf(h);
+  return i; // kann -1 sein, dann wird num/pct NaN -> Auswertung bleibt stabil
+};
 
-    divPA: 24,
-    divFreq: 25,
-    divYield: 26,
-    sharesOut: 27,
-    repurchase: 28,
-    dpsCagr: 29,
-    payout: 30,
-    fcfPayout: 31,
-    divYears: 32,
-    divGrowth: 33,
+// Wähle die passende CAGR-Spalte abhängig von Dropdown (1–4)
+const y = Number(document.getElementById("nutzen_cagrYears")?.value || 4);
+const pickCagr = (prefix) => must(`${prefix} ${y}Y (CAGR)`);
 
-    price: 34,
-    priceCagr: 35,
-    mcap: 36,
-    pe: 37,
-    peTarget: 38,
-    fair: 39
-  };
+const idx = {
+  revFY: must("Revenue (FY)"),
+  revCagr: pickCagr("Revenue Growth"),
+  revYoy: must("Revenue Growth 1Y (YoY)"),
 
+  epsFY: must("EPS (Diluted, FY)"),
+  epsCagr: pickCagr("EPS Growth"),
+
+  opmCagr: pickCagr("Operating Margin"),
+  opmYoy: must("Operating Margin 1Y"),
+
+  beta: must("Beta"),
+  range52: must("52 Week Range"),
+  vol1y: must("Volatilität annualisiert (Std-Abw.) 1Y"),
+
+  fcf: must("FCF 1Y"),
+  fcfMargin: must("FCF-Margin"),
+  debtFcf: must("Debt/ FCF"),
+  netDebtEbitda: must("Net Dept/ EBITDA"),
+  ebitda: must("EBITDA 1Y"),
+  ebitdaMargin: must("EBIDTA Margin 1Y"),
+  interestExp: must("Interest Expense 1Y"),
+  icr: must("Zinsdeckung (ICR)"),
+  roic: must("ROIC"),
+  roce: must("ROCE"),
+  fcfYield: must("FCF Yield 1Y"),
+  netIncome: must("Net Income 1Y"),
+  profitYes: must("Net income positiv (ja/nein)"),
+  fcfYes: must("FCF Positiv (ja/nein)"),
+
+  divPA: must("Dividende (p.a)"),
+  divFreq: must("Div- Frequency"),
+  divYield: must("Div.-Rendite aktuell (%)"),
+  sharesOut: must("Shares out"),
+  repurchase: must("Repurchase of Common stock"),
+  dpsCagr: pickCagr("Dividende (DPS)"),
+  payout: must("Payout Ratio 1Y"),
+  fcfPayout: must("FCF-Payout"),
+  divYears: must("Dividend Growth Years"),
+  divGrowth: must("Dividend growth"),
+
+  price: must("Kurs aktuell"),
+  priceCagr: must("Kurs 4Y (CAGR)"),
+  mcap: must("Marktkapitalisierung"),
+  pe: must("KGV (PE Ratio) 1Y"),
+  peTarget: must("KGV Target"),
+  fair: must("Fairer Preis")
+};
   const r52 = parse52wRange(tds[idx.range52]);
 
   return {
@@ -2727,6 +2928,208 @@ function bindVolUI(){
 
   // Enter im Textarea soll normal Zeilenumbruch machen (kein Berechnen).
 }
+
+
+
+// --- Offline-Default Kurse (kannst du jederzeit ändern) ---
+// Bedeutung: 1 USD = 0.92 EUR (Beispielwert)
+const FX_DEFAULT_USD_EUR = 0.92;
+
+// Ableitung: 1 EUR = X USD
+function fxDefaultRate(from, to){
+  if(from === to) return 1;
+
+  // Wir definieren USD->EUR als Basis
+  if(from === "USD" && to === "EUR") return FX_DEFAULT_USD_EUR;
+  if(from === "EUR" && to === "USD") return 1 / FX_DEFAULT_USD_EUR;
+
+  return NaN;
+}
+
+
+
+// ---------- USD ⇄ EUR ----------
+async function fxFetchRate(from, to){
+  // Frankfurter API (ECB-Referenzkurse)
+  // Beispiel: https://api.frankfurter.dev/latest?from=USD&to=EUR
+  const url = `https://api.frankfurter.dev/latest?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
+  const r = await fetch(url, { cache: "no-store" });
+  if(!r.ok) throw new Error("Kurs konnte nicht geladen werden.");
+  const j = await r.json();
+  const rate = j?.rates?.[to];
+  const date = j?.date;
+  if(!Number.isFinite(rate)) throw new Error("Ungültiger Kurs empfangen.");
+  return { rate, date };
+}
+
+
+function fxShowErr(msg){
+  const el = document.getElementById("fx_err");
+  if(!el) return;
+  el.style.display = "block";
+  el.textContent = msg;
+}
+
+
+function fxHideErr(){
+  const el = document.getElementById("fx_err");
+  if(!el) return;
+  el.style.display = "none";
+  el.textContent = "";
+}
+
+
+function fxFmt(x){
+  if(!Number.isFinite(x)) return "–";
+  return x.toLocaleString("de-DE", { maximumFractionDigits: 6 });
+}
+
+
+
+
+async function fxUpdateRateUI(forceLive = false){
+  fxHideErr();
+  const from = document.getElementById("fx_from")?.value || "USD";
+  const to   = document.getElementById("fx_to")?.value || "EUR";
+  const box  = document.getElementById("fx_rateBox");
+  const man  = document.getElementById("fx_manualRate");
+  if(!box) return;
+
+  // 1) Standard: Offline-Default anzeigen (und Feld befüllen, wenn leer)
+  const def = fxDefaultRate(from, to);
+  if(Number.isFinite(def)){
+    box.innerHTML = `<b>Offline-Default:</b> 1 ${from} = ${fxFmt(def)} ${to}<br><span class="vol-muted">Stand: manuell/vorgegeben</span>`;
+    if(man && !man.value.trim()){
+      man.value = String(def).replace(".", ",");
+    }
+  } else {
+    box.textContent = "Kein Offline-Default für dieses Paar definiert.";
+  }
+
+  // 2) Optional live laden – NUR wenn forceLive=true (Button)
+  if(!forceLive) return;
+
+  box.innerHTML = "Lade Live-Kurs…";
+
+  try{
+    const { rate, date } = await fxFetchRate(from, to);
+    box.innerHTML = `<b>Live:</b> 1 ${from} = ${fxFmt(rate)} ${to}<br><span class="vol-muted">Stand: ${date || "–"}</span>`;
+    if(man){
+      man.value = String(rate).replace(".", ","); // überschreibt bewusst
+    }
+  } catch(e){
+    // Fallback bleibt offline-default / manuell
+    fxShowErr("Live-Kurs nicht verfügbar → nutze Offline/Manuell.");
+    // box wieder auf offline/default zurücksetzen
+    if(Number.isFinite(def)){
+      box.innerHTML = `<b>Offline-Default:</b> 1 ${from} = ${fxFmt(def)} ${to}<br><span class="vol-muted">Stand: manuell/vorgegeben</span>`;
+    } else {
+      box.textContent = "Live nicht verfügbar und kein Default definiert.";
+    }
+  }
+}
+
+
+
+
+async function fxCalc(){
+  fxHideErr();
+
+  const amount = parseNumberSmart(document.getElementById("fx_amount")?.value);
+  const from = document.getElementById("fx_from")?.value || "USD";
+  const to   = document.getElementById("fx_to")?.value || "EUR";
+
+  if(!Number.isFinite(amount)) return fxShowErr("Bitte Betrag korrekt eingeben.");
+
+  // 1) Kurs aus Eingabefeld (Standard: wird beim Öffnen mit Default gefüllt)
+  const manualRaw = document.getElementById("fx_manualRate")?.value;
+  let rate = parseNumberSmart(manualRaw);
+
+  // 2) Wenn Feld leer/ungültig: Offline-Default nehmen
+  if(!Number.isFinite(rate) || rate <= 0){
+    const def = fxDefaultRate(from, to);
+    if(Number.isFinite(def) && def > 0){
+      rate = def;
+      const man = document.getElementById("fx_manualRate");
+      if(man) man.value = String(def).replace(".", ",");
+    } else {
+      return fxShowErr("Kein Kurs eingetragen und kein Offline-Default vorhanden.");
+    }
+  }
+
+  if(rate <= 0) return fxShowErr("Kurs muss > 0 sein.");
+
+  const result = amount * rate;
+  const out = document.getElementById("fx_out");
+  if(!out) return;
+
+  out.innerHTML = `
+    <div class="kpi"><span>Betrag</span><span><b>${fxFmt(amount)} ${from}</b></span></div>
+    <div class="kpi"><span>Kurs</span><span><b>1 ${from} = ${fxFmt(rate)} ${to}</b></span></div>
+    <div class="kpi highlight"><span><b>Ergebnis</b></span><span><b>${fxFmt(result)} ${to}</b></span></div>
+    <div class="small" style="margin-top:6px">Quelle: Offline/Manuell (kein Auto-Live).</div>
+  `;
+  out.style.display = "block";
+}
+
+
+
+function bindFxUI(){
+  const calcBtn = document.getElementById("fx_calcBtn");
+  const swapBtn = document.getElementById("fx_swapBtn");
+  const refBtn  = document.getElementById("fx_refreshBtn");
+
+  if(refBtn)  refBtn.addEventListener("click", () => fxUpdateRateUI(true));
+  if(calcBtn) calcBtn.addEventListener("click", fxCalc);
+
+  if(swapBtn){
+    swapBtn.addEventListener("click", () => {
+      const fromEl = document.getElementById("fx_from");
+      const toEl   = document.getElementById("fx_to");
+      if(!fromEl || !toEl) return;
+      const tmp = fromEl.value;
+      fromEl.value = toEl.value;
+      toEl.value = tmp;
+
+      // Manuelles Feld leeren, weil Bedeutung sich ändert
+      const man = document.getElementById("fx_manualRate");
+      if(man) man.value = "";
+
+      fxUpdateRateUI();
+    });
+  }
+
+  // Enter = umrechnen
+  ["fx_amount","fx_manualRate"].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el || !calcBtn) return;
+    el.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" && !e.shiftKey){
+        e.preventDefault();
+        calcBtn.click();
+      }
+    });
+  });
+
+  // Beim Wechsel von Währungen: Kurs neu laden
+  ["fx_from","fx_to"].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener("change", () => {
+      // Manuelles Feld leeren, weil Richtung sich ändern kann
+      const man = document.getElementById("fx_manualRate");
+      if(man) man.value = "";
+      fxUpdateRateUI();
+    });
+
+  });
+  // Beim ersten Laden: Offline-Default anzeigen/setzen
+fxUpdateRateUI(false);
+}
+
+
+
+document.addEventListener("DOMContentLoaded", bindFxUI);
 
 document.addEventListener("DOMContentLoaded", bindVolUI);
 
