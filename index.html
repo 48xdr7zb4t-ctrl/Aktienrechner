@@ -2292,28 +2292,40 @@ function nutzenSplitValues(raw){
 
 function nutzenApply(){
   const ta = document.getElementById("nutzen_big");
- 
-  const valRow = document.getElementById("nutzenValueRow");
-  if(!ta || !valRow) return;
+  const headRow = document.getElementById("nutzenHeadRow");
+  const valRow  = document.getElementById("nutzenValueRow");
+  if(!ta || !headRow || !valRow) return;
 
+  // 1) erst Sichtbarkeit anhand Dropdown setzen
+  nutzenUpdateCagrVisibility();
+
+  // 2) Werte splitten
   const parts = nutzenSplitValues(ta.value);
 
-  // Spiegel (optional)
-  
-
+  // 3) alle Zellen leeren
+  const ths = Array.from(headRow.querySelectorAll("th"));
   const tds = Array.from(valRow.querySelectorAll("td"));
-for(let i=0;i<tds.length;i++){
-  tds[i].textContent = parts[i] ?? "";
-}
-  nutzenUpdateCagrVisibility();
-const data = nutzenGetData();
-if(data){
-  const res = evaluateCompany(data);
-  renderNutzenResult(data, res);
-}
-console.log("Werte erkannt:", parts.length, parts);
+  tds.forEach(td => td.textContent = "");
 
+  // 4) nur sichtbare Spalten befüllen (in sichtbarer Reihenfolge!)
+  const visibleIdx = ths
+    .map((th, i) => (th.style.display === "none" ? null : i))
+    .filter(i => i !== null);
+
+  for(let j=0; j<visibleIdx.length; j++){
+    const i = visibleIdx[j];
+    if(tds[i]) tds[i].textContent = parts[j] ?? "";
   }
+
+  // 5) Ergebnis berechnen
+  const data = nutzenGetData();
+  if(data){
+    const res = evaluateCompany(data);
+    renderNutzenResult(data, res);
+  }
+
+  console.log("Werte erkannt:", parts.length, parts);
+}
 
 
   
@@ -2466,7 +2478,7 @@ const idx = {
   epsFY: must("EPS (Diluted, FY)"),
   epsCagr: pickCagr("EPS Growth"),
 
-  opmCagr: pickCagr("Operating Margin"),
+  opmCagr: pickCagr("Operating Margin pp"),
   opmYoy: must("Operating Margin 1Y"),
 
   beta: must("Beta"),
