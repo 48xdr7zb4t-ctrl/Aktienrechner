@@ -41,7 +41,216 @@
 #nutzenTable td { vertical-align: top; min-width: 140px; }
 #nutzenTable .nutzenCell { white-space: nowrap; }
 
+
+/* --- Nutzen: Rollen-Details (aufklappbar) --- */
+.roleBox { margin-top:12px; }
+.roleGrid { display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+@media (max-width:900px){ .roleGrid{ grid-template-columns:1fr; } }
+
+.roleDetails {
+  border:1px solid #e6e6e6;
+  border-radius:12px;
+  background:#fff;
+  padding:10px 12px;
+}
+.roleDetails summary{
+  cursor:pointer;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  list-style:none;
+}
+.roleDetails summary::-webkit-details-marker{ display:none; }
+
+.roleDetails summary .sumRow{
   
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+
+}
+.roleDetails summary { position: relative; z-index: 1; }
+  /* Klick zählt immer für summary */
+
+.roleBadge{
+  font-size:12px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:#f2f2f2;
+  white-space:nowrap;
+}
+.roleBadge.ok{ background:#eaf7ef; color:#1d6b3a; border:1px solid #cfe9d9; }
+.roleBadge.bad{ background:#fdecec; color:#8a1f2a; border:1px solid #f6c9cf; }
+
+.roleBadge.mid{ background:#fff3cd; color:#856404; border:1px solid #ffeeba; }
+
+
+.roleMeta { margin-top:6px; font-size:12px; color:#666; line-height:1.35; }
+
+.roleChecks{
+  margin:10px 0 0;
+  padding-left:18px;
+  font-size:13px;
+  line-height:1.45;
+}
+.roleChecks li{ margin:4px 0; }
+.roleChecks .ok{ color:#1d6b3a; }
+.roleChecks .bad{ color:#8a1f2a; }
+.roleChecks .muted{ color:#777; }
+
+ /* FIX: Nutzen-Buttons wieder klickbar (Overlay/Z-Index) */
+#page-nutzen .card { position: relative; }
+#nutzen_parseBtn, #nutzen_clearBtn, #nutzen_big, #nutzen_cagrYears {
+  position: relative;
+  z-index: 50;
+}
+#nutzenTable, #nutzen_roles, #nutzen_result {
+  position: relative;
+  z-index: 1;
+}
+  
+#nutzen_bigMirror { display:none !important; }
+
+/* ===============================
+   OVERLAY: Rollen / Stress / Range
+   =============================== */
+.nutzenOverlayBackdrop{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  z-index:9998;
+}
+.nutzenOverlay{
+  position:fixed; inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:18px;
+}
+.nutzenOverlayPanel{
+  width:min(920px, 96vw);
+  max-height:86vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 10px 35px rgba(0,0,0,.22);
+  border:1px solid #e9e9e9;
+}
+.nutzenOverlayHead{
+  position:sticky;
+  top:0;
+  background:#fff;
+  z-index:1;
+  padding:14px 16px;
+  border-bottom:1px solid #eee;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.nutzenOverlayTitle{
+  font-size:16px;
+  font-weight:800;
+  margin:0;
+}
+.nutzenOverlayClose{
+  width:auto;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #d6d6d6;
+  background:#f3f3f3;
+  color:#333;
+  cursor:pointer;
+}
+.nutzenOverlayBody{ padding:14px 16px; }
+
+.overlayGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media (max-width:900px){
+  .overlayGrid{ grid-template-columns:1fr; }
+}
+
+.overlayCard{
+  border:1px solid #e6e6e6;
+  border-radius:14px;
+  background:#fafafa;
+  padding:12px;
+}
+.overlayCard h3{
+  margin:0 0 10px;
+  font-size:14px;
+}
+
+.statusPill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:700;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid #e6e6e6;
+  background:#fff;
+}
+.statusDot{
+  width:10px; height:10px; border-radius:999px;
+  background:#bbb;
+}
+.statusGreen .statusDot{ background:#1d6b3a; }
+.statusYellow .statusDot{ background:#b8860b; }
+.statusRed .statusDot{ background:#8a1f2a; }
+
+.roleChips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:8px;
+}
+.roleChip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid #e6e6e6;
+  background:#fff;
+  font-size:12px;
+  font-weight:700;
+}
+.roleChip.off{ opacity:.55; }
+
+.overlayMiniTable{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  margin-top:10px;
+}
+.overlayMiniTable th, .overlayMiniTable td{
+  border:1px solid #e6e6e6;
+  padding:8px;
+}
+.overlayMiniTable th{ background:#f2f2f2; }
+
+/* Overlay darf nur Klicks fressen, wenn es wirklich offen ist */
+.nutzenOverlayBackdrop,
+.nutzenOverlay{
+  pointer-events: none;   /* wenn versteckt: keine Klicks blockieren */
+}
+
+/* wenn offen (per JS), dann wieder klickbar */
+.nutzenOverlayBackdrop.isOpen,
+.nutzenOverlay.isOpen{
+  pointer-events: auto;
+}
+
+
   </style>
 </head>
 <body>
@@ -68,6 +277,7 @@
       <button type="button" onclick="goPage('fcfpayout')">(FCF-Payout Rechner)-in FCF Check</button>
       <button type="button" onclick="goPage('nutzen')">Nutzen Check</button>
       <button type="button" onclick="goPage('fx')">USD ⇄ EUR Rechner</button>
+
     </div>
   </div>
 </section>
@@ -395,7 +605,8 @@
   <div class="small" style="margin-top:8px">
     Hinweis: Dividends Paid ist oft negativ → wird als Betrag (|…|) gerechnet. Wenn FCF ≤ 0, ist Payout nicht sinnvoll.
   </div>
-</div>
+    </div> 
+  </div>   
 </section>
 
 
@@ -517,9 +728,12 @@
         <div id="fx_out" class="out" style="display:none; margin-top:10px"></div>
 
         <div class="small" style="margin-top:10px">
-          Hinweis: Frankfurter liefert i. d. R. Tageskurse (ECB, werktags aktualisiert).  [oai_citation:1‡Frankfurter](https://frankfurter.dev/?utm_source=chatgpt.com)
-        </div>
+         Hinweis: Frankfurter liefert i. d. R. Tageskurse (ECB, werktags aktualisiert).
+<a href="https://frankfurter.dev/" target="_blank" rel="noopener">Quelle</a>
       </div>
+
+      </div> 
+
 
       <div class="out">
         <div class="kpi">
@@ -550,7 +764,7 @@
     </div>
   </div>
 
-  <div class="row" style="gap:10px; align-items:flex-end; margin-top:10px">
+<div class="row" style="gap:10px; align-items:flex-end; margin-top:10px">
   <div style="min-width:220px">
     <label for="nutzen_cagrYears">CAGR Jahre (1–4)</label>
     <select id="nutzen_cagrYears">
@@ -561,12 +775,21 @@
     </select>
     <div class="small">Nutzt automatisch die passenden CAGR-Spalten.</div>
   </div>
+
+  <div style="min-width:220px">
+    <label for="nutzen_volYears">Volatilität Jahr</label>
+    <select id="nutzen_volYears">
+      <option value="1">1Y</option>
+      <option value="5">5Y</option>
+      <option value="10">10Y</option>
+    </select>
+  </div>
 </div>
 
   <div class="card">
     <div class="row" style="gap:10px; align-items:flex-end;">
       <div style="flex:1; min-width:220px;">
-        <label for="nutzen_big">Großes Eingabefeld (40 Werte in Reihenfolge)</label>
+        <label for="nutzen_big">Großes Eingabefeld (55 Werte in Reihenfolge)</label>
         <textarea id="nutzen_big" rows="4" style="width:100%;padding:10px;border-radius:10px;border:1px solid #d6d6d6;font-size:14px;box-sizing:border-box;resize:vertical"></textarea>
         <div class="small" style="margin-top:6px">
           Reihenfolge = exakt die Überschriften (von links nach rechts). Fehlende Werte bleiben leer.
@@ -575,6 +798,8 @@
       <div style="min-width:220px">
         <button type="button" id="nutzen_parseBtn">Auf Spalten verteilen</button>
         <button type="button" id="nutzen_clearBtn" style="background:#eee;color:#333">Leeren</button>
+        <button type="button" id="nutzen_overlayBtn" style="background:#111">Overlay (Rollen / Stress / Range)</button>
+        
       </div>
     </div>
 
@@ -587,12 +812,12 @@
         <!-- 1 großes Feld über die gesamte Breite (colspan=31) -->
         <tbody>
           <tr>
-            <td id="nutzenBigCell" colspan="52" style="background:#fafafa">
+            <td id="nutzenBigCell" colspan="55" style="background:#fafafa">
               <div class="small" style="margin-bottom:6px;color:#666">
 
               </div>
               <!-- optionaler Spiegel-Output: wird per JS gesetzt -->
-              <div id="nutzen_bigMirror" class="small" style="white-space:pre-wrap;color:#333"></div>
+              
             </td>
           </tr>
 
@@ -601,6 +826,40 @@
         </tbody>
       </table>
       <div id="nutzen_result" class="out" style="display:none; margin-top:12px"></div>
+
+      <!-- Stress Flag (UI – Logik kommt später) -->
+<div id="nutzen_stressBox" class="out" style="margin-top:12px">
+  <div class="kpi">
+    <span><b>Stress Flag</b></span>
+    <span class="small">UI (später automatisch)</span>
+  </div>
+
+  <div id="nutzenStressPill" class="statusPill" style="margin-top:8px">
+    <span class="statusDot"></span>
+    <span id="nutzenStressText">– (noch nicht berechnet)</span>
+  </div>
+
+  <div class="grid" style="margin-top:10px">
+    <div>
+      <label>Manuell setzen (nur UI-Test)</label>
+      <select id="nutzenStressSelect">
+        <option value="auto" selected>Auto (später)</option>
+        <option value="green">Grün</option>
+        <option value="yellow">Gelb</option>
+        <option value="red">Rot</option>
+      </select>
+    </div>
+    <div></div>
+  </div>
+
+  <details style="margin-top:10px" open>
+    <summary class="small" style="cursor:pointer">Begründung (Platzhalter)</summary>
+    <div class="small" style="margin-top:8px;color:#666" id="nutzenStressWhy">
+      Noch keine Begründung hinterlegt.
+    </div>
+  </details>
+</div>
+      <div id="nutzen_roles" class="roleBox"></div>
     </div>
 
     <div class="small" style="margin-top:10px">
@@ -608,6 +867,169 @@
     </div>
   </div>
 </section>
+
+
+<!-- OVERLAY: Rollen / Stress / Kauf+Nachkauf -->
+<div id="nutzenOverlayBackdrop" class="nutzenOverlayBackdrop"></div>
+
+<div id="nutzenOverlay" class="nutzenOverlay" aria-hidden="true">
+  <div class="nutzenOverlayPanel" role="dialog" aria-modal="true" aria-labelledby="nutzenOverlayTitle">
+    <div class="nutzenOverlayHead">
+      <div>
+        <div id="nutzenOverlayTitle" class="nutzenOverlayTitle">Nutzen-Overlay</div>
+        <div class="small" style="margin-top:4px;color:#666">Rollen • Stress-Flag • Kauf/Nachkauf (UI – Logik kommt später)</div>
+      </div>
+      <button type="button" class="nutzenOverlayClose" id="nutzenOverlayCloseBtn">✕ Schließen</button>
+    </div>
+
+    <div class="nutzenOverlayBody">
+      <div class="overlayGrid">
+
+        <!-- Rollen -->
+        <div class="overlayCard">
+          <h3>Rollen</h3>
+          <div class="small" style="color:#666">
+            Aktuell nur Anzeige/Platzhalter. Auswahl kommt später über deine Auswertungslogik.
+          </div>
+
+          <div class="roleChips" id="nutzenOverlayRoles">
+            <!-- wird per JS gefüllt -->
+          </div>
+
+          <details style="margin-top:10px">
+            <summary class="small" style="cursor:pointer">Begründung / Checks (Platzhalter)</summary>
+            <div class="small" style="margin-top:8px;color:#666" id="nutzenOverlayRolesWhy">
+              Noch keine Begründung hinterlegt.
+            </div>
+          </details>
+        </div>
+
+
+
+        <!-- Stress Flag -->
+        <div class="overlayCard">
+          <h3>Stress Flag</h3>
+
+          <div id="nutzenOverlayStressPill" class="statusPill">
+            <span class="statusDot"></span>
+            <span id="nutzenOverlayStressText">– (noch nicht berechnet)</span>
+          </div>
+
+          <div class="small" style="margin-top:10px;color:#666">
+            (Optional) Manuell setzen — nur für UI-Test:
+          </div>
+
+          <div class="grid" style="margin-top:8px">
+            <div>
+              <label>Manuell</label>
+              <select id="nutzenOverlayStressSelect">
+                <option value="auto" selected>Auto (später)</option>
+                <option value="green">Grün</option>
+                <option value="yellow">Gelb</option>
+                <option value="red">Rot</option>
+              </select>
+            </div>
+            <div></div>
+          </div>
+
+
+
+          <!-- Preis & Aktionen (UI – keine Logik) -->
+<div class="out" style="margin-top:12px">
+  <div class="kpi">
+    <span><b>Preis & Aktionen</b></span>
+    <span class="small">UI (später automatisch)</span>
+  </div>
+
+  <div class="grid" style="margin-top:10px">
+    <div>
+      <label>Fairer Preis (manuell)</label>
+      <input id="ov_fairPrice" type="number" step="0.01" placeholder="z. B. 400">
+    </div>
+
+    <div>
+      <label>Kurs aktuell (optional)</label>
+      <input id="ov_currentPrice" type="number" step="0.01" placeholder="z. B. 382.50">
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:10px">
+    <div>
+      <label>Kaufen (UI)</label>
+      <select id="ov_buySelect">
+        <option value="auto" selected>Auto (später)</option>
+        <option value="yes">Ja</option>
+        <option value="maybe">Vielleicht</option>
+        <option value="no">Nein</option>
+      </select>
+    </div>
+
+    <div>
+      <label>Nachkaufen (UI)</label>
+      <select id="ov_addSelect">
+        <option value="auto" selected>Auto (später)</option>
+        <option value="yes">Ja</option>
+        <option value="maybe">Vielleicht</option>
+        <option value="no">Nein</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="grid" style="margin-top:10px">
+    <div>
+      <div class="small" style="color:#666">Status</div>
+      <div id="ov_actionSummary" class="small" style="margin-top:6px">
+        Noch nichts gesetzt.
+      </div>
+    </div>
+    <div>
+      <button type="button" id="ov_clearActions" class="btn" style="margin-top:18px">
+        Zurücksetzen
+      </button>
+    </div>
+  </div>
+</div>
+
+          <details style="margin-top:10px" open>
+            <summary class="small" style="cursor:pointer">Begründung (aufklappbar)</summary>
+            <div class="small" style="margin-top:8px;color:#666" id="nutzenOverlayStressWhy">
+              Noch keine Begründung hinterlegt.
+            </div>
+          </details>
+        </div>
+
+      </div>
+
+      <!-- Kauf / Nachkauf -->
+      <div class="overlayCard" style="margin-top:12px">
+        <h3>Kauf- & Nachkauf-Range</h3>
+        <div class="small" style="color:#666">
+          UI steht — Berechnung kommt später. Unten zeigen wir schon die vorhandenen Werte aus deiner Tabelle (falls befüllt).
+        </div>
+
+        <table class="overlayMiniTable">
+          <thead>
+            <tr>
+              <th>Feld</th>
+              <th>Wert (aus Tabelle)</th>
+            </tr>
+          </thead>
+          <tbody id="nutzenOverlayRangeBase">
+            <!-- wird per JS gefüllt -->
+          </tbody>
+        </table>
+
+        <details style="margin-top:10px">
+          <summary class="small" style="cursor:pointer">Geplante Range-Logik (Platzhalter)</summary>
+          <div class="small" style="margin-top:8px;color:#666">
+            Beispiel später: Buy-Range = Fairer Preis × (1 − Sicherheitsmarge) … / Nachkauf in Stufen, abhängig Stress+Qualität.
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 
 <section id="page-etf" style="display:none">
@@ -675,16 +1097,16 @@
   Hinweis: FTS-Regeln unterscheiden sich stark je Land und Produkt (Aktie/ETF/Derivat), Handelsplatz und Emittent.
   Werte sind vereinfacht als Orientierung.
 </div>
-
-
 </section>
 
 
-</div>
 
+</div>
 <script>
    let whtSearchBound = false;
    let ftsSearchBound = false;
+   let nutzenBound = false;
+   let fxBound = false;
 
 
      const WHT_DATA = [
@@ -1180,6 +1602,7 @@ const FTS_DATA = [
 
     // --- Seiten Navigation ---
   function goPage(page){
+     closeNutzenOverlay(); // <-- WICHTIG: verhindert "unsichtbares Overlay blockt Klicks"
   const home = document.getElementById("page-home");
   const cagr = document.getElementById("page-cagr");
   const etf  = document.getElementById("page-etf");
@@ -1195,6 +1618,7 @@ const FTS_DATA = [
 
 
 
+
   if (home) home.style.display = (page === "home") ? "block" : "none";
   if (cagr) cagr.style.display = (page === "cagr") ? "block" : "none";
   if (etf)  etf.style.display  = (page === "etf")  ? "block" : "none";
@@ -1204,10 +1628,22 @@ const FTS_DATA = [
   if (icr) icr.style.display = (page === "icr") ? "block" : "none";
   if (checks) checks.style.display = (page === "checks") ? "block" : "none";
   if (nutzen) nutzen.style.display = (page === "nutzen") ? "block" : "none";
-  if(page === "nutzen"){
-  nutzenUpdateCagrVisibility();}
+if(page === "nutzen"){
+  if(!nutzenBound){
+    bindNutzenUI();
+    nutzenBound = true;
+  }
+  nutzenUpdateYearVisibility();
+}
   if (vol) vol.style.display = (page === "volatility") ? "block" : "none";
   if (fx) fx.style.display = (page === "fx") ? "block" : "none";
+
+  if(page === "fx"){
+  if(!fxBound){
+    bindFxUI();
+    fxBound = true;
+  }
+}
 
 
 if(page === "etf") {
@@ -1381,7 +1817,7 @@ function parse52wRange(raw){
   // normalize: replace en dash etc.
   s = s.replace(/–/g, "-");
 
-  const parts = s.split("-").map(x => x.trim()).filter(Boolean);
+  const parts = s.split(/\s*[-–\/]\s*/).map(x=>nzNum(x)).filter(n=>Number.isFinite(n));
   if(parts.length < 2) return { low: NaN, high: NaN };
 
   const a = parseNumberSmart(parts[0]);
@@ -2141,7 +2577,7 @@ function calcFcfPayoutInChecks(){
   out.style.display = "block";
 }
 
-
+document.addEventListener("DOMContentLoaded", bindChecksUI);
 
 function bindChecksUI(){
   const b1 = document.getElementById("chk_profitBtn");
@@ -2204,554 +2640,7 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 
-
-// ---------- NUTZEN CHECK (31 Spalten + 1 großes Feld) ----------
-const NUTZEN_HEADERS = [
-  // --- Financials ---
-  "Revenue (FY)",
-  "Revenue Growth 1Y (CAGR)",
-  "Revenue Growth 2Y (CAGR)",
-  "Revenue Growth 3Y (CAGR)",
-  "Revenue Growth 4Y (CAGR)",
-  "Revenue Growth 1Y (YoY)",
-
-  "EPS (Diluted, FY)",
-  "EPS Growth 1Y (CAGR)",
-  "EPS Growth 2Y (CAGR)",
-  "EPS Growth 3Y (CAGR)",
-  "EPS Growth 4Y (CAGR)",
-
-  "Operating Margin pp 1Y (CAGR)",
-  "Operating Margin pp 2Y (CAGR)",
-  "Operating Margin pp 3Y (CAGR)",
-  "Operating Margin pp 4Y (CAGR)",
-  "Operating Margin 1Y",
-
-  "Beta",
-  "52 Week Range",
-  "Volatilität annualisiert (Std-Abw.) 1Y",
-
-  "FCF 1Y",
-  "FCF-Margin",
-  "Debt/ FCF",
-  "Net Dept/ EBITDA",
-  "EBITDA 1Y",
-  "EBIDTA Margin 1Y",
-  "Interest Expense 1Y",
-  "Zinsdeckung (ICR)",
-  "ROIC",
-  "ROCE",
-  "FCF Yield 1Y",
-  "Net Income 1Y",
-  "Net income positiv (ja/nein)",
-  "FCF Positiv (ja/nein)",
-
-  // --- Dividenden ---
-  "Dividende (p.a)",
-  "Div- Frequency",
-  "Div.-Rendite aktuell (%)",
-  "Shares out",
-  "Repurchase of Common stock",
-
-  "Dividende (DPS) 1Y (CAGR)",
-  "Dividende (DPS) 2Y (CAGR)",
-  "Dividende (DPS) 3Y (CAGR)",
-  "Dividende (DPS) 4Y (CAGR)",
-  "Payout Ratio 1Y",
-  "FCF-Payout",
-  "Dividend Growth Years",
-  "Dividend growth",
-
-  // --- Bewertung ---
-  "Kurs aktuell",
-  "Kurs 1Y (CAGR)",
-  "Kurs 2Y (CAGR)",
-  "Kurs 3Y (CAGR)",
-  "Kurs 4Y (CAGR)",
-  "Marktkapitalisierung",
-  "KGV (PE Ratio) 1Y",
-  "KGV Target",
-  "Fairer Preis"
-];
-
-function nutzenRenderTable(){
-  const headRow = document.getElementById("nutzenHeadRow");
-  const valRow  = document.getElementById("nutzenValueRow");
-  if(!headRow || !valRow) return;
-
-  headRow.innerHTML = NUTZEN_HEADERS.map(h => `<th>${h}</th>`).join("");
-  valRow.innerHTML  = NUTZEN_HEADERS.map(() => `<td class="nutzenCell"></td>`).join("");
-}
-
-function nutzenSplitValues(raw){
-  let s = String(raw ?? "").trim();
-  if(!s) return [];
-
-  // Normalisieren
-  s = s.replace(/\r/g, "\n").trim();
-
-  // Split auf: Tabs, Semikolon, Zeilenumbrüche oder 2+ Leerzeichen
-  const parts = s
-    .split(/[\t;\n]+| {2,}/g)
-    .map(x => x.trim())
-    .filter(x => x !== "");
-
-  return parts;
-}
-
-function nutzenApply(){
-  const ta = document.getElementById("nutzen_big");
-  const headRow = document.getElementById("nutzenHeadRow");
-  const valRow  = document.getElementById("nutzenValueRow");
-  if(!ta || !headRow || !valRow) return;
-
-  // 1) erst Sichtbarkeit anhand Dropdown setzen
-  nutzenUpdateCagrVisibility();
-
-  // 2) Werte splitten
-  const parts = nutzenSplitValues(ta.value);
-
-  // 3) alle Zellen leeren
-  const ths = Array.from(headRow.querySelectorAll("th"));
-  const tds = Array.from(valRow.querySelectorAll("td"));
-  tds.forEach(td => td.textContent = "");
-
-  // 4) nur sichtbare Spalten befüllen (in sichtbarer Reihenfolge!)
-  const visibleIdx = ths
-    .map((th, i) => (th.style.display === "none" ? null : i))
-    .filter(i => i !== null);
-
-  for(let j=0; j<visibleIdx.length; j++){
-    const i = visibleIdx[j];
-    if(tds[i]) tds[i].textContent = parts[j] ?? "";
-  }
-
-  // 5) Ergebnis berechnen
-  const data = nutzenGetData();
-  if(data){
-    const res = evaluateCompany(data);
-    renderNutzenResult(data, res);
-  }
-
-  console.log("Werte erkannt:", parts.length, parts);
-}
-
-
-  
-
-  function nutzenUpdateCagrVisibility(){
-  const years = Number(document.getElementById("nutzen_cagrYears")?.value || 4);
-
-  const headRow = document.getElementById("nutzenHeadRow");
-  const valRow  = document.getElementById("nutzenValueRow");
-  const bigCell = document.getElementById("nutzenBigCell");
-  if(!headRow || !valRow) return;
-
-  const ths = Array.from(headRow.querySelectorAll("th"));
-  const tds = Array.from(valRow.querySelectorAll("td"));
-
-  // Index-Lookup nach Header-Text
-  const idxOf = (label) => NUTZEN_HEADERS.indexOf(label);
-
-  const groups = [
-    [
-      idxOf("Revenue Growth 1Y (CAGR)"),
-      idxOf("Revenue Growth 2Y (CAGR)"),
-      idxOf("Revenue Growth 3Y (CAGR)"),
-      idxOf("Revenue Growth 4Y (CAGR)")
-    ],
-    [
-      idxOf("EPS Growth 1Y (CAGR)"),
-      idxOf("EPS Growth 2Y (CAGR)"),
-      idxOf("EPS Growth 3Y (CAGR)"),
-      idxOf("EPS Growth 4Y (CAGR)")
-    ],
-    [
-      idxOf("Operating Margin pp 1Y (CAGR)"),
-      idxOf("Operating Margin pp 2Y (CAGR)"),
-      idxOf("Operating Margin pp 3Y (CAGR)"),
-      idxOf("Operating Margin pp 4Y (CAGR)")
-    ],
-    [
-      idxOf("Dividende (DPS) 1Y (CAGR)"),
-      idxOf("Dividende (DPS) 2Y (CAGR)"),
-      idxOf("Dividende (DPS) 3Y (CAGR)"),
-      idxOf("Dividende (DPS) 4Y (CAGR)")
-    ],
-        [
-      idxOf("Kurs 1Y (CAGR)"),
-      idxOf("Kurs 2Y (CAGR)"),
-      idxOf("Kurs 3Y (CAGR)"),
-      idxOf("Kurs 4Y (CAGR)")
-    ]
-
-  ];
-
-  // Safety: falls irgendein Label nicht gefunden wurde, abbrechen
-  if(groups.flat().some(i => i < 0)) return;
-
-  const keepPos = Math.min(Math.max(years, 1), 4) - 1; // 0..3
-
-  // Erst mal alles zeigen
-  for(let i=0;i<NUTZEN_HEADERS.length;i++){
-    if(ths[i]) ths[i].style.display = "";
-    if(tds[i]) tds[i].style.display = "";
-  }
-
-  // Dann in jeder Gruppe alles außer ausgewähltem Jahr verstecken
-  for(const g of groups){
-    g.forEach((colIndex, pos) => {
-      const show = (pos === keepPos);
-      if(ths[colIndex]) ths[colIndex].style.display = show ? "" : "none";
-      if(tds[colIndex]) tds[colIndex].style.display = show ? "" : "none";
-    });
-  }
-
-  // colspan vom großen Feld an sichtbare Spalten anpassen
-  if(bigCell){
-    const visibleCount = ths.filter(th => th.style.display !== "none").length;
-    bigCell.colSpan = visibleCount;
-  }
-}
-
-
-
-
-function nutzenClear(){
-  const ta = document.getElementById("nutzen_big");
-
-  const valRow = document.getElementById("nutzenValueRow");
-  if(ta) ta.value = "";
-  
-  if(valRow){
-    valRow.querySelectorAll("td").forEach(td => td.textContent = "");
-  }
-}
-
-function bindNutzenUI(){
-  nutzenRenderTable();
-   nutzenUpdateCagrVisibility();
-
-  const ta = document.getElementById("nutzen_big");
-  const btn = document.getElementById("nutzen_parseBtn");
-  const clr = document.getElementById("nutzen_clearBtn");
-
-  if(btn) btn.addEventListener("click", nutzenApply);
-  if(clr) clr.addEventListener("click", nutzenClear);
-
-  // Live-Update beim Tippen/Pasten
-  if(ta){
-    ta.addEventListener("input", () => nutzenApply());
-
-    // Enter im Textarea soll normal Zeilenumbruch machen → NICHT berechnen.
-    // (Live-Update macht es ohnehin)
-    const sel = document.getElementById("nutzen_cagrYears");
-   if(sel){
-   sel.addEventListener("change", () => {
-    nutzenUpdateCagrVisibility();
-    const data = nutzenGetData();
-    if(data){
-      const res = evaluateCompany(data);
-      renderNutzenResult(data, res);
-    }
-  });
-}
-  }
-}
-
-
-
-function nutzenGetData(){
-  const valRow = document.getElementById("nutzenValueRow");
-  if(!valRow) return null;
-
-  const tds = Array.from(valRow.querySelectorAll("td")).map(td => (td.textContent || "").trim());
-  const cagrYears = Number(document.getElementById("nutzen_cagrYears")?.value || 4);
-
-  // Helfer: % Felder
-  const pct = (i) => parsePercentSmart(tds[i]);      // ergibt Zahl wie 12,5 (nicht 0,125)
-  const num = (i) => parseNumberSmart(tds[i]);
-  const yes = (i) => String(tds[i]).toLowerCase().includes("ja");
-  
-
-  // Indexe passend zu NUTZEN_HEADERS
- // Index-Lookup über Header-Text (robust, egal wie du Spalten verschiebst)
-const idxOf = (h) => NUTZEN_HEADERS.indexOf(h);
-const must = (h) => {
-  const i = idxOf(h);
-  return i; // kann -1 sein, dann wird num/pct NaN -> Auswertung bleibt stabil
-};
-
-// Wähle die passende CAGR-Spalte abhängig von Dropdown (1–4)
-const y = Number(document.getElementById("nutzen_cagrYears")?.value || 4);
-const pickCagr = (prefix) => must(`${prefix} ${y}Y (CAGR)`);
-
-const idx = {
-  revFY: must("Revenue (FY)"),
-  revCagr: pickCagr("Revenue Growth"),
-  revYoy: must("Revenue Growth 1Y (YoY)"),
-
-  epsFY: must("EPS (Diluted, FY)"),
-  epsCagr: pickCagr("EPS Growth"),
-
-  opmCagr: pickCagr("Operating Margin pp"),
-  opmYoy: must("Operating Margin 1Y"),
-
-  beta: must("Beta"),
-  range52: must("52 Week Range"),
-  vol1y: must("Volatilität annualisiert (Std-Abw.) 1Y"),
-
-  fcf: must("FCF 1Y"),
-  fcfMargin: must("FCF-Margin"),
-  debtFcf: must("Debt/ FCF"),
-  netDebtEbitda: must("Net Dept/ EBITDA"),
-  ebitda: must("EBITDA 1Y"),
-  ebitdaMargin: must("EBIDTA Margin 1Y"),
-  interestExp: must("Interest Expense 1Y"),
-  icr: must("Zinsdeckung (ICR)"),
-  roic: must("ROIC"),
-  roce: must("ROCE"),
-  fcfYield: must("FCF Yield 1Y"),
-  netIncome: must("Net Income 1Y"),
-  profitYes: must("Net income positiv (ja/nein)"),
-  fcfYes: must("FCF Positiv (ja/nein)"),
-
-  divPA: must("Dividende (p.a)"),
-  divFreq: must("Div- Frequency"),
-  divYield: must("Div.-Rendite aktuell (%)"),
-  sharesOut: must("Shares out"),
-  repurchase: must("Repurchase of Common stock"),
-  dpsCagr: pickCagr("Dividende (DPS)"),
-  payout: must("Payout Ratio 1Y"),
-  fcfPayout: must("FCF-Payout"),
-  divYears: must("Dividend Growth Years"),
-  divGrowth: must("Dividend growth"),
-
-  price: must("Kurs aktuell"),
-  priceCagr: must(`Kurs ${y}Y (CAGR)`),
-  mcap: must("Marktkapitalisierung"),
-  pe: must("KGV (PE Ratio) 1Y"),
-  peTarget: must("KGV Target"),
-  fair: must("Fairer Preis")
-};
-  const r52 = parse52wRange(tds[idx.range52]);
-
-  return {
-    revenueFY: num(idx.revFY),
-    revCagr: pct(idx.revCagr),
-    revYoy: pct(idx.revYoy),
-    epsFY: num(idx.epsFY),
-    epsCagr: pct(idx.epsCagr),
-    opmCagr: pct(idx.opmCagr),
-    opmYoy: pct(idx.opmYoy),
-
-    beta: num(idx.beta),
-    range52Low: r52.low,
-    range52High: r52.high,
-    vol1y: pct(idx.vol1y),
-
-    fcf: num(idx.fcf),
-    fcfMargin: pct(idx.fcfMargin),
-    debtFcf: num(idx.debtFcf),
-    netDebtEbitda: num(idx.netDebtEbitda),
-    ebitda: num(idx.ebitda),
-    ebitdaMargin: pct(idx.ebitdaMargin),
-    interestExp: num(idx.interestExp),
-    icr: num(idx.icr),
-    roic: pct(idx.roic),
-    roce: pct(idx.roce),
-    fcfYield: pct(idx.fcfYield),
-    netIncome: num(idx.netIncome),
-    profitYes: yes(idx.profitYes),
-    fcfYes: yes(idx.fcfYes),
-
-    divPA: num(idx.divPA),
-    divFreq: tds[idx.divFreq],
-    divYield: pct(idx.divYield),
-    sharesOut: num(idx.sharesOut),
-    repurchase: num(idx.repurchase),
-    dpsCagr: pct(idx.dpsCagr),
-    payout: pct(idx.payout),
-    fcfPayout: pct(idx.fcfPayout),
-    divYears: num(idx.divYears),
-    divGrowth: pct(idx.divGrowth),
-
-    price: num(idx.price),
-    priceCagr: pct(idx.priceCagr),
-    mcap: num(idx.mcap),
-    pe: num(idx.pe),
-    peTarget: num(idx.peTarget),
-    fair: num(idx.fair)
-  };
-}
-
-function evaluateCompany(d){
-  const notes = [];
-  const roles = [];
-
-  // --- Derived ---
-  const price = d.price;
-  let fair = d.fair;
-  if(!Number.isFinite(fair) && Number.isFinite(d.epsFY) && Number.isFinite(d.peTarget) && d.peTarget > 0){
-    fair = d.epsFY * d.peTarget;
-  }
-
-  const r52ok = Number.isFinite(d.range52Low) && Number.isFinite(d.range52High) && d.range52Low > 0;
-  const rangePct = r52ok ? (d.range52High - d.range52Low) / d.range52Low : NaN;
-  const ddFromHigh = (r52ok && Number.isFinite(price) && d.range52High > 0) ? (d.range52High - price) / d.range52High : NaN;
-
-  // --- Stress Flag ---
-  let stress = "grün";
-
-  const redTriggers = [];
-  const yellowTriggers = [];
-
-  if(!d.profitYes) redTriggers.push("Net Income negativ/kein Gewinn");
-  if(!d.fcfYes) redTriggers.push("FCF negativ");
-  if(Number.isFinite(d.icr) && d.icr < 2) redTriggers.push("ICR < 2");
-  if(Number.isFinite(d.netDebtEbitda) && d.netDebtEbitda > 4) redTriggers.push("Net Debt/EBITDA > 4");
-  if(Number.isFinite(d.debtFcf) && d.debtFcf > 6) redTriggers.push("Debt/FCF > 6");
-  if(Number.isFinite(d.fcfPayout) && d.fcfPayout > 120) redTriggers.push("FCF-Payout > 120%");
-
-  if(redTriggers.length){
-    stress = "rot";
-  } else {
-    if(Number.isFinite(d.icr) && d.icr < 4) yellowTriggers.push("ICR 2–4");
-    if(Number.isFinite(d.netDebtEbitda) && d.netDebtEbitda > 3) yellowTriggers.push("Net Debt/EBITDA > 3");
-    if(Number.isFinite(d.debtFcf) && d.debtFcf > 4) yellowTriggers.push("Debt/FCF > 4");
-    if(Number.isFinite(d.fcfPayout) && d.fcfPayout > 90) yellowTriggers.push("FCF-Payout > 90%");
-    if(Number.isFinite(d.payout) && d.payout > 80) yellowTriggers.push("Payout > 80%");
-    if(yellowTriggers.length) stress = "gelb";
-  }
-
-  // --- Rollen (einfach & robust) ---
-  if(stress === "rot") roles.push("Krisenfall");
-
-  // Dividend roles
-  if(Number.isFinite(d.divYears) && d.divYears >= 25 && Number.isFinite(d.divPA) && d.divPA > 0){
-    roles.push("Dividenden-Aristokrat");
-  } else if(Number.isFinite(d.divYears) && d.divYears >= 5 && Number.isFinite(d.dpsCagr) && d.dpsCagr > 0){
-    roles.push("Dividenden-Wachstum");
-  }
-
-  if(Number.isFinite(d.divYield) && d.divYield >= 5){
-    roles.push("High Dividend");
-    if(Number.isFinite(d.fcfPayout) && d.fcfPayout > 100) notes.push("Achtung: hohe Rendite + FCF-Payout > 100% → Yield-Trap möglich");
-  }
-
-  // Quality
-  const quality =
-    d.profitYes && d.fcfYes &&
-    Number.isFinite(d.icr) && d.icr >= 4 &&
-    Number.isFinite(d.netDebtEbitda) && d.netDebtEbitda <= 3 &&
-    Number.isFinite(d.roic) && d.roic >= 10;
-
-  if(quality) roles.push("Quality");
-
-  // Wachstum
-  const growth =
-    (Number.isFinite(d.revCagr) && d.revCagr >= 10) ||
-    (Number.isFinite(d.epsCagr) && d.epsCagr >= 10);
-
-  if(growth) roles.push("Wachstum");
-
-  // Value / Value+Div
-  const undervalued =
-    Number.isFinite(price) && Number.isFinite(fair) && fair > 0 && (price <= fair * 0.9);
-
-  const valueLike =
-    undervalued ||
-    (Number.isFinite(d.pe) && d.pe > 0 && d.pe <= 15) ||
-    (Number.isFinite(d.fcfYield) && d.fcfYield >= 5);
-
-  if(valueLike) roles.push("Value");
-  if(valueLike && Number.isFinite(d.divYield) && d.divYield >= 2 && Number.isFinite(d.fcfPayout) && d.fcfPayout <= 90){
-    roles.push("Value+ Dividende");
-  }
-
-  // GARP
-  const notTooExpensive =
-    (Number.isFinite(d.peTarget) && Number.isFinite(d.pe) && d.peTarget > 0 && d.pe <= d.peTarget * 1.1) ||
-    (Number.isFinite(price) && Number.isFinite(fair) && fair > 0 && price <= fair * 1.1);
-
-  if(growth && notTooExpensive) roles.push("GARP (Wachstum, preis ist nicht teuer)");
-
-  // Zykliker / Spekulation (Heuristik)
-  const cyc = (Number.isFinite(d.beta) && d.beta >= 1.3) || (Number.isFinite(d.vol1y) && d.vol1y >= 35) || (Number.isFinite(rangePct) && rangePct >= 0.5);
-  if(cyc) roles.push("Zykliker");
-
-  const spec = (Number.isFinite(d.vol1y) && d.vol1y >= 45) || (Number.isFinite(d.beta) && d.beta >= 1.8) ||
-               (Number.isFinite(d.pe) && d.pe >= 45) || (!d.fcfYes && growth);
-  if(spec) roles.push("Spekulation");
-
-  // Turnaround (wenn Stress gelb/rot + YoY bessert)
-  const turnaround = (stress !== "grün") && (Number.isFinite(d.revYoy) && d.revYoy > 0) && (Number.isFinite(d.opmYoy) && d.opmYoy > 0);
-  if(turnaround) roles.push("Turnaround");
-
-  // Dedup
-  const uniqRoles = Array.from(new Set(roles));
-
-  // --- Preisrange ---
-  let buyMax = NaN, addMax = NaN;
-  if(Number.isFinite(fair) && fair > 0){
-    if(stress === "grün"){ buyMax = fair * 0.90; addMax = fair * 0.80; }
-    if(stress === "gelb"){ buyMax = fair * 0.80; addMax = fair * 0.70; }
-    if(stress === "rot"){  buyMax = fair * 0.70; addMax = fair * 0.60; }
-  }
-
-  return {
-    stress,
-    triggers: (stress === "rot") ? redTriggers : yellowTriggers,
-    roles: uniqRoles,
-    notes,
-    fair,
-    rangePct,
-    ddFromHigh,
-    buyMax,
-    addMax
-  };
-}
-
-function renderNutzenResult(d, res){
-  const box = document.getElementById("nutzen_result");
-  if(!box) return;
-
-  const stressBadge =
-    res.stress === "grün" ? "✅ Grün" :
-    res.stress === "gelb" ? "⚠️ Gelb" : "🛑 Rot";
-
-  const rolesHtml = (res.roles.length ? res.roles : ["–"]).map(r => `<span style="display:inline-block;padding:4px 8px;border:1px solid #e6e6e6;border-radius:999px;margin:3px 6px 0 0;background:#fff">${r}</span>`).join("");
-
-  const why = (res.triggers && res.triggers.length)
-    ? `<ul style="margin:8px 0 0 18px">${res.triggers.map(x => `<li>${x}</li>`).join("")}</ul>`
-    : `<div class="small" style="margin-top:6px;color:#666">Keine Stress-Trigger.</div>`;
-
-  const fairTxt = Number.isFinite(res.fair) ? fmtNum(res.fair) : "–";
-  const buyTxt  = Number.isFinite(res.buyMax) ? `≤ ${fmtNum(res.buyMax)}` : "–";
-  const addTxt  = Number.isFinite(res.addMax) ? `≤ ${fmtNum(res.addMax)}` : "–";
-
-  const extraNotes = (res.notes && res.notes.length)
-    ? `<div class="small" style="margin-top:8px;color:#b00020">${res.notes.join("<br>")}</div>`
-    : "";
-
-  box.innerHTML = `
-    <div class="kpi"><span><b>Stress-Flag</b></span><span><b>${stressBadge}</b></span></div>
-    <div style="margin-top:6px"><b>Rollen</b><div style="margin-top:6px">${rolesHtml}</div></div>
-
-    <div style="margin-top:10px"><b>Warum?</b>${why}</div>
-
-    <div style="margin-top:10px">
-      <div class="kpi"><span>Fairer Preis</span><span><b>${fairTxt}</b></span></div>
-      <div class="kpi"><span>Kaufen (max)</span><span><b>${buyTxt}</b></span></div>
-      <div class="kpi"><span>Nachkaufen (max)</span><span><b>${addTxt}</b></span></div>
-    </div>
-
-    ${extraNotes}
-  `;
-  box.style.display = "block";
-}
-
-
+// ---------- Volatilität
 
 // ---------- VOLATILITÄT (Std-Abw.) ----------
 function parseVolLines(raw){
@@ -2926,248 +2815,2438 @@ function bindVolUI(){
     const to   = usable[usable.length-1].date.toLocaleDateString("de-DE");
 
     out.innerHTML = `
-      <div class="kpi"><span>Datenpunkte (Preise)</span><span><b>${usable.length}</b></span></div>
-      <div class="kpi"><span>Datenpunkte (Returns)</span><span><b>${rets.length}</b></span></div>
       <div class="kpi"><span>Zeitraum</span><span><b>${from} → ${to}</b></span></div>
+      <div class="kpi"><span>Zeilen (Preise)</span><span><b>${usable.length}</b></span></div>
+      <div class="kpi"><span>Returns</span><span><b>${rets.length}</b></span></div>
 
-      <hr style="border:none;border-top:1px solid #e6e6e6;margin:10px 0">
+      <div class="kpi highlight"><span><b>Volatilität (Std-Abw.)</b></span><span><b>${fmtPctLocal(sdAdj)}</b></span></div>
 
-      <div class="kpi highlight"><span><b>Volatilität (Std-Abw.) ${annualize ? "annualisiert" : "täglich"}</b></span><span><b>${fmtPctLocal(sdAdj)}</b></span></div>
-      <div class="kpi"><span>Ø Return ${annualize ? "(täglich)" : "(täglich)"}</span><span><b>${fmtPctLocal(mu)}</b></span></div>
-      <div class="kpi"><span>Min Return</span><span>${fmtPctLocal(minR)}</span></div>
-      <div class="kpi"><span>Max Return</span><span>${fmtPctLocal(maxR)}</span></div>
+      <div class="kpi"><span>Ø täglicher Return</span><span>${fmtPctLocal(mu)}</span></div>
+      <div class="kpi"><span>Min / Max Return</span><span>${fmtPctLocal(minR)} / ${fmtPctLocal(maxR)}</span></div>
 
-      <div class="small" style="margin-top:10px">
-        Hinweis: Std-Abw. ist <b>Sample</b> (n−1). Annualisierung = × √252.
+      <div class="small" style="margin-top:8px">
+        Return-Typ: <b>${retType === "log" ? "Log Returns" : "Simple Returns"}</b><br/>
+        Annualisierung: <b>${annualize ? "Ja (× √252)" : "Nein (täglich)"}</b>
       </div>
     `;
-    out.style.display="block";
+    out.style.display = "block";
   });
 
   if(clr){
     clr.addEventListener("click", () => {
       ta.value = "";
       hideVolErr();
-      out.style.display="none";
-      out.innerHTML="";
-      ta.focus();
+      out.style.display = "none";
+      out.innerHTML = "";
     });
   }
-
-  // Enter im Textarea soll normal Zeilenumbruch machen (kein Berechnen).
 }
-
-
-
-// --- Offline-Default Kurse (kannst du jederzeit ändern) ---
-// Bedeutung: 1 USD = 0.92 EUR (Beispielwert)
-const FX_DEFAULT_USD_EUR = 0.92;
-
-// Ableitung: 1 EUR = X USD
-function fxDefaultRate(from, to){
-  if(from === to) return 1;
-
-  // Wir definieren USD->EUR als Basis
-  if(from === "USD" && to === "EUR") return FX_DEFAULT_USD_EUR;
-  if(from === "EUR" && to === "USD") return 1 / FX_DEFAULT_USD_EUR;
-
-  return NaN;
-}
-
-
-
-// ---------- USD ⇄ EUR ----------
-async function fxFetchRate(from, to){
-  // Frankfurter API (ECB-Referenzkurse)
-  // Beispiel: https://api.frankfurter.dev/latest?from=USD&to=EUR
-  const url = `https://api.frankfurter.dev/latest?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`;
-  const r = await fetch(url, { cache: "no-store" });
-  if(!r.ok) throw new Error("Kurs konnte nicht geladen werden.");
-  const j = await r.json();
-  const rate = j?.rates?.[to];
-  const date = j?.date;
-  if(!Number.isFinite(rate)) throw new Error("Ungültiger Kurs empfangen.");
-  return { rate, date };
-}
-
-
-function fxShowErr(msg){
-  const el = document.getElementById("fx_err");
-  if(!el) return;
-  el.style.display = "block";
-  el.textContent = msg;
-}
-
-
-function fxHideErr(){
-  const el = document.getElementById("fx_err");
-  if(!el) return;
-  el.style.display = "none";
-  el.textContent = "";
-}
-
-
-function fxFmt(x){
-  if(!Number.isFinite(x)) return "–";
-  return x.toLocaleString("de-DE", { maximumFractionDigits: 6 });
-}
-
-
-
-
-async function fxUpdateRateUI(forceLive = false){
-  fxHideErr();
-  const from = document.getElementById("fx_from")?.value || "USD";
-  const to   = document.getElementById("fx_to")?.value || "EUR";
-  const box  = document.getElementById("fx_rateBox");
-  const man  = document.getElementById("fx_manualRate");
-  if(!box) return;
-
-  // 1) Standard: Offline-Default anzeigen (und Feld befüllen, wenn leer)
-  const def = fxDefaultRate(from, to);
-  if(Number.isFinite(def)){
-    box.innerHTML = `<b>Offline-Default:</b> 1 ${from} = ${fxFmt(def)} ${to}<br><span class="vol-muted">Stand: manuell/vorgegeben</span>`;
-    if(man && !man.value.trim()){
-      man.value = String(def).replace(".", ",");
-    }
-  } else {
-    box.textContent = "Kein Offline-Default für dieses Paar definiert.";
-  }
-
-  // 2) Optional live laden – NUR wenn forceLive=true (Button)
-  if(!forceLive) return;
-
-  box.innerHTML = "Lade Live-Kurs…";
-
-  try{
-    const { rate, date } = await fxFetchRate(from, to);
-    box.innerHTML = `<b>Live:</b> 1 ${from} = ${fxFmt(rate)} ${to}<br><span class="vol-muted">Stand: ${date || "–"}</span>`;
-    if(man){
-      man.value = String(rate).replace(".", ","); // überschreibt bewusst
-    }
-  } catch(e){
-    // Fallback bleibt offline-default / manuell
-    fxShowErr("Live-Kurs nicht verfügbar → nutze Offline/Manuell.");
-    // box wieder auf offline/default zurücksetzen
-    if(Number.isFinite(def)){
-      box.innerHTML = `<b>Offline-Default:</b> 1 ${from} = ${fxFmt(def)} ${to}<br><span class="vol-muted">Stand: manuell/vorgegeben</span>`;
-    } else {
-      box.textContent = "Live nicht verfügbar und kein Default definiert.";
-    }
-  }
-}
-
-
-
-
-async function fxCalc(){
-  fxHideErr();
-
-  const amount = parseNumberSmart(document.getElementById("fx_amount")?.value);
-  const from = document.getElementById("fx_from")?.value || "USD";
-  const to   = document.getElementById("fx_to")?.value || "EUR";
-
-  if(!Number.isFinite(amount)) return fxShowErr("Bitte Betrag korrekt eingeben.");
-
-  // 1) Kurs aus Eingabefeld (Standard: wird beim Öffnen mit Default gefüllt)
-  const manualRaw = document.getElementById("fx_manualRate")?.value;
-  let rate = parseNumberSmart(manualRaw);
-
-  // 2) Wenn Feld leer/ungültig: Offline-Default nehmen
-  if(!Number.isFinite(rate) || rate <= 0){
-    const def = fxDefaultRate(from, to);
-    if(Number.isFinite(def) && def > 0){
-      rate = def;
-      const man = document.getElementById("fx_manualRate");
-      if(man) man.value = String(def).replace(".", ",");
-    } else {
-      return fxShowErr("Kein Kurs eingetragen und kein Offline-Default vorhanden.");
-    }
-  }
-
-  if(rate <= 0) return fxShowErr("Kurs muss > 0 sein.");
-
-  const result = amount * rate;
-  const out = document.getElementById("fx_out");
-  if(!out) return;
-
-  out.innerHTML = `
-    <div class="kpi"><span>Betrag</span><span><b>${fxFmt(amount)} ${from}</b></span></div>
-    <div class="kpi"><span>Kurs</span><span><b>1 ${from} = ${fxFmt(rate)} ${to}</b></span></div>
-    <div class="kpi highlight"><span><b>Ergebnis</b></span><span><b>${fxFmt(result)} ${to}</b></span></div>
-    <div class="small" style="margin-top:6px">Quelle: Offline/Manuell (kein Auto-Live).</div>
-  `;
-  out.style.display = "block";
-}
-
-
-
-function bindFxUI(){
-  const calcBtn = document.getElementById("fx_calcBtn");
-  const swapBtn = document.getElementById("fx_swapBtn");
-  const refBtn  = document.getElementById("fx_refreshBtn");
-
-  if(refBtn)  refBtn.addEventListener("click", () => fxUpdateRateUI(true));
-  if(calcBtn) calcBtn.addEventListener("click", fxCalc);
-
-  if(swapBtn){
-    swapBtn.addEventListener("click", () => {
-      const fromEl = document.getElementById("fx_from");
-      const toEl   = document.getElementById("fx_to");
-      if(!fromEl || !toEl) return;
-      const tmp = fromEl.value;
-      fromEl.value = toEl.value;
-      toEl.value = tmp;
-
-      // Manuelles Feld leeren, weil Bedeutung sich ändert
-      const man = document.getElementById("fx_manualRate");
-      if(man) man.value = "";
-
-      fxUpdateRateUI();
-    });
-  }
-
-  // Enter = umrechnen
-  ["fx_amount","fx_manualRate"].forEach(id => {
-    const el = document.getElementById(id);
-    if(!el || !calcBtn) return;
-    el.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" && !e.shiftKey){
-        e.preventDefault();
-        calcBtn.click();
-      }
-    });
-  });
-
-  // Beim Wechsel von Währungen: Kurs neu laden
-  ["fx_from","fx_to"].forEach(id => {
-    const el = document.getElementById(id);
-    if(!el) return;
-    el.addEventListener("change", () => {
-      // Manuelles Feld leeren, weil Richtung sich ändern kann
-      const man = document.getElementById("fx_manualRate");
-      if(man) man.value = "";
-      fxUpdateRateUI();
-    });
-
-  });
-  // Beim ersten Laden: Offline-Default anzeigen/setzen
-fxUpdateRateUI(false);
-}
-
-
-
-document.addEventListener("DOMContentLoaded", bindFxUI);
 
 document.addEventListener("DOMContentLoaded", bindVolUI);
 
-document.addEventListener("DOMContentLoaded", bindNutzenUI);
+  // Enter im Textarea soll normal Zeilenumbruch machen (kein Berechnen).
+
+
+
+
+
+// ---------- Euro - Dollar ----------
+const FX_OFFLINE_DEFAULT = 0.92; // 1 USD = 0,92 EUR (kannst du ändern)
+
+// LocalStorage Keys (damit "standardmäßig offline", aber mit Cache)
+const FX_LS_RATE_KEY = "fx_usd_eur_rate";
+const FX_LS_TIME_KEY = "fx_usd_eur_rate_ts";
+
+// Frankfurter API (ECB-Daten, werktags). Wir holen USD->EUR.
+const FX_API = "https://api.frankfurter.app/latest?from=USD&to=EUR";
+
+// --- Helper ---
+function fxNowMs(){ return Date.now(); }
+function fxIsFresh(tsMs, maxAgeHours=24){
+  if(!Number.isFinite(tsMs)) return false;
+  return (fxNowMs() - tsMs) <= maxAgeHours*60*60*1000;
+}
+function fxFmtRate(x){
+  if(!Number.isFinite(x)) return "–";
+  return x.toLocaleString("de-DE",{minimumFractionDigits:4, maximumFractionDigits:6});
+}
+function fxFmtMoney(x, ccy){
+  if(!Number.isFinite(x)) return "–";
+  // ohne Intl-Währungsformat (weil du eh DE/EN mischst) – schlicht:
+  return `${x.toLocaleString("de-DE",{maximumFractionDigits:2})} ${ccy}`;
+}
+
+// Rate lesen: Cache -> Default
+function fxGetStoredRate(){
+  const r = Number(localStorage.getItem(FX_LS_RATE_KEY));
+  const ts = Number(localStorage.getItem(FX_LS_TIME_KEY));
+  if(Number.isFinite(r) && r>0) return { rate:r, ts };
+  return { rate: FX_OFFLINE_DEFAULT, ts: NaN };
+}
+function fxStoreRate(rate){
+  if(!Number.isFinite(rate) || rate<=0) return;
+  localStorage.setItem(FX_LS_RATE_KEY, String(rate));
+  localStorage.setItem(FX_LS_TIME_KEY, String(fxNowMs()));
+}
+
+// Aktuelle Rate für UI konstruieren abhängig von From/To
+// Basis ist immer usdEur = 1 USD in EUR
+function fxGetEffectiveRate(from, to, usdEur){
+  if(from === to) return 1;
+  // Wenn von USD nach EUR: usdEur
+  if(from === "USD" && to === "EUR") return usdEur;
+  // Wenn von EUR nach USD: inverse
+  if(from === "EUR" && to === "USD") return 1 / usdEur;
+  // Fallback
+  return NaN;
+}
+
+async function fxFetchFrankfurterUsdEur(){
+  const res = await fetch(FX_API, { cache:"no-store" });
+  if(!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  const rate = data?.rates?.EUR;
+  const date = data?.date; // yyyy-mm-dd (Tageskurs)
+  if(!Number.isFinite(rate) || rate<=0) throw new Error("Rate fehlt/ungültig");
+  return { rate, date };
+}
+
+function bindFxUI(){
+
+  console.log("bindFxUI start", {
+  amount: !!document.getElementById("fx_amount"),
+  from: !!document.getElementById("fx_from"),
+  to: !!document.getElementById("fx_to"),
+  calc: !!document.getElementById("fx_calcBtn"),
+  rateBox: !!document.getElementById("fx_rateBox")
+});
+  const amountEl = document.getElementById("fx_amount");
+  const fromEl   = document.getElementById("fx_from");
+  const toEl     = document.getElementById("fx_to");
+  const swapBtn  = document.getElementById("fx_swapBtn");
+  const refreshBtn = document.getElementById("fx_refreshBtn");
+  const manualEl = document.getElementById("fx_manualRate");
+  const calcBtn  = document.getElementById("fx_calcBtn");
+  const errEl    = document.getElementById("fx_err");
+  const outEl    = document.getElementById("fx_out");
+  const rateBox  = document.getElementById("fx_rateBox");
+
+  if(!amountEl || !fromEl || !toEl || !swapBtn || !refreshBtn || !manualEl || !calcBtn || !errEl || !outEl || !rateBox) return;
+
+  function showFxErr(msg){
+    errEl.style.display="block";
+    errEl.textContent=msg;
+  }
+  function hideFxErr(){
+    errEl.style.display="none";
+    errEl.textContent="";
+  }
+  function setRateBox(text){
+    rateBox.innerHTML = text;
+  }
+
+  // 1) Init: Offline Default + ggf. Cache anzeigen
+  const stored = fxGetStoredRate();
+  let usdEur = stored.rate; // 1 USD in EUR
+  let ts = stored.ts;
+
+  // Manual field standardmäßig NICHT überschreiben, wenn User schon was eingetippt hat
+  function syncManualPlaceholder(){
+    const from = fromEl.value;
+    const to   = toEl.value;
+    const rEff = fxGetEffectiveRate(from, to, usdEur);
+    // Wir setzen den Input nur, wenn er leer ist (damit "offline standardmäßig")
+    if(!manualEl.value){
+      manualEl.value = String(Math.round(rEff*1000000)/1000000).replace(".", ",");
+    }
+  }
+
+  function renderRateStatus(extraNote=""){
+    const from = fromEl.value, to = toEl.value;
+    const eff = fxGetEffectiveRate(from, to, usdEur);
+    const ageTxt = Number.isFinite(ts)
+      ? ` (Cache: ${new Date(ts).toLocaleString("de-DE")})`
+      : " (Offline-Default)";
+
+    setRateBox(`
+      <div><b>Basis:</b> 1 USD = ${fxFmtRate(usdEur)} EUR${ageTxt}</div>
+      <div><b>Aktiv:</b> 1 ${from} = ${fxFmtRate(eff)} ${to}</div>
+      ${extraNote ? `<div class="vol-muted" style="margin-top:6px">${extraNote}</div>` : ""}
+    `);
+  }
+
+  syncManualPlaceholder();
+  renderRateStatus(fxIsFresh(ts,24) ? "" : "Hinweis: Cache älter/leer → aktuell wird der Offline-Default genutzt (bis du aktualisierst).");
+
+  // 2) Convert
+  function fxConvert(){
+    hideFxErr();
+    outEl.style.display="none";
+    outEl.innerHTML="";
+
+    const amt = parseNumberSmart(amountEl.value);
+    if(!Number.isFinite(amt)) return showFxErr("Bitte Betrag korrekt eingeben.");
+
+    const from = fromEl.value;
+    const to   = toEl.value;
+    if(from === to){
+      outEl.innerHTML = `<div class="kpi highlight"><span><b>Ergebnis</b></span><span><b>${fxFmtMoney(amt,to)}</b></span></div>`;
+      outEl.style.display="block";
+      return;
+    }
+
+    // Manual Rate: wenn vorhanden, nimmt Vorrang (genau wie du es wolltest)
+    let rateManual = parseNumberSmart(manualEl.value);
+    const hasManual = Number.isFinite(rateManual) && rateManual > 0;
+
+    const rate = hasManual ? rateManual : fxGetEffectiveRate(from, to, usdEur);
+    if(!Number.isFinite(rate) || rate<=0) return showFxErr("Kurs ist ungültig. Bitte Kurs eintragen oder aktualisieren.");
+
+    const result = amt * rate;
+
+    const src = hasManual ? "Manuell" : (Number.isFinite(ts) ? "Cache/Frankfurter" : "Offline-Default");
+    outEl.innerHTML = `
+      <div class="kpi"><span>Quelle</span><span><b>${src}</b></span></div>
+      <div class="kpi"><span>Kurs</span><span><b>1 ${from} = ${fxFmtRate(rate)} ${to}</b></span></div>
+      <div class="kpi highlight"><span><b>Ergebnis</b></span><span><b>${fxFmtMoney(result,to)}</b></span></div>
+    `;
+    outEl.style.display="block";
+  }
+
+  // 3) Refresh (Frankfurter) – optional, nur per Button (=> standardmäßig offline)
+  async function fxRefresh(){
+    hideFxErr();
+    setRateBox(`Lade Kurs von Frankfurter…`);
+
+    try{
+      const { rate, date } = await fxFetchFrankfurterUsdEur();
+      usdEur = rate;
+      fxStoreRate(rate);
+      ts = Number(localStorage.getItem(FX_LS_TIME_KEY)) || fxNowMs();
+
+      // Manual-Feld nur überschreiben, wenn leer ODER wenn es exakt der bisherige Auto-Wert war
+      // (damit User-Manuell nicht "kaputt" geht)
+      const from = fromEl.value, to = toEl.value;
+      const eff = fxGetEffectiveRate(from,to,usdEur);
+
+      if(!manualEl.value){
+        manualEl.value = String(Math.round(eff*1000000)/1000000).replace(".", ",");
+      }
+
+      renderRateStatus(`Stand (Frankfurter/ECB): ${date} (werktags).`);
+    }catch(e){
+      const fallback = fxGetStoredRate();
+      usdEur = fallback.rate;
+      ts = fallback.ts;
+      renderRateStatus("Konnte online nicht laden → nutze Offline/Cache.");
+      showFxErr("Kurs konnte nicht aktualisiert werden (offline?).");
+    }
+  }
+
+  // 4) Swap
+  function fxSwap(){
+    const a = fromEl.value;
+    fromEl.value = toEl.value;
+    toEl.value = a;
+
+    // Manual placeholder neu setzen (nur wenn leer)
+    syncManualPlaceholder();
+    renderRateStatus();
+  }
+
+  // Events
+  calcBtn.addEventListener("click", fxConvert);
+  refreshBtn.addEventListener("click", fxRefresh);
+  swapBtn.addEventListener("click", fxSwap);
+
+  // Wenn User From/To ändert: Rate-Box + (optional) Auto-Manual setzen, wenn leer
+  fromEl.addEventListener("change", () => { syncManualPlaceholder(); renderRateStatus(); });
+  toEl.addEventListener("change",   () => { syncManualPlaceholder(); renderRateStatus(); });
+
+  // Enter = umrechnen
+  [amountEl, manualEl].forEach(el=>{
+    el.addEventListener("keydown",(e)=>{
+      if(e.key==="Enter" && !e.shiftKey){
+        e.preventDefault();
+        fxConvert();
+      }
+    });
+  });
+}
+
+
+
+
+
+
+
+// ---------- NUTZEN CHECK (55 Spalten + 1 großes Feld) ----------
+
+// 55 Headers (wie von dir gewünscht)
+const NUTZEN_HEADERS = [
+  // --- Financials ---
+  "Revenue (FY)",
+  "Revenue Growth 1Y (CAGR)",
+  "Revenue Growth 2Y (CAGR)",
+  "Revenue Growth 3Y (CAGR)",
+  "Revenue Growth 4Y (CAGR)",
+  "Revenue Growth 1Y (YoY)",
+
+  "EPS (Diluted, FY)",
+  "EPS Growth 1Y (CAGR)",
+  "EPS Growth 2Y (CAGR)",
+  "EPS Growth 3Y (CAGR)",
+  "EPS Growth 4Y (CAGR)",
+
+  "Operating Margin pp 1Y (CAGR)",
+  "Operating Margin pp 2Y (CAGR)",
+  "Operating Margin pp 3Y (CAGR)",
+  "Operating Margin pp 4Y (CAGR)",
+  "Operating Margin 1Y",
+
+  "Beta",
+  "52 Week Range",
+  "Volatilität annualisiert (Std-Abw.) 1Y",
+  "Volatilität annualisiert (Std-Abw.) 5Y",
+  "Volatilität annualisiert (Std-Abw.) 10Y",
+
+  "FCF 1Y",
+  "FCF-Margin",
+  "Debt/ FCF",
+  "Net Dept/ EBITDA",
+  "EBITDA 1Y",
+  "EBIDTA Margin 1Y",
+  "Interest Expense 1Y",
+  "Zinsdeckung (ICR)",
+  "ROIC",
+  "ROCE",
+  "FCF Yield 1Y",
+  "Net Income 1Y",
+  "Net income positiv (ja/nein)",
+  "FCF Positiv (ja/nein)",
+
+  // --- Dividenden ---
+  "Dividende (p.a)",
+  "Div- Frequency",
+  "Div.-Rendite aktuell (%)",
+  "Shares out",
+  "Repurchase of Common stock",
+
+  "Dividende (DPS) 1Y (CAGR)",
+  "Dividende (DPS) 2Y (CAGR)",
+  "Dividende (DPS) 3Y (CAGR)",
+  "Dividende (DPS) 4Y (CAGR)",
+  "Payout Ratio 1Y",
+  "FCF-Payout",
+  "Dividend Growth Years",
+  "Dividend growth",
+
+  // --- Bewertung ---
+  "Kurs aktuell",
+  "Kurs 1Y (CAGR)",
+  "Kurs 2Y (CAGR)",
+  "Kurs 3Y (CAGR)",
+  "Kurs 4Y (CAGR)",
+  "Marktkapitalisierung",
+  "KGV (PE Ratio) 1Y",
+  "KGV Target",
+  "Fairer Preis"
+];
+
+// Welche Header gehören zu welcher CAGR-Jahr-Gruppe?
+
+
+
+function nutzenYearMeta(header){
+  let m;
+
+  // CAGR
+  m = header.match(/^Revenue Growth (\d)Y \(CAGR\)$/);
+  if(m) return { type:"cagr", group:"rev", year:Number(m[1]) };
+
+  m = header.match(/^EPS Growth (\d)Y \(CAGR\)$/);
+  if(m) return { type:"cagr", group:"eps", year:Number(m[1]) };
+
+  m = header.match(/^Operating Margin pp (\d)Y \(CAGR\)$/);
+  if(m) return { type:"cagr", group:"opm", year:Number(m[1]) };
+
+  m = header.match(/^Dividende \(DPS\) (\d)Y \(CAGR\)$/);
+  if(m) return { type:"cagr", group:"dps", year:Number(m[1]) };
+
+  m = header.match(/^Kurs (\d)Y \(CAGR\)$/);
+  if(m) return { type:"cagr", group:"kurs", year:Number(m[1]) };
+
+  // Vol
+  m = header.match(/^Volatilität annualisiert \(Std-Abw\.\) (\d+)Y$/);
+  if(m) return { type:"vol", group:"vol", year:Number(m[1]) };
+
+  return null;
+}
+
+
+
+function nutzenGetSelectedCagrYear(){
+  const sel = document.getElementById("nutzen_cagrYears");
+  const y = sel ? Number(sel.value) : 4;
+  return [1,2,3,4].includes(y) ? y : 4;
+}
+
+function nutzenGetSelectedVolYear(){
+  const sel = document.getElementById("nutzen_volYears");
+  const y = sel ? Number(sel.value) : 1;
+  return [1,5,10].includes(y) ? y : 1;
+}
+
+function nutzenUpdateYearVisibility(){
+  const cagrY = nutzenGetSelectedCagrYear();
+  const volY  = nutzenGetSelectedVolYear();
+
+  const headRow = document.getElementById("nutzenHeadRow");
+  const valRow  = document.getElementById("nutzenValueRow");
+  if(!headRow || !valRow) return;
+
+  const headCells = Array.from(headRow.children);
+  const valCells  = Array.from(valRow.children);
+
+  for(let i=0;i<NUTZEN_HEADERS.length;i++){
+    const th = headCells[i];
+    const td = valCells[i];
+    if(!th || !td) continue;
+
+    const t = th.dataset.yearType;          // "cagr" | "vol" | undefined
+    const y = Number(th.dataset.yearValue); // 1/2/3/4/5/10
+
+    if(!t){
+      th.style.display = "";
+      td.style.display = "";
+      continue;
+    }
+
+    if(t === "cagr"){
+      const show = (y === cagrY);
+      th.style.display = show ? "" : "none";
+      td.style.display = show ? "" : "none";
+      continue;
+    }
+
+    if(t === "vol"){
+      const show = (y === volY);
+      th.style.display = show ? "" : "none";
+      td.style.display = show ? "" : "none";
+      continue;
+    }
+  }
+}
+
+
+// Table initial bauen (Header + eine Value-Row mit 55 Zellen)
+function buildNutzenTable(){
+  const headRow = document.getElementById("nutzenHeadRow");
+  const valRow  = document.getElementById("nutzenValueRow");
+  const bigCell = document.getElementById("nutzenBigCell");
+  if(!headRow || !valRow) return;
+
+  // colspan sicher setzen
+  if(bigCell) bigCell.colSpan = NUTZEN_HEADERS.length;
+
+  headRow.innerHTML = "";
+  valRow.innerHTML = "";
+
+  NUTZEN_HEADERS.forEach((h, idx) => {
+    const th = document.createElement("th");
+    th.textContent = h;
+    th.className = "nutzenCell";
+    th.dataset.idx = String(idx);
+
+const meta = nutzenYearMeta(h);
+
+
+if(meta){
+  th.dataset.yearType = meta.type;      // "cagr" oder "vol"
+  th.dataset.yearGroup = meta.group;    // z.B. "rev" oder "vol"
+  th.dataset.yearValue = String(meta.year); // 1/2/3/4/10
+}
+
+    headRow.appendChild(th);
+
+    const td = document.createElement("td");
+    td.className = "nutzenCell";
+    td.dataset.idx = String(idx);
+    td.textContent = ""; // leer initial
+
+if(meta){
+  td.dataset.yearType  = meta.type;
+  td.dataset.yearGroup = meta.group || "";
+  td.dataset.yearValue = String(meta.year);
+}
+
+    valRow.appendChild(td);
+  });
+}
+
+// Text in Tokens splitten: Tab (Excel) / ; / Zeilenumbruch
+function splitNutzenTokens(raw){
+  let s = String(raw ?? "");
+  if(!s.trim()) return [];
+
+  s = s.replace(/\r/g, "\n");
+
+  // Wichtig: Bei Excel ist TAB das sichere Trennzeichen.
+  // Leere Felder MÜSSEN erhalten bleiben, sonst verrutschen die Spalten!
+  if(s.includes("\t")){
+    return s.split("\t").map(x => x.trim()); // KEIN filter() !
+  }
+
+  // Semikolon-Export: auch hier leere Felder behalten
+  if(s.includes(";")){
+    return s.split(";").map(x => x.trim()); // KEIN filter() !
+  }
+
+  // Fallback: Zeilenweise (hier ignorieren wir echte Leerzeilen)
+ // Fallback: Wenn alles in 1 Zeile steht und keine Tabs/; vorhanden sind,
+// splitte auf 2+ Spaces (typisch Web-Kopien)
+const lines = s.split("\n").map(x => x.trim()).filter(x => x.length>0);
+
+if(lines.length === 1 && /\s{2,}/.test(lines[0])){
+  return lines[0].split(/\s{2,}/).map(x => x.trim());
+}
+
+// sonst: jede Zeile = 1 Token
+return lines;
+}
+
+
+
+function nutzenGetVisibleIndices(){
+  const cagrY = nutzenGetSelectedCagrYear();
+  const volY  = nutzenGetSelectedVolYear();
+
+  const idxs = [];
+  for(let i=0;i<NUTZEN_HEADERS.length;i++){
+    const meta = nutzenYearMeta(NUTZEN_HEADERS[i]);
+
+    if(!meta) { idxs.push(i); continue; }
+    if(meta.type === "cagr" && meta.year === cagrY) { idxs.push(i); continue; }
+    if(meta.type === "vol"  && meta.year === volY)  { idxs.push(i); continue; }
+  }
+  return idxs;
+}
+
+
+
+function nutzenFillValues(tokens){
+  const valRow = document.getElementById("nutzenValueRow");
+  if(!valRow) return;
+
+  const tds = Array.from(valRow.querySelectorAll("td"));
+
+  // alles erstmal leeren
+  for(const td of tds) td.textContent = "";
+
+  const totalCols = tds.length; // 55
+  const visibleIdxs = nutzenGetVisibleIndices();
+
+  // Fall A: User liefert exakt 55 Werte -> 1:1
+  if(tokens.length >= totalCols){
+    for(let i=0;i<totalCols;i++){
+      tds[i].textContent = tokens[i] ?? "";
+    }
+    return;
+  }
+
+  // Fall B: User kopiert nur sichtbare Spalten (sehr häufig!)
+  // -> Tokens auf sichtbare Indizes mappen, Rest bleibt leer
+  for(let j=0;j<visibleIdxs.length;j++){
+    const colIndex = visibleIdxs[j];
+    tds[colIndex].textContent = tokens[j] ?? "";
+  }
+}
+
+function nutzenUpdateBigMirror(){
+  const ta = document.getElementById("nutzen_big");
+  const mirror = document.getElementById("nutzen_bigMirror");
+  if(!ta || !mirror) return;
+  mirror.textContent = ta.value || "";
+}
+
+// Zeigt nur die CAGR-Spalten für das ausgewählte Jahr (1–4)
+function nutzenUpdateYearVisibility(){
+  const sel = document.getElementById("nutzen_cagrYears");
+  if(!sel) return;
+  const y = Number(sel.value);
+
+  // Header + Value Zellen synchron aus-/einblenden
+  const headRow = document.getElementById("nutzenHeadRow");
+  const valRow  = document.getElementById("nutzenValueRow");
+  if(!headRow || !valRow) return;
+
+  const headCells = Array.from(headRow.children);
+  const valCells  = Array.from(valRow.children);
+
+  for(let i=0;i<NUTZEN_HEADERS.length;i++){
+    const th = headCells[i];
+    const td = valCells[i];
+    if(!th || !td) continue;
+
+    const isCagr = th.dataset.cagrYear && th.dataset.cagrGroup;
+    if(!isCagr){
+      th.style.display = "";
+      td.style.display = "";
+      continue;
+    }
+
+    const year = Number(th.dataset.cagrYear);
+    const show = (year === y);
+
+    th.style.display = show ? "" : "none";
+    td.style.display = show ? "" : "none";
+  }
+}
+
+// UI-Bindings für Nutzen
+function bindNutzenUI(){
+  // 1) Tabelle bauen (einmalig)
+  buildNutzenTable();
+
+  // 2) UI einmal binden (wichtig: NICHT in Klick-Handlern!)
+  bindNutzenStressUI();
+  bindNutzenOverlayUI();
+  bindOverlayActionsUI();
+
+  // 3) Rollenbox initial rendern
+  renderNutzenRolesBox();
+
+  // 4) Parse Button
+  const parseBtn = document.getElementById("nutzen_parseBtn");
+  if(parseBtn){
+    parseBtn.addEventListener("click", () => {
+      const raw = document.getElementById("nutzen_big")?.value ?? "";
+      const tokens = splitNutzenTokens(raw);
+      nutzenFillValues(tokens);
+      nutzenUpdateYearVisibility();
+
+      // Rollen + Auto-UI (Stress/Fair/Actions) aktualisieren
+      renderNutzenRolesBox();
+    });
+  }
+
+  // 5) Clear Button
+  const clrBtn = document.getElementById("nutzen_clearBtn");
+  if(clrBtn){
+    clrBtn.addEventListener("click", () => {
+      const ta2 = document.getElementById("nutzen_big");
+      if(ta2) ta2.value = "";
+      nutzenUpdateBigMirror();
+      nutzenFillValues([]);
+      nutzenUpdateYearVisibility();
+      renderNutzenRolesBox();
+    });
+  }
+
+  // 6) CAGR Years Select
+  const sel = document.getElementById("nutzen_cagrYears");
+  if(sel){
+    sel.addEventListener("change", () => {
+      nutzenUpdateYearVisibility();
+      // optional: wenn du nach Wechsel sofort neu rendern willst:
+      // renderNutzenRolesBox();
+    });
+  }
+
+  const selVol = document.getElementById("nutzen_volYears");
+if(selVol){
+  selVol.addEventListener("change", () => {
+    nutzenUpdateYearVisibility();
+    // optional:
+    // renderNutzenRolesBox();
+  });
+}
+
+  // Initial: richtige Sichtbarkeit
+  nutzenUpdateYearVisibility();
+}
+
+
+
+/* ===============================
+   OVERLAY: Rollen / Stress / Range
+   =============================== */
+
+function nutzenGetTableMap(){
+  // Map: Header -> Zelleninhalt (Text)
+  const valRow = document.getElementById("nutzenValueRow");
+  if(!valRow) return {};
+
+  const cells = Array.from(valRow.querySelectorAll("td"));
+  const map = {};
+  for(let i=0;i<NUTZEN_HEADERS.length;i++){
+    map[NUTZEN_HEADERS[i]] = (cells[i]?.textContent ?? "").trim();
+  }
+  return map;
+}
+
+function nutzenOverlaySetStress(mode){
+  const pill = document.getElementById("nutzenOverlayStressPill");
+  const txt  = document.getElementById("nutzenOverlayStressText");
+  if(!pill || !txt) return;
+
+  pill.classList.remove("statusGreen","statusYellow","statusRed");
+
+  if(mode === "green"){
+    pill.classList.add("statusGreen");
+    txt.textContent = "Grün (manuell)";
+  } else if(mode === "yellow"){
+    pill.classList.add("statusYellow");
+    txt.textContent = "Gelb (manuell)";
+  } else if(mode === "red"){
+    pill.classList.add("statusRed");
+    txt.textContent = "Rot (manuell)";
+  } else {
+    txt.textContent = "– (noch nicht berechnet)";
+  }
+}
+
+/* ===============================
+   STRESS FLAG (Nutzen Seite) – UI only
+   =============================== */
+
+// Setzt die Pill auf der Nutzen-Seite (keine Logik, nur Anzeige)
+function nutzenSetStressUI(mode){
+  const pill = document.getElementById("nutzenStressPill");
+  const txt  = document.getElementById("nutzenStressText");
+  if(!pill || !txt) return;
+
+  pill.classList.remove("statusGreen","statusYellow","statusRed");
+
+  if(mode === "green"){
+    pill.classList.add("statusGreen");
+    txt.textContent = "Grün (manuell)";
+  } else if(mode === "yellow"){
+    pill.classList.add("statusYellow");
+    txt.textContent = "Gelb (manuell)";
+  } else if(mode === "red"){
+    pill.classList.add("statusRed");
+    txt.textContent = "Rot (manuell)";
+  } else {
+    txt.textContent = "– (noch nicht berechnet)";
+  }
+}
+
+// Hält Nutzen-Seite und Overlay in Sync (UI only)
+function nutzenSyncStress(mode){
+  // 1) Nutzen-Seite setzen
+  nutzenSetStressUI(mode);
+
+  // 2) Overlay setzen (deine vorhandene Funktion)
+  nutzenOverlaySetStress(mode);
+
+  // 3) Selects synchronisieren (falls vorhanden)
+  const selMain = document.getElementById("nutzenStressSelect");
+  const selOv   = document.getElementById("nutzenOverlayStressSelect");
+
+  if(selMain && selMain.value !== mode) selMain.value = mode;
+  if(selOv   && selOv.value   !== mode) selOv.value = mode;
+
+  // Placeholder-Text (optional)
+  const whyMain = document.getElementById("nutzenStressWhy");
+  const whyOv   = document.getElementById("nutzenOverlayStressWhy");
+
+  const whyTxt = (mode === "auto")
+    ? "Noch keine Begründung hinterlegt."
+    : "Manuell gesetzt (UI-Test) – Regeln kommen später.";
+
+  if(whyMain) whyMain.textContent = whyTxt;
+  if(whyOv)   whyOv.textContent   = whyTxt;
+}
+
+function bindNutzenStressUI(){
+  const selMain = document.getElementById("nutzenStressSelect");
+  const selOv   = document.getElementById("nutzenOverlayStressSelect");
+
+  // default
+  nutzenSyncStress("auto");
+
+  if(selMain){
+    selMain.addEventListener("change", () => {
+      const v = selMain.value;
+      nutzenSyncStress((v==="green"||v==="yellow"||v==="red") ? v : "auto");
+    });
+  }
+
+  if(selOv){
+    selOv.addEventListener("change", () => {
+      const v = selOv.value;
+      nutzenSyncStress((v==="green"||v==="yellow"||v==="red") ? v : "auto");
+    });
+  }
+}
+
+
+
+
+
+function nutzenOverlayFillRangeBase(){
+  const tbody = document.getElementById("nutzenOverlayRangeBase");
+  if(!tbody) return;
+
+  const ev = nutzenEvaluateAll(); // nutzt deine echte Berechnung
+  const m = ev.map;
+
+  const p52 = nzParse52w(m["52 Week Range"]);
+  const baseRows = [
+    ["Kurs aktuell", m["Kurs aktuell"] || "–"],
+    ["Fairer Preis", m["Fairer Preis"] || (Number.isFinite(ev.fair)? ev.fair.toFixed(2):"–")],
+    ["KGV Target", m["KGV Target"] || "–"],
+    ["KGV (PE Ratio) 1Y", m["KGV (PE Ratio) 1Y"] || "–"],
+    ["Beta", m["Beta"] || "–"],
+    ["52W Low", Number.isFinite(p52.low) ? nzFmtPrice(p52.low) : "–"],
+    ["52W High", Number.isFinite(p52.high) ? nzFmtPrice(p52.high) : "–"],
+    ["Volatilität 1Y", m["Volatilität annualisiert (Std-Abw.) 1Y"] || "–"],
+    ["Stress (Auto)", (ev.stress?.mode || "–").toUpperCase()],
+  ];
+
+  // Kauf-Ranges berechnen
+  const bandsRes = nutzenComputeBuyBands(ev);
+
+  let bandsRows = [];
+  let explainTxt = "";
+
+  if(bandsRes.ok){
+    const b = bandsRes.bands;
+
+    const price = (mult)=> (mult===Infinity) ? Infinity : (ev.fair * mult);
+
+    const rowBand = (label, lo, hi) => {
+      const loP = (lo===0) ? 0 : price(lo);
+      const hiP = price(hi);
+
+      const rangeStr =
+        (hi === Infinity)
+          ? `> ${nzFmtPrice(loP)}`
+          : `${nzFmtPrice(loP)} – ${nzFmtPrice(hiP)}`;
+
+      const multStr =
+        (hi === Infinity)
+          ? `> ${(lo*100).toFixed(0)}% von Fair`
+          : `${(lo*100).toFixed(0)}–${(hi*100).toFixed(0)}% von Fair`;
+
+      return [label, `${rangeStr}  (${multStr})`];
+    };
+
+    bandsRows = [
+      ["— Kauf-Ranges (auto) —", ""],
+      rowBand("Nachkaufen (Strong Buy)", b.strongBuy.lo, b.strongBuy.hi),
+      rowBand("Kaufen (Buy)",            b.buy.lo,       b.buy.hi),
+      rowBand("Halten (Hold)",           b.hold.lo,      b.hold.hi),
+      rowBand("Teuer (Wait/Trim)",       b.expensive.lo, b.expensive.hi),
+      rowBand("Sehr teuer",              b.veryExp.lo,   b.veryExp.hi),
+    ];
+
+    explainTxt = bandsRes.explain;
+  } else {
+    bandsRows = [
+      ["— Kauf-Ranges (auto) —", ""],
+      ["Hinweis", "Fair Value fehlt → keine Ranges berechenbar."]
+    ];
+    explainTxt = bandsRes.explain || "";
+  }
+
+  // Render
+  const esc = (x)=> String(x).replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  const allRows = [...baseRows, ...bandsRows];
+
+  tbody.innerHTML = allRows.map(r => `
+    <tr>
+      <td>${esc(r[0])}</td>
+      <td><b>${esc(r[1])}</b></td>
+    </tr>
+  `).join("");
+
+  // Erklärungstext (falls du ein Feld dafür hast)
+  const explainEl = document.getElementById("nutzenOverlayRangeExplain");
+  if(explainEl){
+    explainEl.textContent = explainTxt;
+  } else {
+    // fallback: als zusätzliche Zeile unten
+    if(explainTxt){
+      tbody.innerHTML += `
+        <tr>
+          <td>Begründung</td>
+          <td><span class="muted">${esc(explainTxt)}</span></td>
+        </tr>
+      `;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+function closeNutzenOverlay(){
+  const ov = document.getElementById("nutzenOverlay");
+  const bd = document.getElementById("nutzenOverlayBackdrop");
+  if(!ov || !bd) return;
+
+  bd.style.display = "none";
+  ov.style.display = "none";
+  ov.setAttribute("aria-hidden","true");
+}
+
+
+// Wichtig: wird erst gebunden, wenn Nutzen-UI gebunden ist
+// -> wir rufen es am Ende von bindNutzenUI() auf
+
+
+/* ===============================
+   ROLLEN-KATALOG (nur UI)
+   =============================== */
+
+// Alle Rollen, die du genannt hast (ohne Vergabe-Logik)
+const NUTZEN_ROLE_CATALOG = [
+  "Dividenden-Aristokrat",
+  "Dividenden-Wachstum",
+  "High Dividend",
+  "Value",
+  "Wachstum",
+  "Quality",
+  "GARP (Wachstum, preis ist nicht teuer)",
+  "Turnaround",
+  "Zykliker",
+  "Spekulation",
+  "Krisenfall",
+  "Small Cap",
+  "Mid Cap",
+  "Large Cap",
+  "Defensiv",
+  "Stabil defensiv"
+];
+
+
+
+function roleBadgeHtml(st){
+  if(st === "on")  return `<span class="roleBadge ok">✅ aktiv</span>`;
+  if(st === "warn") return `<span class="roleBadge mid">⚠️ aktiv</span>`;
+  if(st === "off") return `<span class="roleBadge bad">❌ nicht</span>`;
+  return `<span class="roleBadge">… offen</span>`;
+}
+
+
+/* ===============================
+   OVERLAY: Fairer Preis / Kaufen / Nachkaufen – UI only
+   =============================== */
+
+function ovGetEl(id){ return document.getElementById(id); }
+
+function ovRenderActionsSummary(){
+  const fp = ovGetEl("ov_fairPrice")?.value;
+  const cp = ovGetEl("ov_currentPrice")?.value;
+  const buy = ovGetEl("ov_buySelect")?.value || "auto";
+  const add = ovGetEl("ov_addSelect")?.value || "auto";
+  const out = ovGetEl("ov_actionSummary");
+  if(!out) return;
+
+  const tBuy = (buy==="auto") ? "Kaufen: Auto" : (buy==="yes" ? "Kaufen: Ja" : buy==="maybe" ? "Kaufen: Vielleicht" : "Kaufen: Nein");
+  const tAdd = (add==="auto") ? "Nachkaufen: Auto" : (add==="yes" ? "Nachkaufen: Ja" : add==="maybe" ? "Nachkaufen: Vielleicht" : "Nachkaufen: Nein");
+
+  const tFP = fp ? `Fairer Preis: ${fp}` : "Fairer Preis: –";
+  const tCP = cp ? `Kurs: ${cp}` : "Kurs: –";
+
+  out.textContent = `${tFP} | ${tCP} | ${tBuy} | ${tAdd}`;
+}
+
+
+
+
+/* =========================================
+   1) HELPERS: Parsing / Utilities
+   ========================================= */
+
+function nzStr(x){ return (x ?? "").toString().trim(); }
+
+function nzNum(raw){
+  // akzeptiert "1.234,56", "1234.56", "12%", "–"
+  let s = nzStr(raw);
+  if(!s || s === "–" || s === "-" ) return NaN;
+  s = s.replace(/\s/g,"");
+  // Prozent raus (separat gibt es nzPct)
+  s = s.replace("%","");
+  // deutsche Zahl -> Punkt als Tausender, Komma als Dezimal
+  // wenn beides vorkommt, sehr wahrscheinlich DE-Format
+  if(s.includes(",") && s.includes(".")){
+    s = s.replace(/\./g,"").replace(",",".");
+  } else if(s.includes(",")){
+    s = s.replace(",",".");
+  }
+  // K/M/B/T Shortcuts (optional)
+  const m = s.match(/^(-?\d+(?:\.\d+)?)([kKmMbBtT])$/);
+  if(m){
+    const v = Number(m[1]);
+    const u = m[2].toLowerCase();
+    const mul = (u==="k")?1e3:(u==="m")?1e6:(u==="b")?1e9:1e12;
+    return v * mul;
+  }
+  const n = Number(s);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+function nzPct(raw){
+  // "12,3%" => 12.3 (Prozentpunkte)
+  const n = nzNum(raw);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+function nzYesNo(raw){
+  const s = nzStr(raw).toLowerCase();
+  if(["ja","yes","true","1","y"].includes(s)) return true;
+  if(["nein","no","false","0","n"].includes(s)) return false;
+  return null; // unbekannt
+}
+
+function nzRangePct(raw){
+  // "52 Week Range" kann sein: "100 - 200" oder "100–200" oder "100 / 200"
+  const s = nzStr(raw);
+  if(!s) return NaN;
+  const parts = s.split(/[-–\/]/).map(x=>nzNum(x)).filter(n=>Number.isFinite(n));
+  if(parts.length < 2) return NaN;
+  const lo = Math.min(parts[0], parts[1]);
+  const hi = Math.max(parts[0], parts[1]);
+  if(lo <= 0) return NaN;
+  return (hi - lo) / lo; // z.B. 0.50 = 50%
+}
+
+function nzClamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
+
+function nzSelectedCagrYear(){
+  const sel = document.getElementById("nutzen_cagrYears");
+  const y = sel ? Number(sel.value) : 4;
+  return [1,2,3,4].includes(y) ? y : 4;
+}
+
+/* =========================================
+   2) CORE: Evaluate (Roles + Stress + Fair + Actions)
+   ========================================= */
+
+function nutzenComputeFairPrice(m){
+  // 1) wenn Fairer Preis befüllt -> nehmen
+  const fairGiven = nzNum(m["Fairer Preis"]);
+  if(Number.isFinite(fairGiven) && fairGiven > 0) return fairGiven;
+
+  // 2) sonst EPS * KGV Target (wenn möglich)
+  const eps = nzNum(m["EPS (Diluted, FY)"]);
+  const peT = nzNum(m["KGV Target"]);
+  if(Number.isFinite(eps) && eps > 0 && Number.isFinite(peT) && peT > 0){
+    return eps * peT;
+  }
+  return NaN;
+}
+
+function nutzenComputeActions(m, fair){
+  const current = nzNum(m["Kurs aktuell"]);
+  if(!Number.isFinite(current) || current <= 0 || !Number.isFinite(fair) || fair <= 0){
+    return { buy:"auto", add:"auto", why:["Zu wenig Daten (Kurs/Fair fehlen)."] };
+  }
+  const discount = (fair - current) / fair; // 0.20 => 20% unter fair
+
+  // simple, robuste Heuristik
+  // buy: >=15% unter fair => Ja, 5-15% => Vielleicht, sonst Nein
+  let buy = "no";
+  if(discount >= 0.15) buy = "yes";
+  else if(discount >= 0.05) buy = "maybe";
+
+  // add (nachkaufen): tieferer Discount
+  let add = "no";
+  if(discount >= 0.25) add = "yes";
+  else if(discount >= 0.12) add = "maybe";
+
+  return {
+    buy, add,
+    why: [
+      `Fair ≈ ${fair.toFixed(2)} | Kurs ≈ ${current.toFixed(2)} | Discount ≈ ${(discount*100).toFixed(1)}%`
+    ]
+  };
+}
+
+
+function nzParse52w(raw){
+  // liefert {low, high} oder {low:NaN, high:NaN}
+  const s = nzStr(raw);
+  if(!s) return { low: NaN, high: NaN };
+
+  const parts = s.split(/\s*[-–\/]\s*/).map(x => x.trim());
+  if(parts.length < 2) return { low: NaN, high: NaN };
+
+  const a = nzNum(parts[0]);
+  const b = nzNum(parts[1]);
+  if(!Number.isFinite(a) || !Number.isFinite(b)) return { low: NaN, high: NaN };
+
+  return { low: Math.min(a, b), high: Math.max(a, b) };
+}
+
+function nzFmtPrice(x){
+  return Number.isFinite(x) ? x.toFixed(2) : "–";
+}
+
+/**
+ * Kauf-Bands:
+ * - Baseline: Strong Buy <= 0.75*Fair, Buy 0.75–0.90, Hold 0.90–1.10, Teuer 1.10–1.25, Sehr teuer >1.25
+ * - Dynamisch: bei Stress/Vol werden die Buy-Zonen "strenger" (mehr Sicherheitsmarge)
+ */
+function nutzenComputeBuyBands(ev){
+  const fair = ev?.fair;
+  if(!Number.isFinite(fair) || fair <= 0){
+    return {
+      ok:false,
+      bands:null,
+      explain:"Keine Kauf-Ranges: Fair Value fehlt (oder ist 0)."
+    };
+  }
+
+  const vol = nzPct(ev.map?.["Volatilität annualisiert (Std-Abw.) 1Y"]);
+  const stress = (ev?.stress?.mode || "green"); // green/yellow/red
+
+  // ---- Baseline Multiples ----
+  let strongBuyMax = 0.75;
+  let buyMax       = 0.90;
+  let holdMax      = 1.10;
+  let expensiveMax = 1.25;
+
+  // ---- Risiko-Anpassung (warum):
+  // Höhere Unsicherheit (gelb/rot) oder hohe Volatilität -> größere Sicherheitsmarge -> Buy-Zonen tiefer.
+  // Niedrige Unsicherheit -> leicht weniger strenge Marge möglich.
+  let shift = 0; // wie stark wir nach unten verschieben
+
+  if(stress === "red") shift += 0.08;
+  else if(stress === "yellow") shift += 0.04;
+
+  if(Number.isFinite(vol)){
+    if(vol >= 60) shift += 0.06;
+    else if(vol >= 45) shift += 0.04;
+    else if(vol <= 30 && stress === "green") shift -= 0.02; // stabiler => minimal weniger streng
+  }
+
+  // Clamp: nicht zu extrem
+  shift = nzClamp(shift, -0.03, 0.18);
+
+  strongBuyMax = nzClamp(strongBuyMax - shift, 0.55, 0.85);
+  buyMax       = nzClamp(buyMax       - shift, strongBuyMax + 0.05, 0.98);
+
+  // Hold/Expensive lassen wir bewusst stabil:
+  // Warum: Über Fair werden die Signale ohnehin schwächer, zu viel Dynamik macht's unruhig.
+  // Optional könntest du bei rot auch holdMax leicht senken – ich lasse es erstmal simpel/robust.
+
+  const bands = {
+    strongBuy: { lo: 0,              hi: strongBuyMax },
+    buy:       { lo: strongBuyMax,   hi: buyMax },
+    hold:      { lo: buyMax,         hi: holdMax },
+    expensive: { lo: holdMax,        hi: expensiveMax },
+    veryExp:   { lo: expensiveMax,   hi: Infinity }
+  };
+
+  const explain =
+    `Baseline (Fair-Multiples): Nachkaufen ≤0,75×, Kaufen 0,75–0,90×, Halten 0,90–1,10×, Teuer 1,10–1,25×.\n` +
+    `Anpassung: shift=${(shift*100).toFixed(0)}%-Pkt (Stress=${stress}${Number.isFinite(vol)?`, Vol=${vol.toFixed(1)}%`:""}). ` +
+    `Mehr Risiko ⇒ größere Sicherheitsmarge ⇒ Buy-Zonen tiefer.`;
+
+  return { ok:true, bands, explain };
+}
+
+
+
+/* ===========================
+   Extra helpers (neu)
+   =========================== */
+
+function nzLower(raw){ return nzStr(raw).toLowerCase(); }
+
+function nzIsRegularDividend(freqRaw){
+  // akzeptiert: "quarterly", "quartalsweise", "monthly", "jährlich" etc.
+  const s = nzLower(freqRaw);
+  if(!s) return false;
+  // "stabil regelmäßig" ist nicht messbar -> wir nehmen typische Muster
+  return (
+    s.includes("quart") || s.includes("quarter") ||
+    s.includes("monat") || s.includes("month") ||
+    s.includes("halb")  || s.includes("semi")  ||
+    s.includes("jähr")  || s.includes("year")  ||
+    s.includes("annual")
+  );
+}
+
+function nzIsPeUsable(pe){
+  return Number.isFinite(pe) && pe > 0 && pe < 2000; // sehr grob, aber verhindert Quatsch
+}
+
+
+
+
+
+
+
+/* =========================================
+   STRESS / KRISENFALL (ersetzt deine Funktion)
+   ========================================= */
+
+function nutzenComputeStress(m){
+  const triggers = [];
+
+  const netIncomePos = nzYesNo(m["Net income positiv (ja/nein)"]);
+  const fcfPos       = nzYesNo(m["FCF Positiv (ja/nein)"]);
+
+  const icr          = nzNum(m["Zinsdeckung (ICR)"]);
+  const netDebtEbitda= nzNum(m["Net Dept/ EBITDA"]);
+  const debtFcf      = nzNum(m["Debt/ FCF"]);
+
+  const opm1y        = nzPct(m["Operating Margin 1Y"]);
+  const fcfMargin    = nzPct(m["FCF-Margin"]);
+
+  const vol          = nzPct(m["Volatilität annualisiert (Std-Abw.) 1Y"]);
+  const beta         = nzNum(m["Beta"]);
+  const revYoy       = nzPct(m["Revenue Growth 1Y (YoY)"]);
+
+  const roic         = nzPct(m["ROIC"]);
+  const roce         = nzPct(m["ROCE"]);
+
+
+  // helpers
+  const icrBad1   = Number.isFinite(icr) && icr > 0 && icr < 1;
+  const icr1to6   = Number.isFinite(icr) && icr >= 1 && icr < 6;
+
+  const ndeHigh25to4 = Number.isFinite(netDebtEbitda) && netDebtEbitda > 2.5 && netDebtEbitda <= 4;
+  const ndeOver5     = Number.isFinite(netDebtEbitda) && netDebtEbitda > 5;
+  const ndeNotSane   = !Number.isFinite(netDebtEbitda); // "nicht sinnvoll" / fehlt
+
+  const debtFcf6to12 = Number.isFinite(debtFcf) && debtFcf > 6 && debtFcf <= 12;
+  const debtFcfOver12= Number.isFinite(debtFcf) && debtFcf > 12;
+  const debtFcfNotSane = !Number.isFinite(debtFcf)  || debtFcf <= 0;; // "nicht sinnvoll" / fehlt
+
+  const opm0to10  = Number.isFinite(opm1y) && opm1y >= 0 && opm1y <= 10;
+  const opmNeg    = Number.isFinite(opm1y) && opm1y < 0;
+
+  const vol35to60 = Number.isFinite(vol) && vol >= 35 && vol < 60;
+  const vol60plus = Number.isFinite(vol) && vol >= 60;
+
+  const beta13to18= Number.isFinite(beta) && beta >= 1.3 && beta < 1.8;
+  const beta18plus= Number.isFinite(beta) && beta >= 1.8;
+
+  const revNeg    = Number.isFinite(revYoy) && revYoy < 0;
+  const revVeryNeg= Number.isFinite(revYoy) && revYoy <= -5;
+
+  const fcfWeakMargin = (fcfPos === true) && Number.isFinite(fcfMargin) && fcfMargin < 5;
+
+  // ------------------------
+  // ROT (Krisenfall)
+  // ------------------------
+  // Basis: NetIncome negativ + FCF negativ + mind. 1 harter Trigger
+  const hardRed =
+    icrBad1 ||
+    ndeOver5 || ndeNotSane ||
+    debtFcfOver12 || debtFcfNotSane ||
+    opmNeg;
+
+  const isRedBase = (netIncomePos === false) && (fcfPos === false) && hardRed;
+
+  // optional Rot-Plus (nur als Trigger-Hinweis)
+  const isRedPlus = isRedBase && revVeryNeg && vol60plus;
+
+  if(isRedBase){
+    if(netIncomePos === false) triggers.push("Net Income negativ");
+    if(fcfPos === false) triggers.push("FCF negativ");
+    if(icrBad1) triggers.push("ICR < 1");
+    if(ndeOver5) triggers.push("Net Debt/EBITDA > 5");
+    if(ndeNotSane) triggers.push("Net Debt/EBITDA nicht sinnvoll/fehlt");
+    if(debtFcfOver12) triggers.push("Debt/FCF > 12 (extrem)");
+    if(debtFcfNotSane) triggers.push("Debt/FCF nicht sinnvoll/fehlt");
+    if(opmNeg) triggers.push("Operating Margin < 0%");
+    if(isRedPlus) triggers.push("Rot-Plus: Revenue YoY ≤ -5% & Vol ≥ 60%");
+    return { mode:"red", triggers };
+  }
+
+  // ------------------------
+  // GRÜN (alle Kernkriterien erfüllt)
+  // ------------------------
+  const greenCore =
+    (netIncomePos === true) &&
+    (fcfPos === true) &&
+    (Number.isFinite(icr) && icr >= 6) &&
+    (Number.isFinite(netDebtEbitda) && netDebtEbitda <= 2.5) &&
+    (Number.isFinite(debtFcf) && debtFcf <= 6) &&
+    (Number.isFinite(opm1y) && opm1y > 10) &&
+    (Number.isFinite(vol) && vol <= 35) &&
+    (Number.isFinite(beta) && beta <= 1.3);
+
+  const greenOptionalQuality =
+    (Number.isFinite(roic) && roic >= 10) || (Number.isFinite(roce) && roce >= 12);
+
+  if(greenCore){
+    // optionaler Hinweis
+    if(greenOptionalQuality) triggers.push("Qualitäts-Plus: ROIC/ROCE ok");
+    return { mode:"green", triggers };
+  }
+
+  // ------------------------
+  // GELB (nicht Rot) + Trigger
+  // ------------------------
+  // mindestens 1 (besser 2) Trigger aus deiner Liste
+  let yellowCount = 0;
+
+  if(icr1to6){ triggers.push("ICR 1 bis < 6"); yellowCount++; }
+  if(ndeHigh25to4){ triggers.push("Net Debt/EBITDA > 2,5 bis 4"); yellowCount++; }
+  if(debtFcf6to12){ triggers.push("Debt/FCF > 6 bis 12"); yellowCount++; }
+  if(debtFcfNotSane){ triggers.push("Debt/FCF nicht sinnvoll (FCF sehr klein/fehlt)"); yellowCount++; }
+  if(opm0to10){ triggers.push("Operating Margin 0 bis 10%"); yellowCount++; }
+  if(fcfWeakMargin){ triggers.push("FCF positiv, aber FCF-Marge < 5%"); yellowCount++; }
+  if(vol35to60){ triggers.push("Volatilität 35% bis 60%"); yellowCount++; }
+  if(beta13to18){ triggers.push("Beta 1,3 bis 1,8"); yellowCount++; }
+  if(revNeg){ triggers.push("Revenue YoY < 0%"); yellowCount++; }
+
+  if(yellowCount >= 1){
+    return { mode:"yellow", triggers };
+  }
+
+  // ------------------------
+  // Fallback: eher Grün wenn nichts auffällig, sonst Gelb
+  // (hier: wenn Daten fehlen, lieber Gelb)
+  // ------------------------
+  const missingCore =
+    (netIncomePos === null) || (fcfPos === null) ||
+    !Number.isFinite(icr) || !Number.isFinite(netDebtEbitda) || !Number.isFinite(debtFcf);
+
+  if(missingCore){
+    return { mode:"yellow", triggers:["Zu wenig Daten für eindeutiges Grün/Rot."] };
+  }
+
+  return { mode:"green", triggers:["Keine Stress-Trigger erkannt."] };
+}
+
+
+
+
+
+
+
+/* =========================================
+   ROLES (ersetzt deine Funktion)
+   ========================================= */
+
+function nutzenComputeRoles(m){
+  const y = nzSelectedCagrYear();
+
+  function fmtPct(x){ return Number.isFinite(x) ? `${x.toFixed(1)}%` : "–"; }
+  function fmtNum(x){ return Number.isFinite(x) ? `${x.toFixed(2)}` : "–"; }
+  function okLine(ok, txt){ return `${ok ? "✅" : "❌"} ${txt}`; }
+  function unkLine(txt){ return `… ${txt}`; }
+
+
+  function chk(label, ok, missing=false){
+  return { label, ok, missing };
+}
+
+function buildWhy(checks){
+  // Checklist für ON/OFF: zeigt immer alle Punkte
+  return checks.map(c => {
+    const icon = c.missing ? "…" : (c.ok ? "✅" : "❌");
+    return `${icon} ${c.label}`;
+  });
+}
+
+// true/false/fehlend sauber unterscheiden
+function okOrMissing(isOk, isMissing){
+  if(isMissing) return { ok:false, missing:true };
+  return { ok: !!isOk, missing:false };
+}
+
+
+function has(x){ return Number.isFinite(x); } // nur Kurzform
+
+  // Wachstumsfelder (für Wachstum/GARP etc. nimm IMMER 4Y nach deiner Vorgabe)
+  const revCagr4 = nzPct(m["Revenue Growth 4Y (CAGR)"]);
+  const epsCagr4 = nzPct(m["EPS Growth 4Y (CAGR)"]);
+  const revYoy   = nzPct(m["Revenue Growth 1Y (YoY)"]);
+
+  const dpsCagr4 = nzPct(m["Dividende (DPS) 4Y (CAGR)"]);
+  const divYears = nzNum(m["Dividend Growth Years"]);
+  const divYield = nzPct(m["Div.-Rendite aktuell (%)"]);
+  const payout   = nzPct(m["Payout Ratio 1Y"]);
+  const fcfPayout = nzPct(m["FCF-Payout"]);
+  const divFreq  = nzStr(m["Div- Frequency"]);
+  const divGrowthTxt = nzLower(m["Dividend growth"]); // falls dort "cut" / "negativ" o.ä. steht
+
+  const pe  = nzNum(m["KGV (PE Ratio) 1Y"]);
+  const fair = nutzenComputeFairPrice(m);
+  const current = nzNum(m["Kurs aktuell"]);
+
+  const fcfYield = nzPct(m["FCF Yield 1Y"]);
+  const fcfMargin = nzPct(m["FCF-Margin"]);
+  const opm1y = nzPct(m["Operating Margin 1Y"]);
+  const opmCagr4 = nzPct(m["Operating Margin pp 4Y (CAGR)"]);
+
+  const roic = nzPct(m["ROIC"]);
+  const roce = nzPct(m["ROCE"]);
+
+  const debtFcf = nzNum(m["Debt/ FCF"]);
+  const netDebtEbitda = nzNum(m["Net Dept/ EBITDA"]);
+  const icr = nzNum(m["Zinsdeckung (ICR)"]);
+
+  const beta = nzNum(m["Beta"]);
+  const vol  = nzPct(m["Volatilität annualisiert (Std-Abw.) 1Y"]);
+  const rangePct = nzRangePct(m["52 Week Range"]);
+
+  const netIncomePos = nzYesNo(m["Net income positiv (ja/nein)"]);
+  const fcfPos = nzYesNo(m["FCF Positiv (ja/nein)"]);
+
+  const mcap = nzNum(m["Marktkapitalisierung"]);
+
+  const peUsable = nzIsPeUsable(pe);
+
+  // Margin of Safety (fair/current)
+  const mosOk = (Number.isFinite(fair) && fair > 0 && Number.isFinite(current) && current > 0)
+    ? (current <= 0.85 * fair) : false;
+  const mosOk90 = (Number.isFinite(fair) && fair > 0 && Number.isFinite(current) && current > 0)
+    ? (current <= 0.90 * fair) : false;
+
+  // Dividend sanity (Yield-Trap Filter)
+  const payoutOk = !Number.isFinite(payout) || payout <= 100; // wenn fehlt -> nicht blocken
+  const fcfPayoutOk = !Number.isFinite(fcfPayout) || fcfPayout <= 80;
+  const fcfMustBePos = (fcfPos !== false);
+
+  const regularDiv = nzIsRegularDividend(divFreq);
+
+  // Dividend growth text check (optional, wenn du da "negativ" reinschreibst)
+  const divGrowthLooksBad = divGrowthTxt.includes("cut") || divGrowthTxt.includes("kürz") || divGrowthTxt.includes("negativ") || divGrowthTxt.includes("stop");
+
+  // --- Rollen nach deinen Regeln ---
+
+  // Dividenden-Aristokrat
+  const isAristocrat =
+    (Number.isFinite(divYears) && divYears >= 25) &&
+    regularDiv &&
+    (Number.isFinite(dpsCagr4) ? dpsCagr4 > 0 : true) &&
+    (Number.isFinite(payout) ? (payout >= 30 && payout <= 70) : true) &&
+    (Number.isFinite(fcfPayout) ? fcfPayout <= 80 : true) &&
+    (fcfPos !== false) &&
+    (netIncomePos !== false) &&
+    (Number.isFinite(debtFcf) ? debtFcf < 8 : true) &&
+    (Number.isFinite(icr) ? icr > 4 : true) &&
+    (Number.isFinite(beta) ? beta < 1.2 : true);
+
+  // Dividenden-Wachstum
+  const isDivGrowth =
+    (Number.isFinite(divYears) && divYears >= 5) &&
+    (Number.isFinite(dpsCagr4) && dpsCagr4 >= 5) &&
+    !divGrowthLooksBad &&
+    (Number.isFinite(payout) ? (payout >= 25 && payout <= 60) : true) &&
+    (Number.isFinite(fcfPayout) ? fcfPayout <= 70 : true) &&
+    (fcfPos !== false) &&
+    (netIncomePos !== false) &&
+    (Number.isFinite(revCagr4) ? revCagr4 >= 3 : true) &&
+    (Number.isFinite(epsCagr4) ? epsCagr4 >= 5 : true) &&
+    (Number.isFinite(debtFcf) ? debtFcf < 8 : true) &&
+    (Number.isFinite(icr) ? icr > 4 : true);
+
+  // High Dividend (+ Yield-Trap Filter)
+  const isHighDividend =
+    (Number.isFinite(divYield) && divYield >= 4) &&
+    regularDiv &&
+    payoutOk &&
+    (Number.isFinite(payout) ? payout <= 80 : true) &&
+    fcfPayoutOk &&
+    fcfMustBePos &&
+    (netIncomePos !== false) &&
+    (Number.isFinite(debtFcf) ? debtFcf < 10 : true) &&
+    (Number.isFinite(icr) ? icr > 3 : true);
+
+  // Value
+  const isValue =
+    (
+      (peUsable && pe <= 18) ||
+      mosOk ||
+      (Number.isFinite(fcfYield) && fcfYield >= 5)
+    ) &&
+    (fcfPos !== false) &&
+    (netIncomePos !== false) &&
+    (
+      (Number.isFinite(roic) && roic >= 10) ||
+      (Number.isFinite(roce) && roce >= 10)
+    ) &&
+    (Number.isFinite(netDebtEbitda) ? netDebtEbitda < 3 : true) &&
+    (Number.isFinite(debtFcf) ? debtFcf < 8 : true) &&
+    (Number.isFinite(opm1y) ? opm1y > 0 : true);
+
+  // Wachstum
+  const isGrowth =
+    (Number.isFinite(revCagr4) && revCagr4 >= 10) &&
+    (Number.isFinite(revYoy) ? revYoy >= 8 : true) &&
+    (Number.isFinite(epsCagr4) ? epsCagr4 >= 12 : (netIncomePos !== false && fcfPos !== false)) &&
+    (Number.isFinite(opm1y) ? opm1y > 0 : true) &&
+    (fcfPos !== false) &&
+    (Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true) &&
+    (
+      (Number.isFinite(roic) && roic >= 10) ||
+      (Number.isFinite(roce) && roce >= 10)
+    );
+
+  // Quality
+  const isQuality =
+    (
+      (Number.isFinite(roic) && roic >= 12) &&
+      (Number.isFinite(roce) ? roce >= 12 : true)
+    ) &&
+    (Number.isFinite(opm1y) ? opm1y >= 15 : true) &&
+    (Number.isFinite(opmCagr4) ? opmCagr4 >= 0 : true) &&
+    (fcfPos !== false) &&
+    (Number.isFinite(fcfMargin) ? fcfMargin >= 10 : true) &&
+    (netIncomePos !== false) &&
+    (Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true) &&
+    (Number.isFinite(debtFcf) ? debtFcf <= 6 : true) &&
+    (Number.isFinite(icr) ? icr > 6 : true) &&
+    (Number.isFinite(beta) ? beta <= 1.2 : true);
+
+  // GARP
+  const isGarp =
+    (Number.isFinite(revCagr4) && revCagr4 >= 8) &&
+    (Number.isFinite(epsCagr4) && epsCagr4 >= 10) &&
+    (Number.isFinite(opm1y) ? opm1y >= 10 : true) &&
+    (
+      (Number.isFinite(roic) && roic >= 10) ||
+      (Number.isFinite(roce) && roce >= 10)
+    ) &&
+    (fcfPos !== false) &&
+    (Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true) &&
+    (
+      (peUsable ? pe <= 30 : true) ||
+      mosOk90
+    ) &&
+    (Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true) &&
+    (Number.isFinite(icr) ? icr > 5 : true);
+
+
+    // ===========================
+// Turnaround Inputs (optional)
+// ===========================
+
+// Net Income / FCF Zeitreihe (wenn du sie in der Tabelle hast; sonst NaN)
+const netIncome1 = nzNum(m["Net Income 1Y"]);
+const netIncome2 = nzNum(m["Net Income 2Y"]);
+
+const fcf1 = nzNum(m["FCF 1Y"]);
+const fcf2 = nzNum(m["FCF 2Y"]);
+const fcf3 = nzNum(m["FCF 3Y"]);
+const fcf4 = nzNum(m["FCF 4Y"]);
+
+const fcfMargin1 = nzPct(m["FCF-Margin 1Y"]);
+const fcfMargin2 = nzPct(m["FCF-Margin 2Y"]);
+
+// Operating Margin Vorjahr (du nutzt opmPrev im Trendvergleich)
+const opmPrev = nzPct(m["Operating Margin 2Y"]);
+
+// EPS (FY) und Vorjahr
+const epsFY     = nzNum(m["EPS (Diluted, FY)"]);
+const epsPrevFY = nzNum(m["EPS (Diluted, FY-1)"]);
+
+// EPS YoY 1Y (wird in Turnaround schon gebraucht)
+const epsYoy1 = nzPct(m["EPS Growth 1Y (YoY)"]);
+const epsYoy2 = nzPct(m["EPS Growth 2Y (YoY)"]);
+const epsYoy3 = nzPct(m["EPS Growth 3Y (YoY)"]);
+const epsYoy4 = nzPct(m["EPS Growth 4Y (YoY)"]);
+
+// ICR Vorjahr
+const icrPrev = nzNum(m["Zinsdeckung (ICR) 2Y"]);
+
+// Leverage Vorjahr (optional)
+const ndePrev = nzNum(m["Net Dept/ EBITDA 2Y"]);
+const dcfPrev = nzNum(m["Debt/ FCF 2Y"]);
+
+// =====================
+// Turnaround (neu)
+// ====================
+
+
+
+// Helper: Trend “hoch” (steigend) bei Zahlwerten
+function trendUp(a, b){
+  // a = aktueller, b = vorheriger
+  if(!Number.isFinite(a) || !Number.isFinite(b)) return { ok:false, missing:true };
+  return { ok: a > b, missing:false };
+}
+
+// Helper: “negativ -> weniger negativ” (z.B. -10 -> -2)
+function lessNegative(a, b){
+  if(!Number.isFinite(a) || !Number.isFinite(b)) return { ok:false, missing:true };
+  // a aktueller, b vorher
+  return { ok: (b < 0 && a < 0 && a > b), missing:false };
+}
+
+// Helper: “von negativ zu positiv”
+function flippedToPositive(a, b){
+  if(!Number.isFinite(a) || !Number.isFinite(b)) return { ok:false, missing:true };
+  return { ok: (b < 0 && a > 0), missing:false };
+}
+
+// 52W Low/High (für “vom Tief erholt”)
+const r52 = nzParse52w(m["52 Week Range"]);
+const nearLow = (Number.isFinite(current) && Number.isFinite(r52.low) && Number.isFinite(r52.high))
+  ? (current <= r52.low * 1.10)  // nahe Tief (≤ +10%)
+  : null;
+const reboundFromLow = (Number.isFinite(current) && Number.isFinite(r52.low))
+  ? (current >= r52.low * 1.25)  // ≥ +25% vom Tief
+  : null;
+
+// --- Kernidee Turnaround nach deiner Definition ---e
+// 1) Ausgangslage: NI oder FCF war “schlecht” (negativ) ODER ist aktuell noch schlecht
+const wasBadNow =
+  (netIncomePos === false) || (fcfPos === false);
+
+// 2) “Drehung / Verbesserung” Signale (Trend)
+const niFlip = flippedToPositive(netIncome1, netIncome2);        // - -> +
+const niLessNeg = lessNegative(netIncome1, netIncome2);          // -10 -> -2
+const fcfFlip = flippedToPositive(fcf1, fcf2);                   // - -> +
+const fcfLessNeg = lessNegative(fcf1, fcf2);
+const fcfMarginUp = trendUp(fcfMargin1, fcfMargin2);
+
+const opmUp = trendUp(opm1y, opmPrev);                           // Marge steigt ggü. Vorjahr
+const opmTurning = (Number.isFinite(opmCagr4) ? (opmCagr4 > 0) : null); // 4Y(CAGR) dreht positiv (oder weniger negativ → wenn du willst, kannst du hier auch "> -1" erlauben)
+const revBackPos = (Number.isFinite(revYoy) ? (revYoy > 0) : null);
+
+// EPS dreht: entweder YoY positiv ODER FY besser als FY-1 ODER FY > 0 nach negativ
+const epsUp = trendUp(epsFY, epsPrevFY);
+const epsBackPos = (Number.isFinite(epsYoy1) ? (epsYoy1 > 0) : null);
+
+// ICR verbessert sich (Richtung >1–2)
+const icrUp = trendUp(icr, icrPrev);
+const icrNowOk = (Number.isFinite(icr) ? (icr >= 1.5) : null);
+
+// Leverage “hoch aber sinkend”
+const ndeDown = (Number.isFinite(netDebtEbitda) && Number.isFinite(ndePrev)) ? (netDebtEbitda < ndePrev) : null;
+const dcfDown = (Number.isFinite(debtFcf) && Number.isFinite(dcfPrev)) ? (debtFcf < dcfPrev) : null;
+const leverageHigh = (Number.isFinite(netDebtEbitda) ? netDebtEbitda > 3 : false) || (Number.isFinite(debtFcf) ? debtFcf > 8 : false);
+
+// --- ECHT vs PROXY ---
+// ECHT wenn wir wenigstens NI oder FCF oder OPM Trend vergleichen können:
+const hasTrendData =
+  !niFlip.missing || !niLessNeg.missing || !fcfFlip.missing || !fcfLessNeg.missing || !opmUp.missing || (opmTurning !== null) || (icrUp.missing === false);
+
+// “Turnaround-Score”: du willst mehrere Signale gleichzeitig
+let taSignals = 0;
+
+function addSig(cond){
+  if(cond === true) taSignals++;
+}
+
+addSig(niFlip.ok || niLessNeg.ok);
+addSig(fcfFlip.ok || fcfLessNeg.ok);
+addSig(fcfMarginUp.ok);
+addSig(opmUp.ok || opmTurning === true);
+addSig(revBackPos === true);
+addSig(epsUp.ok || epsBackPos === true);
+addSig(icrUp.ok || icrNowOk === true);
+addSig( (ndeDown === true) || (dcfDown === true) );
+addSig(reboundFromLow === true); // nur Signal, nicht Pflicht
+
+// ECHT: “war schlecht” + mindestens 3 Turnaround-Signale (du kannst 2/4 wählen)
+const isTurnaroundTrue =
+  wasBadNow &&
+  hasTrendData &&
+  (taSignals >= 3) &&
+  (revBackPos !== false); // wenn revYoy bekannt und negativ => eher kein Turnaround
+
+// PROXY: wenn Trends fehlen -> strenger mit 1Y Signalen
+// Proxy = NI/FCF schlecht + (Rev wieder >0) + (OPM >0 oder OPM4Y dreht) + (EPS/ICR nicht katastrophal) und idealerweise Kurs vom Tief erholt
+const isTurnaroundProxy =
+  wasBadNow &&
+  !hasTrendData &&
+  (revBackPos === true) &&
+  ((Number.isFinite(opm1y) && opm1y > 0) || (opmTurning === true)) &&
+  ((epsBackPos === true) || (Number.isFinite(epsFY) && epsFY > 0) || (icrNowOk === true)) &&
+  (reboundFromLow !== false); // wenn bekannt und NICHT erholt -> eher kein
+
+const isTurnaround = isTurnaroundTrue || isTurnaroundProxy;
+const turnaroundNote = isTurnaroundTrue ? "Echt (Trend erkannt)" : (isTurnaroundProxy ? "Proxy (Trend fehlt)" : "");
+
+
+
+// =====================
+// Zykliker (neu)
+// =====================
+
+// --- 0) optional: mehrjährige Felder (wenn vorhanden) ---
+// Wenn du diese Header NICHT hast, bleiben die Werte NaN und es läuft Proxy.
+const revYoy1 = nzPct(m["Revenue Growth 1Y (YoY)"]);
+const revYoy2 = nzPct(m["Revenue Growth 2Y (YoY)"]);
+const revYoy3 = nzPct(m["Revenue Growth 3Y (YoY)"]);
+const revYoy4 = nzPct(m["Revenue Growth 4Y (YoY)"]);
+
+
+
+// Optional (wenn du sowas hast)
+const opm1 = nzPct(m["Operating Margin 1Y"]);
+const opm2 = nzPct(m["Operating Margin 2Y"]);
+const opm3 = nzPct(m["Operating Margin 3Y"]);
+const opm4 = nzPct(m["Operating Margin 4Y"]);
+
+
+// --- 1) Helper: “stark schwankend” über mehrere Jahre ---
+// Schwankend = mindestens 1x positiv UND 1x negativ in der Reihe
+function hasPlusAndMinus(arr){
+  const vals = arr.filter(v => Number.isFinite(v));
+  if(vals.length < 2) return { ok:false, missing:true };
+  const hasPos = vals.some(v => v > 0);
+  const hasNeg = vals.some(v => v < 0);
+  return { ok: hasPos && hasNeg, missing:false };
+}
+
+// “sehr volatil” = Range zwischen min/max groß (z.B. > 25 Prozentpunkte)
+function rangeLarge(arr, pp){
+  const vals = arr.filter(v => Number.isFinite(v));
+  if(vals.length < 2) return { ok:false, missing:true };
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  return { ok: (hi - lo) >= pp, missing:false };
+}
+
+// --- 2) “Echter Zykliker” (wenn Zeitreihe da ist) ---
+const revSwing = hasPlusAndMinus([revYoy1,revYoy2,revYoy3,revYoy4]);        // + und –
+const epsSwing = hasPlusAndMinus([epsYoy1,epsYoy2,epsYoy3,epsYoy4]);        // + und –
+const opmSwing = rangeLarge([opm1,opm2,opm3,opm4], 8);                      // Marge schwankt stark
+const fcfSwing = hasPlusAndMinus([fcf1,fcf2,fcf3,fcf4]);                    // FCF dreht
+
+const betaCyc = Number.isFinite(beta) && beta > 1.2;                        // oft >1,2
+const betaStrong = Number.isFinite(beta) && beta > 1.5;                     // “oft >1,5”
+const volCyc  = Number.isFinite(vol) && vol >= 35;                          // relativ hoch
+const rangeBroad = Number.isFinite(rangePct) && rangePct >= 0.8;            // breite 52W-Range
+
+// PE “trügerisch”: wir können nur markieren, wenn PE nicht nutzbar/negativ oder extrem
+const peTricky = (!peUsable) || (peUsable && pe >= 45);
+
+// ECHT = (Rev ODER EPS) zeigt +/– Wechsel UND Risiko/Range passt
+const isCyclicalTrue =
+  ( (revSwing.ok || epsSwing.ok) ) &&
+  (betaCyc || volCyc || rangeBroad) &&
+  (opmSwing.ok || fcfSwing.ok || peTricky);
+
+// --- 3) Proxy-Zykliker (wenn Zeitreihe fehlt) ---
+// Wenn wir Rev/EPS-Swing nicht prüfen können, nehmen wir “Zykliker-Profil”
+const missingTimeSeries = revSwing.missing && epsSwing.missing;
+const isCyclicalProxy =
+  missingTimeSeries &&
+  (betaCyc && volCyc && rangeBroad) &&
+  ( (Number.isFinite(opm1) && opm1 < 12) || (fcfPos === false) || peTricky );
+
+// Final
+const isCyclical = isCyclicalTrue || isCyclicalProxy;
+const cyclicalNote = isCyclicalTrue ? "Echt (Zeitreihe erkannt)" : (isCyclicalProxy ? "Proxy (Zeitreihe fehlt)" : "");
+
+
+const volVeryHigh = Number.isFinite(vol) && vol >= 60;
+const debtFcfNotSane = !Number.isFinite(debtFcf) || debtFcf <= 0;
+
+// =====================
+// Spekulation (neu)
+// =====================
+
+// 52W Range extrem breit: rangePct ist (high-low)/low
+const rangeExtreme = Number.isFinite(rangePct) && rangePct >= 1.2; // >=120% Spanne
+
+// Vol sehr hoch (45–60+)
+const volHigh = Number.isFinite(vol) && vol >= 45;
+
+// Beta hoch
+const betaHigh = Number.isFinite(beta) && beta >= 1.8;
+
+// Net income negativ (stark schwankend kann man ohne Zeitreihe nicht exakt messen)
+const niBad = (netIncomePos === false);
+
+// FCF negativ oder Marge sehr niedrig/negativ
+const fcfBad = (fcfPos === false) || (Number.isFinite(fcfMargin) && fcfMargin < 3);
+const fcfVeryBad = (fcfPos === false) || (Number.isFinite(fcfMargin) && fcfMargin < 0);
+
+// Debt/FCF sehr hoch oder “nicht sinnvoll”
+const debtFcfVeryHigh = (Number.isFinite(debtFcf) && debtFcf > 12) || debtFcfNotSane;
+
+// PE sehr hoch oder negativ/nicht nutzbar
+const peTooHigh = (Number.isFinite(pe) && pe >= 45);
+const peNotUsable = !Number.isFinite(pe) || pe <= 0; // negativ/fehlend
+const peSpec = peTooHigh || peNotUsable;
+
+// Optional: Hype-Hinweis (nur, wenn du Kurs 4Y CAGR hast)
+const priceCagr4 = nzPct(m["Kurs 4Y (CAGR)"]); // nur falls Feld existiert
+const hypeMove = Number.isFinite(priceCagr4) && priceCagr4 >= 30; // “extrem” frei wählbar
+
+// Fundamentaldaten “nicht stabil”: NI oder FCF schlecht
+const fundamentalsBad = (niBad || fcfBad);
+
+// --- Score Modell ---
+// Idee: Spekulation, wenn (Risk-Vol/Beta/Range) + (Fundamentals/Valuation) zusammenkommen.
+let specScore = 0;
+
+// Risiko/Schwankung
+if(volHigh) specScore++;
+if(volVeryHigh) specScore++;      // extra Punkt
+if(betaHigh) specScore++;
+if(rangeExtreme) specScore++;
+
+// Fundamentals
+if(niBad) specScore++;
+if(fcfBad) specScore++;
+if(fcfVeryBad) specScore++;       // extra Punkt
+if(debtFcfVeryHigh) specScore++;
+
+// Bewertung/PE
+if(peTooHigh) specScore++;
+if(peNotUsable) specScore++;      // extra Punkt
+
+// Harte Mindestbedingung: Mindestens 1 “Schwankungs”-Signal
+const hasSwing = volHigh || betaHigh || rangeExtreme;
+
+// Spekulation = Swing + Score >= 4
+// (dadurch wird es nicht zu “leicht” getriggert)
+const isSpec = hasSwing && (specScore >= 4);
+
+// Optional: Hype nur als Hinweis in Why, nicht als Kriterium
+
+
+  // Krisenfall 
+// Stress weiter berechnen (für Ampel/Overlay), aber NICHT für Krisenfall-Rolle verwenden
+const { mode: stressMode, triggers: stressTriggers } = nutzenComputeStress(m);
+
+// --- Krisenfall (Rolle) = harte Kriterien ---
+const interestExp = nzNum(m["Interest Expense 1Y"]); // Feld muss so heißen wie in deiner Tabelle!
+const range52 = nzParse52w(m["52 Week Range"]);
+const currentPrice = nzNum(m["Kurs aktuell"]);
+
+// Nähe zum 52W-Tief (z.B. <= 15% über Low)
+const near52wLow = (Number.isFinite(range52.low) && Number.isFinite(currentPrice) && range52.low > 0)
+  ? (currentPrice <= range52.low * 1.15)
+  : false;
+
+// “hoch/steigend” bei Interest Expense kann man ohne Zeitreihe NICHT sauber erkennen.
+// Daher: wenn InterestExpense vorhanden und >0 => Druckpunkt; wenn fehlt -> "unknown" (nicht blockend).
+const interestPressure = Number.isFinite(interestExp) ? (interestExp > 0) : null;
+
+// Debt/FCF “nicht sinnvoll” wenn fehlt oder <=0 oder extrem hoch
+
+const debtFcfExtreme = (Number.isFinite(debtFcf) && debtFcf > 12) || debtFcfNotSane;
+
+// NetDebt/EBITDA sehr hoch oder “nicht sinnvoll”
+const ndeExtreme = (!Number.isFinite(netDebtEbitda)) || (netDebtEbitda > 5);
+
+// Operating Margin stark negativ (z.B. < 0)
+const opmVeryBad = Number.isFinite(opm1y) && opm1y < 0;
+
+// Revenue YoY deutlich negativ (z.B. <= -5)
+const revBad = Number.isFinite(revYoy) && revYoy <= -5;
+
+// Volatilität sehr hoch (z.B. >= 60)
+
+
+// ICR kritisch
+const icrCritical = Number.isFinite(icr) && icr < 1;
+
+// Basisbedingungen (müssen erfüllt sein)
+const crisisBase =
+  (netIncomePos === false) &&
+  (fcfPos === false) &&
+  icrCritical;
+
+// Zusätzliche Krisen-Trigger (wir verlangen mehrere davon)
+let crisisScore = 0;
+if(ndeExtreme) crisisScore++;
+if(debtFcfExtreme) crisisScore++;
+if(opmVeryBad) crisisScore++;
+if(revBad) crisisScore++;
+if(near52wLow) crisisScore++;
+if(volVeryHigh) crisisScore++;
+if(interestPressure === true) crisisScore++; // optionaler Zusatz
+
+// Krisenfall = Base + mindestens 2 zusätzliche Trigger
+const isCrisis = crisisBase && (crisisScore >= 2);
+
+  // Size
+  const isSmall = Number.isFinite(mcap) && mcap > 0 && mcap < 2e9;
+  const isMid   = Number.isFinite(mcap) && mcap >= 2e9 && mcap < 10e9;
+  const isLarge = Number.isFinite(mcap) && mcap >= 10e9;
+
+  // Defensiv / stabil defensiv
+  const isDefensive =
+    (Number.isFinite(beta) && beta <= 1.0) &&
+    (Number.isFinite(vol) ? vol <= 30 : true) &&
+    (Number.isFinite(rangePct) ? rangePct <= 0.6 : true);
+
+  const isStableDef =
+    (netIncomePos !== false) &&
+    (fcfPos !== false) &&
+    (Number.isFinite(opm1y) ? opm1y > 0 : true) &&
+    (Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true) &&
+    (Number.isFinite(icr) ? icr > 6 : true) &&
+    (Number.isFinite(debtFcf) ? debtFcf <= 6 : true) &&
+    isDefensive;
+
+
+  const status = {};
+
+function healthLabel(pct, known){
+  if(known <= 0) return "Health: – (zu wenig Daten)";
+  if(pct >= 0.75) return "Health: stark";
+  if(pct >= 0.60) return "Health: ok";
+  return "Health: schwach";
+}
+
+function evalRole(baseChecks, healthChecks, healthMinPct=0.60){
+  // Base: fehlende Werte blocken NICHT hart
+  const baseOk = baseChecks.every(c => c.missing ? true : !!c.ok);
+
+  // Health: nur bekannte Checks zählen
+  const known = healthChecks.filter(c => !c.missing);
+  const okCnt = known.filter(c => !!c.ok).length;
+  const max   = known.length;
+  const pct   = max > 0 ? okCnt / max : 0;
+
+  let state = "off";
+  if(baseOk){
+    if(max === 0) state = "warn";              // Base ok, aber kaum Health-Daten
+    else state = (pct >= healthMinPct) ? "on" : "warn";
+  }
+
+  return { state, baseOk, okCnt, max, pct };
+}
+
+function setRole(role, baseChecks, healthChecks, healthMinPct=0.60){
+  const ev = evalRole(baseChecks, healthChecks, healthMinPct);
+
+  const header =
+    `BASE: ${ev.baseOk ? "✅ ok" : "❌ nicht"} | ` +
+    `HEALTH: ${ev.max ? `${ev.okCnt}/${ev.max}` : "–"} (${healthLabel(ev.pct, ev.max)})`;
+
+  status[role] = {
+    state: ev.state, // "on" | "warn" | "off"
+    why: [
+      header,
+      ...buildWhy(baseChecks).map(x => "BASE: " + x),
+      ...buildWhy(healthChecks).map(x => "HEALTH: " + x),
+    ]
+  };
+}
+
+  // ========== CHECKLISTEN (Beispiele) ==========
+
+  // Aristokrat Checkliste
+const aristocratBase = [
+  chk(`Dividend Growth Years ≥ 25 (aktuell: ${Number.isFinite(divYears)?divYears:"–"})`, Number.isFinite(divYears) && divYears >= 25, !Number.isFinite(divYears)),
+  chk(`Dividende regelmäßig (Frequency: ${divFreq || "–"})`, !!regularDiv, !divFreq),
+  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+];
+
+const aristocratHealth = [
+  chk(`DPS 4Y CAGR > 0% (aktuell: ${fmtPct(dpsCagr4)})`, Number.isFinite(dpsCagr4) ? dpsCagr4 > 0 : true, !Number.isFinite(dpsCagr4)),
+  chk(`Payout 30–70% (aktuell: ${fmtPct(payout)})`, Number.isFinite(payout) ? (payout >= 30 && payout <= 70) : true, !Number.isFinite(payout)),
+  chk(`FCF-Payout ≤ 80% (aktuell: ${fmtPct(fcfPayout)})`, Number.isFinite(fcfPayout) ? (fcfPayout <= 80) : true, !Number.isFinite(fcfPayout)),
+  chk(`Debt/FCF < 8`, Number.isFinite(debtFcf) ? debtFcf < 8 : true, !Number.isFinite(debtFcf)),
+  chk(`ICR > 4`, Number.isFinite(icr) ? icr > 4 : true, !Number.isFinite(icr)),
+  chk(`Beta < 1.2`, Number.isFinite(beta) ? beta < 1.2 : true, !Number.isFinite(beta)),
+];
+
+  // Dividenden-Wachstum Checkliste
+const divGrowthBase = [
+  chk(`Dividend Growth Years ≥ 5`, Number.isFinite(divYears) && divYears >= 5, !Number.isFinite(divYears)),
+  chk(`DPS 4Y CAGR ≥ 5%`, Number.isFinite(dpsCagr4) && dpsCagr4 >= 5, !Number.isFinite(dpsCagr4)),
+  chk(`Keine Kürzung/Stop (Text)`, !divGrowthLooksBad, !divGrowthTxt),
+  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+];
+
+const divGrowthHealth = [
+  chk(`Payout 25–60%`, Number.isFinite(payout) ? (payout >= 25 && payout <= 60) : true, !Number.isFinite(payout)),
+  chk(`FCF-Payout ≤ 70%`, Number.isFinite(fcfPayout) ? (fcfPayout <= 70) : true, !Number.isFinite(fcfPayout)),
+  chk(`Revenue 4Y CAGR ≥ 3%`, Number.isFinite(revCagr4) ? revCagr4 >= 3 : true, !Number.isFinite(revCagr4)),
+  chk(`EPS 4Y CAGR ≥ 5%`, Number.isFinite(epsCagr4) ? epsCagr4 >= 5 : true, !Number.isFinite(epsCagr4)),
+  chk(`Debt/FCF < 8`, Number.isFinite(debtFcf) ? debtFcf < 8 : true, !Number.isFinite(debtFcf)),
+  chk(`ICR > 4`, Number.isFinite(icr) ? icr > 4 : true, !Number.isFinite(icr)),
+];
+
+  // High Dividend Checkliste
+const highDivBase = [
+  chk(`Div.-Rendite ≥ 4%`, Number.isFinite(divYield) && divYield >= 4, !Number.isFinite(divYield)),
+  chk(`Dividende regelmäßig`, !!regularDiv, !divFreq),
+  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+];
+
+const highDivHealth = [
+  chk(`Payout ≤ 80%`, Number.isFinite(payout) ? payout <= 80 : true, !Number.isFinite(payout)),
+  chk(`FCF-Payout ≤ 80%`, Number.isFinite(fcfPayout) ? fcfPayout <= 80 : true, !Number.isFinite(fcfPayout)),
+  chk(`Debt/FCF < 10`, Number.isFinite(debtFcf) ? debtFcf < 10 : true, !Number.isFinite(debtFcf)),
+  chk(`ICR > 3`, Number.isFinite(icr) ? icr > 3 : true, !Number.isFinite(icr)),
+  chk(`Kein Yield-Trap (PayoutOk/FCF)`, payoutOk && fcfPayoutOk && fcfMustBePos, false),
+];
+
+  // Value Checkliste (kurz, aber korrekt)
+const valueBase = [
+  chk(`Billig: KGV≤18 ODER MOS ODER FCF Yield≥5`, (peUsable && pe <= 18) || mosOk || (Number.isFinite(fcfYield) && fcfYield >= 5), false),
+  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+];
+
+const valueHealth = [
+  chk(`ROIC/ROCE ≥ 10%`, (Number.isFinite(roic)&&roic>=10) || (Number.isFinite(roce)&&roce>=10), !(Number.isFinite(roic)||Number.isFinite(roce))),
+  chk(`NetDebt/EBITDA < 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda < 3 : true, !Number.isFinite(netDebtEbitda)),
+  chk(`Debt/FCF < 8`, Number.isFinite(debtFcf) ? debtFcf < 8 : true, !Number.isFinite(debtFcf)),
+  chk(`Operating Margin > 0`, Number.isFinite(opm1y) ? opm1y > 0 : true, !Number.isFinite(opm1y)),
+  chk(`Beta nicht hoch (≤1.3)`, Number.isFinite(beta) ? beta <= 1.3 : true, !Number.isFinite(beta)),
+];
+
+  // Wachstum (kurz)
+const growthBase = [
+  chk(`Revenue 4Y CAGR ≥ 10%`, Number.isFinite(revCagr4) && revCagr4 >= 10, !Number.isFinite(revCagr4)),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
+];
+
+const growthHealth = [
+  chk(`Revenue YoY ≥ 8%`, Number.isFinite(revYoy) ? revYoy >= 8 : true, !Number.isFinite(revYoy)),
+  chk(`EPS 4Y CAGR ≥ 12%`, Number.isFinite(epsCagr4) ? epsCagr4 >= 12 : true, !Number.isFinite(epsCagr4)),
+  chk(`Operating Margin > 0%`, Number.isFinite(opm1y) ? opm1y > 0 : true, !Number.isFinite(opm1y)),
+  chk(`FCF-Marge ≥ 5%`, Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true, !Number.isFinite(fcfMargin)),
+  chk(`ROIC/ROCE ≥ 10%`, (Number.isFinite(roic)&&roic>=10) || (Number.isFinite(roce)&&roce>=10), !(Number.isFinite(roic)||Number.isFinite(roce))),
+];
+
+  // Quality (kurz)
+const qualityBase = [
+  chk(`ROIC ≥ 12%`, Number.isFinite(roic) && roic >= 12, !Number.isFinite(roic)),
+  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+];
+
+const qualityHealth = [
+  chk(`ROCE ≥ 12%`, Number.isFinite(roce) ? roce >= 12 : true, !Number.isFinite(roce)),
+  chk(`Operating Margin ≥ 15%`, Number.isFinite(opm1y) ? opm1y >= 15 : true, !Number.isFinite(opm1y)),
+  chk(`OPM-Trend ≥ 0 (4Y)` , Number.isFinite(opmCagr4) ? opmCagr4 >= 0 : true, !Number.isFinite(opmCagr4)),
+  chk(`FCF-Marge ≥ 10%`, Number.isFinite(fcfMargin) ? fcfMargin >= 10 : true, !Number.isFinite(fcfMargin)),
+  chk(`NetDebt/EBITDA ≤ 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true, !Number.isFinite(netDebtEbitda)),
+  chk(`Debt/FCF ≤ 6`, Number.isFinite(debtFcf) ? debtFcf <= 6 : true, !Number.isFinite(debtFcf)),
+  chk(`ICR > 6`, Number.isFinite(icr) ? icr > 6 : true, !Number.isFinite(icr)),
+  chk(`Beta ≤ 1.2`, Number.isFinite(beta) ? beta <= 1.2 : true, !Number.isFinite(beta)),
+];
+
+  // GARP (kurz)
+const garpBase = [
+  chk(`Revenue 4Y CAGR ≥ 8%`, Number.isFinite(revCagr4) && revCagr4 >= 8, !Number.isFinite(revCagr4)),
+  chk(`EPS 4Y CAGR ≥ 10%`, Number.isFinite(epsCagr4) && epsCagr4 >= 10, !Number.isFinite(epsCagr4)),
+  chk(`Preis ok: PE≤30 oder MOS≤0,9`, (peUsable && pe <= 30) || mosOk90, false),
+];
+
+const garpHealth = [
+  chk(`Operating Margin ≥ 10%`, Number.isFinite(opm1y) ? opm1y >= 10 : true, !Number.isFinite(opm1y)),
+  chk(`ROIC/ROCE ≥ 10%`, (Number.isFinite(roic)&&roic>=10) || (Number.isFinite(roce)&&roce>=10), !(Number.isFinite(roic)||Number.isFinite(roce))),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+  chk(`FCF-Marge ≥ 5%`, Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true, !Number.isFinite(fcfMargin)),
+  chk(`NetDebt/EBITDA ≤ 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true, !Number.isFinite(netDebtEbitda)),
+  chk(`ICR > 5`, Number.isFinite(icr) ? icr > 5 : true, !Number.isFinite(icr)),
+];
+
+const turnBase = [
+  chk(`Ausgangslage: NI oder FCF negativ`, wasBadNow, (netIncomePos===null && fcfPos===null)),
+  chk(`Turnaround erkannt (Echt/Proxy)`, isTurnaround, false),
+];
+
+const turnHealth = [
+  chk(`Signale ≥ 3 (aktuell: ${taSignals})`, Number.isFinite(taSignals) ? (taSignals >= 3) : false, !Number.isFinite(taSignals)),
+  chk(`Revenue YoY nicht negativ`, (revBackPos !== false), (revBackPos===null)),
+  chk(`ICR Richtung ok (≥1.5 oder steigend)`, (icrNowOk===true) || icrUp.ok, (!Number.isFinite(icr) && icrUp.missing)),
+  chk(`Leverage sinkt (NDE oder Debt/FCF)`, (ndeDown===true) || (dcfDown===true), (ndeDown===null && dcfDown===null)),
+  chk(`Kurs vom Tief erholt (Signal)`, reboundFromLow === true, reboundFromLow===null),
+];
+
+const cycBase = [
+  chk(`Zykliker-Profil erkannt (Echt/Proxy)`, isCyclical, false),
+];
+
+const cycHealth = [
+  chk(`Rev Swing (+/–)`, revSwing.ok, revSwing.missing),
+  chk(`EPS Swing (+/–)`, epsSwing.ok, epsSwing.missing),
+  chk(`OPM Swing groß`, opmSwing.ok, opmSwing.missing),
+  chk(`Beta/Vol/Range passen`, (betaCyc || volCyc || rangeBroad), false),
+];
+  
+const specBase = [
+  chk(`Mindestens 1 Swing-Signal (Vol/Beta/Range)`, hasSwing, false),
+  chk(`SpecScore ≥ 4 (aktuell: ${specScore})`, Number.isFinite(specScore) ? specScore >= 4 : false, !Number.isFinite(specScore)),
+];
+
+const specHealth = [
+  chk(`Fundamentals schwach (NI oder FCF)`, fundamentalsBad, false),
+  chk(`Debt/FCF extrem/unsinnig`, debtFcfVeryHigh, false),
+  chk(`PE sehr hoch/negativ`, peSpec, false),
+  chk(`Hype Move (Hinweis)`, hypeMove, !Number.isFinite(priceCagr4)),
+];
+  
+const crisisBaseChecks = [
+  chk(`Net Income negativ`, netIncomePos === false, netIncomePos === null),
+  chk(`FCF negativ`, fcfPos === false, fcfPos === null),
+  chk(`ICR < 1`, icrCritical, !Number.isFinite(icr)),
+];
+
+const crisisHealthChecks = [
+  chk(`Score ≥ 2 (aktuell: ${crisisScore})`, Number.isFinite(crisisScore) ? crisisScore >= 2 : false, !Number.isFinite(crisisScore)),
+  chk(`NetDebt/EBITDA extrem/fehlt`, ndeExtreme, false),
+  chk(`Debt/FCF extrem/unsinnig`, debtFcfExtreme, false),
+  chk(`Operating Margin < 0`, opmVeryBad, !Number.isFinite(opm1y)),
+  chk(`Revenue YoY ≤ -5%`, revBad, !Number.isFinite(revYoy)),
+  chk(`Nahe 52W Low`, near52wLow, !(Number.isFinite(range52.low)&&Number.isFinite(currentPrice))),
+  chk(`Volatilität ≥ 60%`, volVeryHigh, !Number.isFinite(vol)),
+  chk(`Interest Expense Druck`, interestPressure === true, interestPressure === null),
+];
+  const smallChecks = [ chk(`Market Cap < 2 Mrd`, Number.isFinite(mcap) && mcap < 2e9, !Number.isFinite(mcap)) ];
+  const midChecks   = [ chk(`Market Cap 2–10 Mrd`, Number.isFinite(mcap) && mcap >= 2e9 && mcap < 10e9, !Number.isFinite(mcap)) ];
+  const largeChecks = [ chk(`Market Cap > 10 Mrd`, Number.isFinite(mcap) && mcap >= 10e9, !Number.isFinite(mcap)) ];
+
+const defBase = [
+  chk(`Beta ≤ 1.0`, Number.isFinite(beta) && beta<=1.0, !Number.isFinite(beta)),
+];
+
+const defHealth = [
+  chk(`Vol ≤ 30%`, Number.isFinite(vol) ? vol <= 30 : true, !Number.isFinite(vol)),
+  chk(`52W Range ≤ 60%`, Number.isFinite(rangePct) ? rangePct <= 0.6 : true, !Number.isFinite(rangePct)),
+];
+
+const stabDefBase = [
+  chk(`Defensiv erfüllt`, isDefensive, false),
+  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
+  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
+];
+
+const stabDefHealth = [
+  chk(`Operating Margin > 0`, Number.isFinite(opm1y) ? opm1y > 0 : true, !Number.isFinite(opm1y)),
+  chk(`NetDebt/EBITDA ≤ 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true, !Number.isFinite(netDebtEbitda)),
+  chk(`Debt/FCF ≤ 6`, Number.isFinite(debtFcf) ? debtFcf <= 6 : true, !Number.isFinite(debtFcf)),
+  chk(`ICR > 6`, Number.isFinite(icr) ? icr > 6 : true, !Number.isFinite(icr)),
+];
+
+  // ========== SETZEN ==========
+setRole("Dividenden-Aristokrat", aristocratBase, aristocratHealth, 0.60);
+setRole("Dividenden-Wachstum", divGrowthBase, divGrowthHealth, 0.60);
+setRole("High Dividend", highDivBase, highDivHealth, 0.60);
+
+setRole("Value", valueBase, valueHealth, 0.60);
+setRole("Wachstum", growthBase, growthHealth, 0.60);
+setRole("Quality", qualityBase, qualityHealth, 0.65); // Quality etwas strenger
+setRole("GARP (Wachstum, preis ist nicht teuer)", garpBase, garpHealth, 0.60);
+
+setRole("Turnaround", turnBase, turnHealth, 0.50);    // Turnaround: Health lockerer
+setRole("Zykliker", cycBase, cycHealth, 0.50);
+setRole("Spekulation", specBase, specHealth, 0.50);
+
+setRole("Krisenfall", crisisBaseChecks, crisisHealthChecks, 0.50);
+
+setRole("Defensiv", defBase, defHealth, 0.60);
+setRole("Stabil defensiv", stabDefBase, stabDefHealth, 0.65);
+
+// Size kannst du entweder lassen wie gehabt (ohne Health) oder auch als Base-only:
+setRole("Small Cap", smallChecks, [], 0.0);
+setRole("Mid Cap", midChecks, [], 0.0);
+setRole("Large Cap", largeChecks, [], 0.0);
+
+  // Safety
+  for(const r of NUTZEN_ROLE_CATALOG){
+    if(!status[r]) status[r] = { state:"off", why:["… noch keine Checkliste"] };
+  }
+  return status;
+}
+
+
+
+
+
+
+
+
+
+function nutzenEvaluateAll(){
+  const m = nutzenGetTableMap();
+  const fair = nutzenComputeFairPrice(m);
+  const stress = nutzenComputeStress(m);
+  const roles = nutzenComputeRoles(m);
+  const actions = nutzenComputeActions(m, fair);
+
+  return { map:m, fair, stress, roles, actions };
+}
+
+
+
+
+
+
+
+
+/* =========================================
+   3) UI: Render using REAL evaluation
+   ========================================= */
+
+function nutzenApplyAutoToUI(ev){
+  // Fairer Preis in Tabelle zurückschreiben, falls leer/NaN und wir etwas berechnen konnten
+  if(Number.isFinite(ev.fair)){
+    // schreibe nur, wenn Zelle leer ist
+    const valRow = document.getElementById("nutzenValueRow");
+    if(valRow){
+      const cells = Array.from(valRow.querySelectorAll("td"));
+      const idxFair = NUTZEN_HEADERS.indexOf("Fairer Preis");
+      if(idxFair >= 0 && cells[idxFair]){
+        if(!nzStr(cells[idxFair].textContent)) cells[idxFair].textContent = ev.fair.toFixed(2);
+      }
+    }
+  }
+
+  // Stress nur setzen, wenn auf "auto" (nicht manuell überschreiben)
+  const selMain = document.getElementById("nutzenStressSelect");
+  const selOv   = document.getElementById("nutzenOverlayStressSelect");
+  const isAutoMain = !selMain || selMain.value === "auto";
+  const isAutoOv   = !selOv   || selOv.value   === "auto";
+
+  if(isAutoMain || isAutoOv){
+    const mode = ev.stress.mode; // green/yellow/red
+    nutzenSyncStress(mode);
+
+    const whyTxt = ev.stress.triggers.length
+      ? ("Auto-Trigger: " + ev.stress.triggers.join(" | "))
+      : "Auto: keine Stress-Trigger erkannt.";
+    const whyMain = document.getElementById("nutzenStressWhy");
+    const whyOv   = document.getElementById("nutzenOverlayStressWhy");
+    if(whyMain) whyMain.textContent = whyTxt;
+    if(whyOv)   whyOv.textContent   = whyTxt;
+  }
+
+  // Overlay Actions Felder automatisch füllen (wenn leer)
+  const fp = ovGetEl("ov_fairPrice");
+  const cp = ovGetEl("ov_currentPrice");
+  const buy = ovGetEl("ov_buySelect");
+  const add = ovGetEl("ov_addSelect");
+
+  if(fp && !nzStr(fp.value) && Number.isFinite(ev.fair)) fp.value = ev.fair.toFixed(2);
+
+  const current = nzNum(ev.map["Kurs aktuell"]);
+  if(cp && !nzStr(cp.value) && Number.isFinite(current)) cp.value = current.toFixed(2);
+
+  if(buy && buy.value === "auto" && ev.actions.buy !== "auto") buy.value = ev.actions.buy;
+  if(add && add.value === "auto" && ev.actions.add !== "auto") add.value = ev.actions.add;
+
+  ovRenderActionsSummary();
+}
+
+function renderNutzenRolesBox(){
+  const host = document.getElementById("nutzen_roles");
+  if(!host) return;
+
+  const ev = nutzenEvaluateAll();
+  const statusMap = ev.roles;
+
+  host.innerHTML = `
+    <div class="out" style="margin-top:12px">
+      <div class="kpi">
+        <span><b>Rollen</b></span>
+        <span class="small">Auto aus Kennzahlen</span>
+      </div>
+
+      <div class="roleGrid">
+        ${NUTZEN_ROLE_CATALOG.map(role => {
+          const st = statusMap[role]?.state || "unknown";
+          const why = statusMap[role]?.why || [];
+          const whyHtml = (why.length)
+            ? `<ul class="roleChecks">${why.map(x => `<li class="muted">${String(x).replace(/</g,"&lt;").replace(/>/g,"&gt;")}</li>`).join("")}</ul>`
+            : `<div class="roleMeta">–</div>`;
+
+          return `
+            <details class="roleDetails">
+              <summary>
+                <span class="sumRow">
+                  <span>${role}</span>
+                  ${roleBadgeHtml(st)}
+                </span>
+              </summary>
+              ${whyHtml}
+            </details>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+
+  // nach Render: Auto-UI anwenden (Stress/Fair/Actions)
+  nutzenApplyAutoToUI(ev);
+}
+
+function nutzenOverlayFillRoles(){
+  const box = document.getElementById("nutzenOverlayRoles");
+  const why = document.getElementById("nutzenOverlayRolesWhy");
+  if(!box) return;
+
+  const ev = nutzenEvaluateAll();
+  const statusMap = ev.roles;
+
+  box.innerHTML = NUTZEN_ROLE_CATALOG.map(role => {
+    const st = statusMap[role]?.state || "unknown";
+    const on = (st === "on");
+    const off = !on;
+    return `<span class="roleChip ${off ? "off" : ""}">${on ? "✅" : "…"} ${role}</span>`;
+  }).join("");
+
+  if(why){
+    const t = ev.stress.triggers.length ? ev.stress.triggers.join(" | ") : "Keine Stress-Trigger.";
+    why.textContent = `Auto-Status. Stress: ${ev.stress.mode.toUpperCase()} (${t})`;
+  }
+
+  nutzenApplyAutoToUI(ev);
+}
+
+/* =========================================
+   4) Overlay open: use real fills
+   ========================================= */
+
+function openNutzenOverlay(){
+  const ov = document.getElementById("nutzenOverlay");
+  const bd = document.getElementById("nutzenOverlayBackdrop");
+  if(!ov || !bd) return;
+
+  // Inhalte füllen / aktualisieren
+  try { nutzenOverlayFillRoles(); } catch(e) {}
+  try { nutzenOverlayFillRangeBase(); } catch(e) {}
+
+  // Stress Select: nur setzen, wenn leer (sonst überschreibst du manuell)
+  const sel = document.getElementById("nutzenOverlayStressSelect");
+  if(sel && !sel.value) sel.value = "auto";
+
+  // show
+  bd.style.display = "block";
+  ov.style.display = "flex";
+
+  // optional: Klassen für Animationen/Styles
+  bd.classList.add("isOpen");
+  ov.classList.add("isOpen");
+
+  ov.setAttribute("aria-hidden","false");
+}
+
+
+
+
+
+/* =========================================
+   5) Guard: prevent double-binding Overlay/Actions
+   ========================================= */
+
+let _nutzenOverlayBound = false;
+
+
+function bindNutzenOverlayUI(){
+  // 1) Globaler Guard (nur 1x)
+  if(window._nutzenOverlayBound) return;
+  window._nutzenOverlayBound = true;
+
+  const btnOpen   = document.getElementById("nutzen_overlayBtn");
+  const btnClose  = document.getElementById("nutzenOverlayCloseBtn");
+  const backdrop  = document.getElementById("nutzenOverlayBackdrop");
+  const selStress = document.getElementById("nutzenOverlayStressSelect");
+
+  // 2) Pro-Element Guard via dataset.bound
+  if(btnOpen && !btnOpen.dataset.bound){
+    btnOpen.dataset.bound = "1";
+    btnOpen.addEventListener("click", openNutzenOverlay);
+  }
+
+  if(btnClose && !btnClose.dataset.bound){
+    btnClose.dataset.bound = "1";
+    btnClose.addEventListener("click", closeNutzenOverlay);
+  }
+
+  if(backdrop && !backdrop.dataset.bound){
+    backdrop.dataset.bound = "1";
+    backdrop.addEventListener("click", closeNutzenOverlay);
+  }
+
+  // 3) ESC schließt – nur 1x binden
+  if(!document.body.dataset.nutzenEscBound){
+    document.body.dataset.nutzenEscBound = "1";
+    document.addEventListener("keydown", (e) => {
+      if(e.key !== "Escape") return;
+
+      const ov = document.getElementById("nutzenOverlay");
+      if(!ov) return;
+
+      const isOpen =
+        ov.classList.contains("isOpen") ||
+        ov.getAttribute("aria-hidden") === "false" ||
+        ov.style.display === "flex";
+
+      if(isOpen) closeNutzenOverlay();
+    });
+  }
+
+  // 4) Stress-Select im Overlay (manuell/auto)
+  // Pro-Element Guard, damit kein doppeltes "change" entsteht
+  if(selStress && !selStress.dataset.bound){
+    selStress.dataset.bound = "1";
+    selStress.addEventListener("change", () => {
+      const v = selStress.value;
+
+      // Manuell gesetzt
+      if(v === "green" || v === "yellow" || v === "red"){
+        nutzenSyncStress(v);
+        return;
+      }
+
+      // Zurück auf "auto" => neu berechnen und anwenden
+      const ev = nutzenEvaluateAll();
+      nutzenSyncStress(ev.stress.mode);
+
+      const whyTxt = ev.stress.triggers.length
+        ? ("Auto-Trigger: " + ev.stress.triggers.join(" | "))
+        : "Auto: keine Stress-Trigger erkannt.";
+
+      const whyOv   = document.getElementById("nutzenOverlayStressWhy");
+      const whyMain = document.getElementById("nutzenStressWhy");
+      if(whyOv)   whyOv.textContent   = whyTxt;
+      if(whyMain) whyMain.textContent = whyTxt;
+    });
+  }
+}
+
+
+
+let _actionsBound = false;
+function bindOverlayActionsUI(){
+  if(_actionsBound) return;
+  _actionsBound = true;
+  // deine bestehende Funktion bleibt – wir rufen sie einfach nur 1x
+  // (Inhalt unverändert)
+  const fp = ovGetEl("ov_fairPrice");
+  const cp = ovGetEl("ov_currentPrice");
+  const buy = ovGetEl("ov_buySelect");
+  const add = ovGetEl("ov_addSelect");
+  const clearBtn = ovGetEl("ov_clearActions");
+
+  if(fp) fp.addEventListener("input", ovRenderActionsSummary);
+  if(cp) cp.addEventListener("input", ovRenderActionsSummary);
+  if(buy) buy.addEventListener("change", ovRenderActionsSummary);
+  if(add) add.addEventListener("change", ovRenderActionsSummary);
+
+  if(clearBtn){
+    clearBtn.addEventListener("click", () => {
+      if(fp) fp.value = "";
+      if(cp) cp.value = "";
+      if(buy) buy.value = "auto";
+      if(add) add.value = "auto";
+      ovRenderActionsSummary();
+    });
+  }
+  ovRenderActionsSummary();
+}
+
+
+
 
 
 
 </script>
 </body>
 </html>
-
-
-
