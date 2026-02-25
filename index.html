@@ -251,6 +251,9 @@
 }
 
 
+.statusDarkRed{ background:#5a0000; color:#fff; }
+.statusDarkRed .statusDot{ background:#ff4d4d; } 
+
   </style>
 </head>
 <body>
@@ -831,7 +834,6 @@
 <div id="nutzen_stressBox" class="out" style="margin-top:12px">
   <div class="kpi">
     <span><b>Stress Flag</b></span>
-    <span class="small">UI (später automatisch)</span>
   </div>
 
   <div id="nutzenStressPill" class="statusPill" style="margin-top:8px">
@@ -839,28 +841,50 @@
     <span id="nutzenStressText">– (noch nicht berechnet)</span>
   </div>
 
-  <div class="grid" style="margin-top:10px">
-    <div>
-      <label>Manuell setzen (nur UI-Test)</label>
-      <select id="nutzenStressSelect">
-        <option value="auto" selected>Auto (später)</option>
-        <option value="green">Grün</option>
-        <option value="yellow">Gelb</option>
-        <option value="red">Rot</option>
       </select>
     </div>
     <div></div>
   </div>
 
-  <details style="margin-top:10px" open>
-    <summary class="small" style="cursor:pointer">Begründung (Platzhalter)</summary>
-    <div class="small" style="margin-top:8px;color:#666" id="nutzenStressWhy">
-      Noch keine Begründung hinterlegt.
-    </div>
-  </details>
 </div>
       <div id="nutzen_roles" class="roleBox"></div>
+
+    <!-- Erklärungen (Hauptseite) -->
+<div id="nutzen_explainBox" class="out" style="margin-top:12px">
+  <div class="kpi">
+    <span><b>Erklärungen</b></span>
+  </div>
+
+  <!-- 1) Kaufen/Nachkaufen Logik (sichtbar) -->
+  <div style="margin-top:10px">
+    <div class="small" style="color:#666; font-weight:700">Kaufen / Nachkaufen – Logik</div>
+    <div class="small" style="margin-top:6px;color:#666" id="nutzenBuyLogicExplain">
+      <!-- wird per JS gefüllt -->
+      –
     </div>
+  </div>
+
+  <!-- 2) Stress Logik (sichtbar, darunter) -->
+  <div style="margin-top:12px">
+    <div class="small" style="color:#666; font-weight:700">Stress Flag – warum diese Farbe?</div>
+    <div class="small" style="margin-top:6px;color:#666" id="nutzenStressLogicExplain">
+      
+
+      <!-- 3) Rollen – Base/Health -->
+<div style="margin-top:12px">
+  <div class="small" style="color:#666; font-weight:700">Rollen – Base/Health (Kurz)</div>
+  <div class="small" style="margin-top:6px;color:#666; white-space:pre-line" id="nutzenRolesLogicExplain">–</div>
+</div>
+
+      
+    </div>
+  </div>
+</div>
+
+      <div id="nutzenRolesStressLegend" class="small" style="margin-top:8px;color:#666">
+  <!-- wird per JS gefüllt -->
+</div>
+
 
     <div class="small" style="margin-top:10px">
       Hinweis: Die Werte werden als Text verteilt (z. B. „12,5%“,  ja“, „1.250.000“ bleibt erhalten).
@@ -877,7 +901,6 @@
     <div class="nutzenOverlayHead">
       <div>
         <div id="nutzenOverlayTitle" class="nutzenOverlayTitle">Nutzen-Overlay</div>
-        <div class="small" style="margin-top:4px;color:#666">Rollen • Stress-Flag • Kauf/Nachkauf (UI – Logik kommt später)</div>
       </div>
       <button type="button" class="nutzenOverlayClose" id="nutzenOverlayCloseBtn">✕ Schließen</button>
     </div>
@@ -889,19 +912,18 @@
         <div class="overlayCard">
           <h3>Rollen</h3>
           <div class="small" style="color:#666">
-            Aktuell nur Anzeige/Platzhalter. Auswahl kommt später über deine Auswertungslogik.
+        
           </div>
 
           <div class="roleChips" id="nutzenOverlayRoles">
             <!-- wird per JS gefüllt -->
           </div>
 
-          <details style="margin-top:10px">
-            <summary class="small" style="cursor:pointer">Begründung / Checks (Platzhalter)</summary>
-            <div class="small" style="margin-top:8px;color:#666" id="nutzenOverlayRolesWhy">
-              Noch keine Begründung hinterlegt.
-            </div>
-          </details>
+    
+          <div id="nutzenOverlayRolesStressLegend" class="small" style="margin-top:10px;color:#666">
+  <!-- wird per JS gefüllt -->
+</div>
+
         </div>
 
 
@@ -915,20 +937,9 @@
             <span id="nutzenOverlayStressText">– (noch nicht berechnet)</span>
           </div>
 
-          <div class="small" style="margin-top:10px;color:#666">
-            (Optional) Manuell setzen — nur für UI-Test:
-          </div>
 
           <div class="grid" style="margin-top:8px">
-            <div>
-              <label>Manuell</label>
-              <select id="nutzenOverlayStressSelect">
-                <option value="auto" selected>Auto (später)</option>
-                <option value="green">Grün</option>
-                <option value="yellow">Gelb</option>
-                <option value="red">Rot</option>
-              </select>
-            </div>
+    
             <div></div>
           </div>
 
@@ -938,7 +949,6 @@
 <div class="out" style="margin-top:12px">
   <div class="kpi">
     <span><b>Preis & Aktionen</b></span>
-    <span class="small">UI (später automatisch)</span>
   </div>
 
   <div class="grid" style="margin-top:10px">
@@ -956,7 +966,7 @@
   <div class="grid" style="margin-top:10px">
     <div>
       <label>Kaufen (UI)</label>
-      <select id="ov_buySelect">
+      <select id="ov_buySelect" disabled>
         <option value="auto" selected>Auto (später)</option>
         <option value="yes">Ja</option>
         <option value="maybe">Vielleicht</option>
@@ -966,7 +976,7 @@
 
     <div>
       <label>Nachkaufen (UI)</label>
-      <select id="ov_addSelect">
+      <select id="ov_addSelect" disabled>>
         <option value="auto" selected>Auto (später)</option>
         <option value="yes">Ja</option>
         <option value="maybe">Vielleicht</option>
@@ -990,12 +1000,7 @@
   </div>
 </div>
 
-          <details style="margin-top:10px" open>
-            <summary class="small" style="cursor:pointer">Begründung (aufklappbar)</summary>
-            <div class="small" style="margin-top:8px;color:#666" id="nutzenOverlayStressWhy">
-              Noch keine Begründung hinterlegt.
-            </div>
-          </details>
+
         </div>
 
       </div>
@@ -1019,12 +1024,7 @@
           </tbody>
         </table>
 
-        <details style="margin-top:10px">
-          <summary class="small" style="cursor:pointer">Geplante Range-Logik (Platzhalter)</summary>
-          <div class="small" style="margin-top:8px;color:#666">
-            Beispiel später: Buy-Range = Fairer Preis × (1 − Sicherheitsmarge) … / Nachkauf in Stufen, abhängig Stress+Qualität.
-          </div>
-        </details>
+
       </div>
 
     </div>
@@ -3082,103 +3082,471 @@ function bindFxUI(){
 
 // ---------- NUTZEN CHECK (55 Spalten + 1 großes Feld) ----------
 
+
+
+/* ===============================
+   PHASE 1: Normalize Helpers
+================================ */
+
+function nzNumber(x){
+  if(x === null || x === undefined) return NaN;
+  if(typeof x === "number") return Number.isFinite(x) ? x : NaN;
+
+  let s = String(x).trim();
+  if(!s) return NaN;
+
+  const low = s.toLowerCase();
+  if(["n/a","na","—","-","null",""].includes(low)) return NaN;
+
+  let neg = false;
+  if(/^\(.*\)$/.test(s)){ neg = true; s = s.slice(1,-1).trim(); }
+  if(s.startsWith("-")){ neg = true; s = s.slice(1).trim(); }
+
+  // remove currency words/symbols
+  s = s.replace(/[$€£¥]|usd|eur|gbp|jpy/gi, "").trim();
+
+  // unit suffix K/M/B/T
+  let mult = 1;
+  const unitMatch = s.match(/([0-9.,]+)\s*([kmbt])\b/i);
+  if(unitMatch){
+    s = unitMatch[1];
+    const u = unitMatch[2].toLowerCase();
+    if(u==="k") mult = 1e3;
+    if(u==="m") mult = 1e6;
+    if(u==="b") mult = 1e9;
+    if(u==="t") mult = 1e12;
+  }
+
+  // keep only digits and separators
+  s = s.replace(/[^\d.,]/g, "");
+
+  const hasDot = s.includes(".");
+  const hasComma = s.includes(",");
+  if(hasDot && hasComma){
+    const lastDot = s.lastIndexOf(".");
+    const lastComma = s.lastIndexOf(",");
+    if(lastComma > lastDot){
+      s = s.replace(/\./g, "").replace(/,/g, ".");
+    }else{
+      s = s.replace(/,/g, "");
+    }
+  }else if(hasComma && !hasDot){
+    s = s.replace(/,/g, ".");
+  }else{
+    s = s.replace(/,/g, "");
+  }
+
+  const v = Number(s);
+  if(!Number.isFinite(v)) return NaN;
+  const out = v * mult;
+  return neg ? -out : out;
+}
+
+function nzPercent(x){
+  if(x === null || x === undefined) return NaN;
+  return nzNumber(String(x).replace("%",""));
+}
+
+
+function nutzenDevCheckHeaders(){
+  const must = ["KGV target","Fairer Preis","Kurs aktuell","52-Week Range"];
+  const missing = must.filter(h => !NUTZEN_HEADERS.includes(h));
+  if(missing.length) console.warn("Nutzen DevCheck – Missing headers:", missing);
+}
+
+
+function nutzenDevCheckDOM(){
+  const ids = [
+    "nutzenHeadRow","nutzenValueRow","nutzen_roles",
+    "nutzen_parseBtn","nutzen_clearBtn",
+    "nutzen_cagrYears","nutzen_volYears",
+    "nutzenStressSelect","nutzenStressWhy",
+    "nutzen_overlayBtn","nutzenOverlay","nutzenOverlayBackdrop"
+  ];
+  const missing = ids.filter(id => !document.getElementById(id));
+  if(missing.length) console.warn("Nutzen DevCheck – Missing DOM IDs:", missing);
+}
+
+function nutzenDevCheckTableShape(){
+  const headRow = document.getElementById("nutzenHeadRow");
+  const valRow  = document.getElementById("nutzenValueRow");
+  if(!headRow || !valRow) return;
+
+  const ths = headRow.querySelectorAll("th").length;
+  const tds = valRow.querySelectorAll("td").length;
+
+  if(ths !== NUTZEN_HEADERS.length || tds !== NUTZEN_HEADERS.length){
+    console.warn("Nutzen DevCheck – Table shape mismatch", {
+      headers: NUTZEN_HEADERS.length, ths, tds
+    });
+  }
+}
+
+function nutzenDevCheckYearMeta(){
+  // Prüft: (1) YearMeta passt auf alle erwarteten Muster, (2) Select-Werte existieren
+  const yearsCagrInHeaders = new Set();
+  const yearsVolInHeaders  = new Set();
+
+  for(const h of NUTZEN_HEADERS){
+    const meta = nutzenYearMeta(h);
+    if(!meta) continue;
+    if(meta.type === "cagr") yearsCagrInHeaders.add(meta.year);
+    if(meta.type === "vol")  yearsVolInHeaders.add(meta.year);
+  }
+
+  const selC = document.getElementById("nutzen_cagrYears");
+  const selV = document.getElementById("nutzen_volYears");
+
+  const cVals = selC ? Array.from(selC.options).map(o=>Number(o.value)).filter(Number.isFinite) : [];
+  const vVals = selV ? Array.from(selV.options).map(o=>Number(o.value)).filter(Number.isFinite) : [];
+
+  const missingC = [...yearsCagrInHeaders].filter(y => !cVals.includes(y));
+  const missingV = [...yearsVolInHeaders].filter(y => !vVals.includes(y));
+
+  if(missingC.length) console.warn("Nutzen DevCheck – CAGR years in headers but not in select:", missingC);
+  if(missingV.length) console.warn("Nutzen DevCheck – VOL years in headers but not in select:", missingV);
+}
+
+function nutzenDevCheckRuntime(){
+  const mustFns = [
+    "nutzenEvaluateAll","renderNutzenRolesBox","nutzenApplyAutoToUI",
+    "openNutzenOverlay","closeNutzenOverlay",
+    "nutzenSyncStress","ovRenderActionsSummary"
+  ];
+  const missing = mustFns.filter(fn => typeof window[fn] !== "function");
+  if(missing.length) console.warn("Nutzen DevCheck – Missing functions:", missing);
+}
+
+
+function nzYesNo(x){
+  if(x === null || x === undefined) return null;
+  const s = String(x).trim().toLowerCase();
+  if(!s) return null;
+  if(["ja","yes","true","1","positiv","positive"].includes(s)) return true;
+  if(["nein","no","false","0","negativ","negative"].includes(s)) return false;
+  return null;
+}
+
+function nzParse52w(x){
+  const s = (x ?? "").toString();
+  const nums = s.match(/-?\(?[\d.,]+(?:\s*[kmbt])?\)?/gi);
+  if(!nums || nums.length < 2) return { low: NaN, high: NaN };
+  const a = nzNumber(nums[0]);
+  const b = nzNumber(nums[1]);
+  if(!Number.isFinite(a) || !Number.isFinite(b)) return { low: NaN, high: NaN };
+  return { low: Math.min(a,b), high: Math.max(a,b) };
+}
+
+// tolerant header getter (fängt doppelte spaces / kleine Variationen ab)
+function getH(m, ...candidates){
+  for(const k of candidates){
+    if(k in m) return m[k];
+  }
+  // fallback: normalize spaces and compare
+  const keys = Object.keys(m);
+  for(const want of candidates){
+    const w = want.replace(/\s+/g," ").trim();
+    const hit = keys.find(real => real.replace(/\s+/g," ").trim() === w);
+    if(hit) return m[hit];
+  }
+  return undefined;
+}
+
+
+/* ===============================
+   PHASE 1: Normalize Company
+   input:  m = { "<Header>": "<string>", ... }
+   output: d = normalized stable keys
+================================ */
+
+function normalizeCompany(m){
+  const d = {};
+
+  // 1) Revenue (FY)
+  d.revenue_fy = nzNumber(getH(m, "Revenue (FY)"));
+
+  // 2) Revenue CAGR 1/2/3/4Y (du willst mind. 4Y anzeigen, aber Set ist da)
+  for(const y of CAGR_YEARS){
+    d[`revenue_cagr_${y}y`] = nzPercent(getH(m, `Revenue Growth ${y}Y (CAGR)`, `Revenue  ${y}Y (CAGR)`, `Revenue ${y}Y (CAGR)`));
+  }
+
+  // 3) Revenue Growth 1Y (YoY)
+  d.revenue_yoy_1y = nzPercent(getH(m, "Revenue Growth  1Y (YoY)", "Revenue Growth 1Y (YoY)"));
+
+  // 4) Interest Expense 1Y
+  d.interest_exp_1y = nzNumber(getH(m, "Interest Expense 1Y"));
+
+  // 5) Net Income Y1 + Positiv Flag
+  d.net_income_1y  = nzNumber(getH(m, "Net Income Y1"));
+  d.net_income_yes = nzYesNo(getH(m, "Net income positiv (Ja/Nein)"));
+
+  // 6) EPS (Diluted, FY) + EPS CAGR 1/2/3/4Y
+  d.eps_fy = nzNumber(getH(m, "EPS 1Y (Diluted, FY)", "EPS (Diluted, FY)"));
+  for(const y of CAGR_YEARS){
+    d[`eps_cagr_${y}y`] = nzPercent(getH(m, `EPS Growth ${y}Y (CAGR)`));
+  }
+
+  // 7) Operating Margin pp CAGR 1/2/3/4Y + Operating Margin 1Y
+  for(const y of CAGR_YEARS){
+    d[`op_margin_pp_cagr_${y}y`] = nzNumber(getH(m, `Operating Margin ${y}Y pp (CAGR)`, `Operating Margin pp ${y}Y (CAGR)`));
+  }
+  d.op_margin_1y = nzPercent(getH(m, "Operating Margin 1Y"));
+
+  // 8) Profit / EBITDA / Gross
+  d.profit_margin_1y  = nzPercent(getH(m, "Profit Margin 1Y"));
+  d.ebitda_1y         = nzNumber(getH(m, "EBITDA 1Y"));
+  d.ebitda_margin_1y  = nzPercent(getH(m, "EBITDA Margin 1Y"));
+  d.dps_cagr_4y        = nzPercent(getH(m, " Dividende (DPS) 4Y (CAGR)", "Dividende (DPS) 4Y (CAGR)"));
+  d.gross_margin_1y    = nzPercent(getH(m, "Gross Margin 1Y"));
+
+  // 9) Cash & ST Investments 1Y
+  d.cash_st_invest_1y  = nzNumber(getH(m, "Cash& Short- Term Investments 1Y", "Cash & Short- Term Investments 1Y"));
+
+  // 10) Beta + 52W Range
+  d.beta = nzNumber(getH(m, "Beta"));
+  const r52 = nzParse52w(getH(m, "52- Week Range", "52 Week Range"));
+  d.range52_low  = r52.low;
+  d.range52_high = r52.high;
+
+  // 11) KGV target + Fairer Preis
+  d.pe_target       = nzNumber(getH(m, "KGV target"));
+  d.fair_price_input= nzNumber(getH(m, "Fairer Preis"));
+
+  // 12) Cashflow / Capex / Buybacks / FCF
+  d.ocf_1y        = nzNumber(getH(m, "Operating Cash Flow 1Y"));
+  d.capex_1y      = nzNumber(getH(m, "Capital Expenditures 1Y"));
+  d.repurchases_1y= nzNumber(getH(m, "Repurchase of Common Stock 1Y"));
+
+  d.fcf_1y        = nzNumber(getH(m, "FCF 1Y"));
+  // fcf conversion: wenn du es als Zahl 0.8 oder als "80%" führst → aktuell als Number; später können wir typisieren
+  d.fcf_conv      = nzNumber(getH(m, "FCF Conversion"));
+  d.fcf_margin_1y = nzPercent(getH(m, "FCF-Marge 1Y"));
+  d.fcf_yes       = nzYesNo(getH(m, "FCF positiv (Ja/Nein)"));
+  d.fcf_payout    = nzPercent(getH(m, "FCF-Payout"));
+  d.fcf_ps_1y     = nzNumber(getH(m, "Free Cash Flow Per Share 1Y"));
+
+  // 13) Enterprise/Valuation
+  d.enterprise_value_1y = nzNumber(getH(m, "Enterprise Value 1Y"));
+  d.pe_1y               = nzNumber(getH(m, "KGV (PE Ratio) 1Y"));
+  d.p_fcf_1y            = nzNumber(getH(m, "P/FCF Ratio  1Y", "P/FCF Ratio 1Y"));
+  d.ev_ebitda_1y        = nzNumber(getH(m, "EV/ EBITDA Ratio 1Y", "EV/ EBITDA Ratio 1"));
+
+  // 14) Zusätzliche neue Felder aus deiner Liste (Ratio-Block)
+  d.ev_fcf_ratio        = nzNumber(getH(m, "EV/ FCF Ratio", "EV/FCF Ratio"));
+  d.debt_fcf_ratio      = nzNumber(getH(m, "Debt / FCF Ratio"));
+  d.net_debt_ebitda_1y  = nzNumber(getH(m, "Net Debt / EBITDA Ratio 1Y"));
+
+  d.quick_ratio_1y      = nzNumber(getH(m, "Quick Ratio 1Y"));
+  d.current_ratio_1y    = nzNumber(getH(m, "Current Ratio 1Y"));
+
+  d.roe_1y              = nzPercent(getH(m, "ROE 1Y"));
+  d.roic_1y             = nzPercent(getH(m, "ROIC 1Y"));
+  d.roce_1y             = nzPercent(getH(m, "ROCE 1Y"));
+
+  d.fcf_yield_1y        = nzPercent(getH(m, "FCF Yield 1Y"));
+  d.payout_ratio_1y     = nzPercent(getH(m, "Payout Ratio 1Y"));
+  d.interest_coverage_1y= nzNumber(getH(m, "Zinsdeckung 1Y (Interest Coverage)", "Interest Coverage 1Y"));
+
+  // 15) Shares / Marketcap / Dividend details
+  d.shares_outstanding_1y = nzNumber(getH(m, "Shares Outstanding 1Y"));
+  d.market_cap            = nzNumber(getH(m, "Marktkapitalisierung", "Market Cap"));
+  d.shares_change_yoy     = nzPercent(getH(m, "Shares Change (YoY)", "Shares Change YoY"));
+
+  d.dividend_pa           = nzNumber(getH(m, "Dividende (p.a.)"));
+  d.div_frequency         = getH(m, "Div.- Frequency", "Div. Frequency");
+  d.div_yield_current_pct = nzPercent(getH(m, "Div.-Rendite aktuell (%)", "Dividend Yield (%)"));
+
+  d.div_growth_years      = nzNumber(getH(m, "Dividend Growth years"));
+  d.div_growth_pct        = nzPercent(getH(m, "Dividend Growth"));
+
+  d.buyback_yield         = nzPercent(getH(m, "Buyback Yield"));
+  d.shareholder_yield     = nzPercent(getH(m, "Shareholder Yield"));
+
+  // 16) Kurs aktuell + Kurs CAGR 1/2/3/4Y (OPEN) + Vol 1/5/10Y
+  d.price_current = nzNumber(getH(m, "Kurs aktuell", "Price", "Current Price"));
+
+  for(const y of CAGR_YEARS){
+    d[`price_cagr_${y}y`] = nzPercent(getH(m, `Kurs ${y}Y (CAGR) OPEN`, `Kurs ${y}Y (CAGR)`, `Price ${y}Y (CAGR)`));
+  }
+
+  for(const y of VOL_YEARS){
+    // du hattest "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y"
+    d[`vol_${y}y`] = nzPercent(getH(m, `Volatilität annualisiert (Std-Abw.) ${y}Y`, `Volatilität ${y}Y`));
+  }
+
+  return d;
+}
+
+
+
+
 // 55 Headers (wie von dir gewünscht)
 const NUTZEN_HEADERS = [
-  // --- Financials ---
   "Revenue (FY)",
-  "Revenue Growth 1Y (CAGR)",
-  "Revenue Growth 2Y (CAGR)",
-  "Revenue Growth 3Y (CAGR)",
-  "Revenue Growth 4Y (CAGR)",
+  "Revenue 4Y (CAGR)",
   "Revenue Growth 1Y (YoY)",
-
-  "EPS (Diluted, FY)",
-  "EPS Growth 1Y (CAGR)",
-  "EPS Growth 2Y (CAGR)",
-  "EPS Growth 3Y (CAGR)",
-  "EPS Growth 4Y (CAGR)",
-
-  "Operating Margin pp 1Y (CAGR)",
-  "Operating Margin pp 2Y (CAGR)",
-  "Operating Margin pp 3Y (CAGR)",
-  "Operating Margin pp 4Y (CAGR)",
-  "Operating Margin 1Y",
-
-  "Beta",
-  "52 Week Range",
-  "Volatilität annualisiert (Std-Abw.) 1Y",
-  "Volatilität annualisiert (Std-Abw.) 5Y",
-  "Volatilität annualisiert (Std-Abw.) 10Y",
-
-  "FCF 1Y",
-  "FCF-Margin",
-  "Debt/ FCF",
-  "Net Dept/ EBITDA",
-  "EBITDA 1Y",
-  "EBIDTA Margin 1Y",
   "Interest Expense 1Y",
-  "Zinsdeckung (ICR)",
-  "ROIC",
-  "ROCE",
-  "FCF Yield 1Y",
   "Net Income 1Y",
-  "Net income positiv (ja/nein)",
-  "FCF Positiv (ja/nein)",
-
-  // --- Dividenden ---
-  "Dividende (p.a)",
-  "Div- Frequency",
-  "Div.-Rendite aktuell (%)",
-  "Shares out",
-  "Repurchase of Common stock",
-
-  "Dividende (DPS) 1Y (CAGR)",
-  "Dividende (DPS) 2Y (CAGR)",
-  "Dividende (DPS) 3Y (CAGR)",
+  "Net Income positiv (Ja/Nein)",
+  "EPS 1Y (Diluted, FY)",
+  "EPS Growth 4Y (CAGR)",
+  "Operating Margin 4Y pp (CAGR)",
+  "Operating Margin 1Y",
+  "Profit Margin 1Y",
+  "EBITDA 1Y",
+  "EBITDA Margin 1Y",
   "Dividende (DPS) 4Y (CAGR)",
-  "Payout Ratio 1Y",
+  "Gross Margin 1Y",
+  "Cash & Short-Term Investments 1Y",
+  "Beta",
+  "52-Week Range",
+  "KGV target",
+  "Fairer Preis",
+  "Operating Cash Flow 1Y",
+  "Capital Expenditures 1Y",
+  "Repurchase of Common Stock 1Y",
+  "FCF 1Y",
+  "FCF Conversion",
+  "FCF-Marge 1Y",
+  "FCF positiv (Ja/Nein)",
   "FCF-Payout",
-  "Dividend Growth Years",
-  "Dividend growth",
-
-  // --- Bewertung ---
-  "Kurs aktuell",
-  "Kurs 1Y (CAGR)",
-  "Kurs 2Y (CAGR)",
-  "Kurs 3Y (CAGR)",
-  "Kurs 4Y (CAGR)",
-  "Marktkapitalisierung",
+  "Free Cash Flow per Share 1Y",
+  "Enterprise Value 1Y",
   "KGV (PE Ratio) 1Y",
-  "KGV Target",
-  "Fairer Preis"
+  "P/FCF Ratio 1Y",
+  "EV/EBITDA Ratio 1Y",
+  "EV/FCF Ratio",
+  "Debt / FCF Ratio",
+  "Net Debt / EBITDA Ratio 1Y",
+  "Quick Ratio 1Y",
+  "Current Ratio 1Y",
+  "ROE 1Y",
+  "ROIC 1Y",
+  "ROCE 1Y",
+  "FCF Yield 1Y",
+  "Payout Ratio 1Y",
+  "Zinsdeckung 1Y (Interest Coverage)",
+  "Shares Outstanding 1Y",
+  "Marktkapitalisierung",
+  "Shares Change (YoY)",
+  "Dividende (p.a.)",
+  "Div.-Frequency",
+  "Div.-Rendite aktuell (%)",
+  "Dividend Growth years",
+  "Dividend Growth",
+  "Buyback Yield",
+  "Shareholder Yield",
+  "Kurs aktuell",
+  "Kurs 4Y (CAGR)",
+  "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y",
 ];
 
-// Welche Header gehören zu welcher CAGR-Jahr-Gruppe?
+
+
+// =============================
+// Phase 9: Header-Aliases (Kompatibilität)
+// =============================
+const NUTZEN_HEADER_ALIASES = {
+  // canonical passt final
+  "KGV Target": "KGV target",
+  "KGV target": "KGV target",
+
+  "52 Week Range": "52-Week Range",
+  "52-Week Range": "52-Week Range",
+
+  // Cash
+  "Cash& Short- Term Investments 1Y": "Cash & Short-Term Investments 1Y",
+  "Cash& Short-Term Investments 1Y": "Cash & Short-Term Investments 1Y",
+  "Cash & Short- Term Investments 1Y": "Cash & Short-Term Investments 1Y",
+  "Cash & Short-Term Investments 1Y": "Cash & Short-Term Investments 1Y",
+
+  // Net income positiv
+  "Net income positiv (Ja/Nein)": "Net Income positiv (Ja/Nein)",
+  "Net Income positiv (Ja/Nein)": "Net Income positiv (Ja/Nein)",
+
+  // Revenue CAGR alt -> final
+  "Revenue Growth 4Y (CAGR)": "Revenue 4Y (CAGR)",
+  "Revenue 4Y (CAGR)": "Revenue 4Y (CAGR)",
+
+  // OPM pp alt -> final
+  "Operating Margin pp 4Y (CAGR)": "Operating Margin 4Y pp (CAGR)",
+  "Operating Margin 4Y pp (CAGR)": "Operating Margin 4Y pp (CAGR)",
+
+  // FCF Conversion
+  "FCF Conversion 1Y": "FCF Conversion",
+  "FCF Conversion": "FCF Conversion",
+
+  // EV/EBITDA final (ohne Space)
+  "EV/ EBITDA Ratio 1Y": "EV/EBITDA Ratio 1Y",
+  "EV/EBITDA Ratio 1Y": "EV/EBITDA Ratio 1Y",
+
+  // EV/FCF final (ohne 1Y)
+  "EV/ FCF Ratio 1Y": "EV/FCF Ratio",
+  "EV/FCF Ratio 1Y": "EV/FCF Ratio",
+  "EV/FCF Ratio": "EV/FCF Ratio",
+
+  // Debt/FCF final (ohne 1Y)
+  "Debt / FCF Ratio 1Y": "Debt / FCF Ratio",
+  "Debt / FCF Ratio": "Debt / FCF Ratio",
+
+  // Div frequency final
+  "Div.- Frequency": "Div.-Frequency",
+  "Div- Frequency": "Div.-Frequency",
+  "Div.-Frequency": "Div.-Frequency",
+
+  // FCF per share Schreibweisen
+  "Free Cash Flow Per Share 1Y": "Free Cash Flow per Share 1Y",
+  "Free Cash Flow per Share 1Y": "Free Cash Flow per Share 1Y",
+
+  // Kurs Open -> final
+  "Kurs 4Y (CAGR) Open": "Kurs 4Y (CAGR)",
+  "Kurs 4Y (CAGR)": "Kurs 4Y (CAGR)",
+
+  // Vol alt (3 Spalten) -> final Pack
+  "Volatilität annualisiert (Std-Abw.) 1Y": "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y",
+  "Volatilität annualisiert (Std-Abw.) 5Y": "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y",
+  "Volatilität annualisiert (Std-Abw.) 10Y": "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y",
+  "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y": "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y",
+
+  // Dividend Growth Years Varianten
+  "Dividend Growth Years": "Dividend Growth years",
+  "Dividend Growth Years ": "Dividend Growth years",
+  "Dividend Growth years": "Dividend Growth years",
+
+  // Net Debt / EBITDA Varianten
+  "Net Dept/ EBITDA": "Net Debt / EBITDA Ratio 1Y",
+  "Net Dept/ EBITDA Ratio 1Y": "Net Debt / EBITDA Ratio 1Y",
+  "Net Debt/ EBITDA Ratio 1Y": "Net Debt / EBITDA Ratio 1Y",
+  "Net Debt / EBITDA Ratio 1Y": "Net Debt / EBITDA Ratio 1Y",
+
+  // Interest coverage Varianten
+  "Interest Coverage 1Y": "Zinsdeckung 1Y (Interest Coverage)",
+  "Zinsdeckung (ICR)": "Zinsdeckung 1Y (Interest Coverage)",
+  "Zinsdeckung 1Y (Interest Coverage)": "Zinsdeckung 1Y (Interest Coverage)",
+};
+
+
+
+function nzGet(m, key){
+  const canonical = NUTZEN_HEADER_ALIASES[key] || key;
+  return (m?.[canonical] ?? m?.[key] ?? "");
+}
+
 
 
 
 function nutzenYearMeta(header){
-  let m;
+  if(!header) return null;
 
-  // CAGR
-  m = header.match(/^Revenue Growth (\d)Y \(CAGR\)$/);
-  if(m) return { type:"cagr", group:"rev", year:Number(m[1]) };
+  // Vol pack (eine Spalte)
+  if(header.startsWith("Volatilität annualisiert")) return { type:"volpack" };
 
-  m = header.match(/^EPS Growth (\d)Y \(CAGR\)$/);
-  if(m) return { type:"cagr", group:"eps", year:Number(m[1]) };
-
-  m = header.match(/^Operating Margin pp (\d)Y \(CAGR\)$/);
-  if(m) return { type:"cagr", group:"opm", year:Number(m[1]) };
-
-  m = header.match(/^Dividende \(DPS\) (\d)Y \(CAGR\)$/);
-  if(m) return { type:"cagr", group:"dps", year:Number(m[1]) };
-
-  m = header.match(/^Kurs (\d)Y \(CAGR\)$/);
-  if(m) return { type:"cagr", group:"kurs", year:Number(m[1]) };
-
-  // Vol
-  m = header.match(/^Volatilität annualisiert \(Std-Abw\.\) (\d+)Y$/);
-  if(m) return { type:"vol", group:"vol", year:Number(m[1]) };
+  // 4Y CAGR Spalten (nur diese existieren final)
+  if(header === "Revenue 4Y (CAGR)") return { type:"cagr", group:"rev", year:4 };
+  if(header === "EPS Growth 4Y (CAGR)") return { type:"cagr", group:"eps", year:4 };
+  if(header === "Operating Margin 4Y pp (CAGR)") return { type:"cagr", group:"opm", year:4 };
+  if(header === "Dividende (DPS) 4Y (CAGR)") return { type:"cagr", group:"dps", year:4 };
+  if(header === "Kurs 4Y (CAGR)") return { type:"cagr", group:"kurs", year:4 };
 
   return null;
 }
@@ -3187,19 +3555,35 @@ function nutzenYearMeta(header){
 
 function nutzenGetSelectedCagrYear(){
   const sel = document.getElementById("nutzen_cagrYears");
-  const y = sel ? Number(sel.value) : 4;
-  return [1,2,3,4].includes(y) ? y : 4;
+  const y = sel ? Number(sel.value) : NaN;
+  return Number.isFinite(y) ? y : 4;
 }
 
 function nutzenGetSelectedVolYear(){
   const sel = document.getElementById("nutzen_volYears");
-  const y = sel ? Number(sel.value) : 1;
-  return [1,5,10].includes(y) ? y : 1;
+  const y = sel ? Number(sel.value) : NaN;
+  return Number.isFinite(y) ? y : 1;
 }
 
+
 function nutzenUpdateYearVisibility(){
-  const cagrY = nutzenGetSelectedCagrYear();
-  const volY  = nutzenGetSelectedVolYear();
+  let cagrY = (typeof nutzenGetSelectedCagrYear === "function")
+    ? Number(nutzenGetSelectedCagrYear())
+    : NaN;
+
+  let volY = (typeof nutzenGetSelectedVolYear === "function")
+    ? Number(nutzenGetSelectedVolYear())
+    : NaN;
+
+  if(!Number.isFinite(cagrY)){
+    const sel = document.getElementById("nutzen_cagrYears");
+    if(sel) cagrY = Number(sel.value);
+  }
+
+  if(!Number.isFinite(volY)){
+  const selV = document.getElementById("nutzen_volYears");
+  if(selV) volY = Number(selV.value);
+}
 
   const headRow = document.getElementById("nutzenHeadRow");
   const valRow  = document.getElementById("nutzenValueRow");
@@ -3213,30 +3597,40 @@ function nutzenUpdateYearVisibility(){
     const td = valCells[i];
     if(!th || !td) continue;
 
-    const t = th.dataset.yearType;          // "cagr" | "vol" | undefined
-    const y = Number(th.dataset.yearValue); // 1/2/3/4/5/10
+    const tNew = th.dataset.yearType;
+    const yNew = Number(th.dataset.yearValue);
 
-    if(!t){
-      th.style.display = "";
-      td.style.display = "";
+    if(tNew === "cagr"){
+      const show = Number.isFinite(cagrY) ? (yNew === cagrY) : true;
+      th.style.display = show ? "" : "none";
+      td.style.display = show ? "" : "none";
       continue;
     }
-
-    if(t === "cagr"){
-      const show = (y === cagrY);
+    if(tNew === "vol"){
+      const show = Number.isFinite(volY) ? (yNew === volY) : true;
       th.style.display = show ? "" : "none";
       td.style.display = show ? "" : "none";
       continue;
     }
 
-    if(t === "vol"){
-      const show = (y === volY);
+    // optional: altes schema behalten/entfernen
+    const isOldCagr = th.dataset.cagrYear && th.dataset.cagrGroup;
+    if(isOldCagr){
+      const yOld = Number(th.dataset.cagrYear);
+      const show = Number.isFinite(cagrY) ? (yOld === cagrY) : true;
       th.style.display = show ? "" : "none";
       td.style.display = show ? "" : "none";
       continue;
     }
+
+    
+
+    th.style.display = "";
+    td.style.display = "";
   }
 }
+
+
 
 
 // Table initial bauen (Header + eine Value-Row mit 55 Zellen)
@@ -3273,6 +3667,10 @@ if(meta){
     td.className = "nutzenCell";
     td.dataset.idx = String(idx);
     td.textContent = ""; // leer initial
+
+    td.contentEditable = "true";
+    td.spellcheck = false;             // optional
+    td.inputMode = "text";             // optional
 
 if(meta){
   td.dataset.yearType  = meta.type;
@@ -3369,51 +3767,21 @@ function nutzenUpdateBigMirror(){
   mirror.textContent = ta.value || "";
 }
 
-// Zeigt nur die CAGR-Spalten für das ausgewählte Jahr (1–4)
-function nutzenUpdateYearVisibility(){
-  const sel = document.getElementById("nutzen_cagrYears");
-  if(!sel) return;
-  const y = Number(sel.value);
-
-  // Header + Value Zellen synchron aus-/einblenden
-  const headRow = document.getElementById("nutzenHeadRow");
-  const valRow  = document.getElementById("nutzenValueRow");
-  if(!headRow || !valRow) return;
-
-  const headCells = Array.from(headRow.children);
-  const valCells  = Array.from(valRow.children);
-
-  for(let i=0;i<NUTZEN_HEADERS.length;i++){
-    const th = headCells[i];
-    const td = valCells[i];
-    if(!th || !td) continue;
-
-    const isCagr = th.dataset.cagrYear && th.dataset.cagrGroup;
-    if(!isCagr){
-      th.style.display = "";
-      td.style.display = "";
-      continue;
-    }
-
-    const year = Number(th.dataset.cagrYear);
-    const show = (year === y);
-
-    th.style.display = show ? "" : "none";
-    td.style.display = show ? "" : "none";
-  }
-}
 
 // UI-Bindings für Nutzen
 function bindNutzenUI(){
+  if(window._nutzenUIBound) return;
+  window._nutzenUIBound = true;
   // 1) Tabelle bauen (einmalig)
   buildNutzenTable();
 
-  // 2) UI einmal binden (wichtig: NICHT in Klick-Handlern!)
+
+  
   bindNutzenStressUI();
   bindNutzenOverlayUI();
   bindOverlayActionsUI();
+  bindNutzenAutoRerender();
 
-  // 3) Rollenbox initial rendern
   renderNutzenRolesBox();
 
   // 4) Parse Button
@@ -3429,6 +3797,51 @@ function bindNutzenUI(){
       renderNutzenRolesBox();
     });
   }
+
+
+  // Enter/Return im großen Input: wie "Bestätigen"
+const big = document.getElementById("nutzen_big");
+if(big && !big.dataset.enterBound){
+  big.dataset.enterBound = "1";
+
+  let enterCount = 0;
+  let enterTimer = null;
+
+  big.addEventListener("keydown", (e) => {
+    if(e.key !== "Enter") return;
+    if(e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return;
+
+    e.preventDefault(); // kein Zeilenumbruch
+
+    // Parse/Verteilen IMMER bei Enter
+    const raw = big.value ?? "";
+    const tokens = splitNutzenTokens(raw);
+    nutzenFillValues(tokens);
+    nutzenUpdateYearVisibility();
+    renderNutzenRolesBox();
+
+    // Doppel-Enter erkennen
+    enterCount++;
+    if(enterTimer) clearTimeout(enterTimer);
+
+    enterTimer = setTimeout(() => {
+      // Zeitfenster vorbei -> reset
+      enterCount = 0;
+      enterTimer = null;
+    }, 350);
+
+    if(enterCount >= 2){
+      // reset sofort, damit es beliebig oft wieder geht
+      enterCount = 0;
+      if(enterTimer) { clearTimeout(enterTimer); enterTimer = null; }
+
+      if(typeof openNutzenOverlay === "function"){
+        openNutzenOverlay();
+      }
+    }
+  });
+}
+
 
   // 5) Clear Button
   const clrBtn = document.getElementById("nutzen_clearBtn");
@@ -3464,6 +3877,10 @@ if(selVol){
 
   // Initial: richtige Sichtbarkeit
   nutzenUpdateYearVisibility();
+  nutzenDevCheckDOM();
+  nutzenDevCheckTableShape();
+  nutzenDevCheckYearMeta();
+  nutzenDevCheckRuntime();
 }
 
 
@@ -3490,123 +3907,248 @@ function nutzenOverlaySetStress(mode){
   const txt  = document.getElementById("nutzenOverlayStressText");
   if(!pill || !txt) return;
 
-  pill.classList.remove("statusGreen","statusYellow","statusRed");
+  pill.classList.remove("statusGreen","statusYellow","statusRed","statusDarkRed");
 
   if(mode === "green"){
     pill.classList.add("statusGreen");
-    txt.textContent = "Grün (manuell)";
+    txt.textContent = "Grün (auto)";
   } else if(mode === "yellow"){
     pill.classList.add("statusYellow");
-    txt.textContent = "Gelb (manuell)";
+    txt.textContent = "Gelb (auto)";
   } else if(mode === "red"){
     pill.classList.add("statusRed");
-    txt.textContent = "Rot (manuell)";
+    txt.textContent = "Rot (auto)";
+  } else if(mode === "darkred"){
+    pill.classList.add("statusDarkRed");
+    txt.textContent = "Dunkelrot (akut, auto)";
   } else {
     txt.textContent = "– (noch nicht berechnet)";
   }
 }
 
+
+
 /* ===============================
-   STRESS FLAG (Nutzen Seite) – UI only
+/* ===============================
+   STRESS FLAG (Nutzen + Overlay) – UI only (Sync)
    =============================== */
 
-// Setzt die Pill auf der Nutzen-Seite (keine Logik, nur Anzeige)
 function nutzenSetStressUI(mode){
   const pill = document.getElementById("nutzenStressPill");
   const txt  = document.getElementById("nutzenStressText");
   if(!pill || !txt) return;
 
-  pill.classList.remove("statusGreen","statusYellow","statusRed");
+  pill.classList.remove("statusGreen","statusYellow","statusRed","statusDarkRed");
 
   if(mode === "green"){
     pill.classList.add("statusGreen");
-    txt.textContent = "Grün (manuell)";
+    txt.textContent = "Grün";
   } else if(mode === "yellow"){
     pill.classList.add("statusYellow");
-    txt.textContent = "Gelb (manuell)";
+    txt.textContent = "Gelb";
   } else if(mode === "red"){
     pill.classList.add("statusRed");
-    txt.textContent = "Rot (manuell)";
+    txt.textContent = "Rot";
+  } else if(mode === "darkred"){
+    pill.classList.add("statusDarkRed");
+    txt.textContent = "Dunkelrot";
   } else {
-    txt.textContent = "– (noch nicht berechnet)";
+    txt.textContent = "–";
   }
 }
 
-// Hält Nutzen-Seite und Overlay in Sync (UI only)
-function nutzenSyncStress(mode){
-  // 1) Nutzen-Seite setzen
+
+function setSelectIfHasOption(sel, value){
+  if(!sel) return;
+  const has = Array.from(sel.options || []).some(o => o.value === value);
+  if(has) sel.value = value;
+}
+
+
+function nutzenSyncStress(mode, why){
+  // 1) Haupt-UI immer
   nutzenSetStressUI(mode);
 
-  // 2) Overlay setzen (deine vorhandene Funktion)
-  nutzenOverlaySetStress(mode);
+  // 2) Overlay-Farbe nur wenn Funktion existiert
+  if(typeof nutzenOverlaySetStress === "function"){
+    nutzenOverlaySetStress(mode);
+  }
 
-  // 3) Selects synchronisieren (falls vorhanden)
+  // 3) Selects setzen – nur wenn Element existiert
   const selMain = document.getElementById("nutzenStressSelect");
-  const selOv   = document.getElementById("nutzenOverlayStressSelect");
+  setSelectIfHasOption(selMain, mode || "auto");
 
-  if(selMain && selMain.value !== mode) selMain.value = mode;
-  if(selOv   && selOv.value   !== mode) selOv.value = mode;
+  const selOv = document.getElementById("nutzenOverlayStressSelect");
+  setSelectIfHasOption(selOv, mode || "auto");
 
-  // Placeholder-Text (optional)
+  // 4) Why-Text (robust)
+  const txt = (why && String(why).trim())
+    ? String(why)
+    : stressExplainText(mode);
+
   const whyMain = document.getElementById("nutzenStressWhy");
-  const whyOv   = document.getElementById("nutzenOverlayStressWhy");
+  if(whyMain) whyMain.textContent = txt;
 
-  const whyTxt = (mode === "auto")
-    ? "Noch keine Begründung hinterlegt."
-    : "Manuell gesetzt (UI-Test) – Regeln kommen später.";
-
-  if(whyMain) whyMain.textContent = whyTxt;
-  if(whyOv)   whyOv.textContent   = whyTxt;
-}
-
-function bindNutzenStressUI(){
-  const selMain = document.getElementById("nutzenStressSelect");
-  const selOv   = document.getElementById("nutzenOverlayStressSelect");
-
-  // default
-  nutzenSyncStress("auto");
-
-  if(selMain){
-    selMain.addEventListener("change", () => {
-      const v = selMain.value;
-      nutzenSyncStress((v==="green"||v==="yellow"||v==="red") ? v : "auto");
-    });
-  }
-
-  if(selOv){
-    selOv.addEventListener("change", () => {
-      const v = selOv.value;
-      nutzenSyncStress((v==="green"||v==="yellow"||v==="red") ? v : "auto");
-    });
-  }
+  const whyOv = document.getElementById("nutzenOverlayStressWhy");
+  if(whyOv) whyOv.textContent = txt;
 }
 
 
 
 
 
+function nutzenRenderMainExplanations(ev, bandsRes){
+  // 1) Kaufen/Nachkaufen – Logik
+  const buyEl = document.getElementById("nutzenBuyLogicExplain");
+  if(buyEl){
+    buyEl.textContent =
+      (bandsRes?.explain && String(bandsRes.explain).trim())
+        ? String(bandsRes.explain)
+        : "Keine Kauf-Ranges: Fair Value fehlt (oder ist 0).";
+    buyEl.style.whiteSpace = "pre-line";
+  }
+
+
+
+// 2) Stress – Logik (BASE + HEALTH schön formatieren)
+// 2) Stress – Logik (BASE + HEALTH schön formatieren)
+const stressEl = document.getElementById("nutzenStressLogicExplain");
+if(stressEl){
+  const whyRaw = (ev?.stress?.why && String(ev.stress.why).trim())
+    ? String(ev.stress.why)
+    : "";
+
+  if(!whyRaw){
+    stressEl.textContent = "Noch keine Stress-Begründung verfügbar.";
+    stressEl.style.whiteSpace = "pre-line";
+  } else {
+
+    const iconForSeverity = (line) => {
+      if(/\bDunkelrot\b/i.test(line)) return "🟥";
+      if(/\bRot\b/i.test(line))       return "❌";
+      if(/\bGelb\b/i.test(line))      return "⚠️";
+      if(/\bGrün\b/i.test(line))      return "✅";
+      return "•";
+    };
+
+    const iconForHealthLine = (line) => {
+      if(/Entlastung:/i.test(line)) return "✅";
+      if(/Verstärker:/i.test(line)) return "❌";
+      return iconForSeverity(line);
+    };
+
+    const out = whyRaw.split("\n").map(l => {
+      const line = l.trim();
+      if(!line) return "";
+
+      if(line.startsWith("BASE:")){
+        return "BASE: " + line.slice(5).trim();
+      }
+
+      if(line.startsWith("HEALTH:")){
+        const rest = line.slice(7).trim();
+        const parts = rest.split("|").map(x => x.trim()).filter(Boolean);
+        return [
+          "HEALTH:",
+          ...parts.map(p => `${iconForHealthLine(p)} ${p}`)
+        ].join("\n");
+      }
+
+      return `• ${line}`;
+    }).join("\n");
+
+    stressEl.textContent = out;
+    stressEl.style.whiteSpace = "pre-line";
+  }
+}
+
+
+
+  // 3) Rollen – Base/Health Kurzliste
+  const rolesEl = document.getElementById("nutzenRolesLogicExplain");
+  if(rolesEl){
+    const roles = ev?.roles || {};
+    const lines = [];
+
+    for(const roleRaw of (NUTZEN_ROLE_CATALOG || [])){
+      const key = normalizeNutzenRoleName(roleRaw) || roleRaw;
+      const r = roles[key];
+      if(!r?.why?.length) continue;
+      if(r.state === "off") continue;
+      lines.push(`• ${key}: ${r.why[0]}`);
+    }
+
+    rolesEl.textContent = lines.length ? lines.join("\n") : "Keine aktiven Rollen / keine Details.";
+    rolesEl.style.whiteSpace = "pre-line";
+  }
+}
+
+
+
+
+
+
+
+
+  
 function nutzenOverlayFillRangeBase(){
   const tbody = document.getElementById("nutzenOverlayRangeBase");
   if(!tbody) return;
 
-  const ev = nutzenEvaluateAll(); // nutzt deine echte Berechnung
-  const m = ev.map;
+  const ev = nutzenEvaluateAll();
+  const m  = ev.map || {};
 
-  const p52 = nzParse52w(m["52 Week Range"]);
+  const fpEl = document.getElementById("ov_fairPrice");
+  const fairManual = fpEl ? nzNum(fpEl.value) : NaN;
+  const fairUsed = (Number.isFinite(fairManual) && fairManual > 0) ? fairManual : ev.fair;
+const ev2 = { ...ev, fair: fairUsed };
+
+const cpEl = document.getElementById("ov_currentPrice");
+const priceManual = cpEl ? nzNum(cpEl.value) : NaN;
+
+// Kurs für Overlay-Render & ev2 überschreiben (damit alles konsistent ist)
+const priceUsed = (Number.isFinite(priceManual) && priceManual > 0)
+  ? priceManual
+  : nzNum(nzGet(m,"Kurs aktuell"));
+
+ev2.map = { ...(ev2.map || {}), "Kurs aktuell": Number.isFinite(priceUsed) ? String(priceUsed) : (ev2.map?.["Kurs aktuell"] || "") };
+
+
+
+  // 52W Range robust (Aliases)
+  const p52 = nzParse52w(nzGet(m, "52-Week Range"));
+
+  // Vol: erst final Pack, sonst 1Y
+  const volPack = nzGet(m, "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y");
+  const vol1y    = nzGet(m, "Volatilität annualisiert (Std-Abw.) 1Y");
+  const volShow  = volPack || vol1y || "–";
+
   const baseRows = [
-    ["Kurs aktuell", m["Kurs aktuell"] || "–"],
-    ["Fairer Preis", m["Fairer Preis"] || (Number.isFinite(ev.fair)? ev.fair.toFixed(2):"–")],
-    ["KGV Target", m["KGV Target"] || "–"],
-    ["KGV (PE Ratio) 1Y", m["KGV (PE Ratio) 1Y"] || "–"],
-    ["Beta", m["Beta"] || "–"],
-    ["52W Low", Number.isFinite(p52.low) ? nzFmtPrice(p52.low) : "–"],
+    ["Kurs aktuell", Number.isFinite(priceUsed) ? priceUsed.toFixed(2) : (nzGet(m,"Kurs aktuell") || "–")],
+    ["Fairer Preis", (Number.isFinite(fairUsed) ? fairUsed.toFixed(2) : (nzGet(m,"Fairer Preis") || "–"))],
+    ["KGV Target",   nzGet(m,"KGV target") || nzGet(m,"KGV Target") || "–"],
+    ["KGV (PE Ratio) 1Y", nzGet(m,"KGV (PE Ratio) 1Y") || "–"],
+    ["Beta", nzGet(m,"Beta") || "–"],
+    ["52W Low",  Number.isFinite(p52.low)  ? nzFmtPrice(p52.low)  : "–"],
     ["52W High", Number.isFinite(p52.high) ? nzFmtPrice(p52.high) : "–"],
-    ["Volatilität 1Y", m["Volatilität annualisiert (Std-Abw.) 1Y"] || "–"],
+    ["Volatilität", volShow],
     ["Stress (Auto)", (ev.stress?.mode || "–").toUpperCase()],
   ];
 
-  // Kauf-Ranges berechnen
-  const bandsRes = nutzenComputeBuyBands(ev);
+  // Stress-Farbe sync
+  const rawMode = String(ev.stress?.mode || "").toLowerCase();
+  const mode =
+    (rawMode === "green" || rawMode === "grün") ? "green" :
+    (rawMode === "yellow" || rawMode === "gelb") ? "yellow" :
+    (rawMode === "red" || rawMode === "rot") ? "red" :
+    (rawMode === "darkred" || rawMode === "dunkelrot") ? "darkred" :
+    "green";
+  nutzenSyncStress(mode, ev.stress?.why || "");
+
+
+// Kauf-Ranges berechnen + Erklärungen setzen (mit manuellem Fair)
+const bandsRes = nutzenComputeBuyBands(ev2);
+nutzenRenderMainExplanations(ev2, bandsRes);
 
   let bandsRows = [];
   let explainTxt = "";
@@ -3614,7 +4156,7 @@ function nutzenOverlayFillRangeBase(){
   if(bandsRes.ok){
     const b = bandsRes.bands;
 
-    const price = (mult)=> (mult===Infinity) ? Infinity : (ev.fair * mult);
+      const price = (mult)=> (mult===Infinity) ? Infinity : (fairUsed * mult);
 
     const rowBand = (label, lo, hi) => {
       const loP = (lo===0) ? 0 : price(lo);
@@ -3666,18 +4208,34 @@ function nutzenOverlayFillRangeBase(){
   const explainEl = document.getElementById("nutzenOverlayRangeExplain");
   if(explainEl){
     explainEl.textContent = explainTxt;
-  } else {
-    // fallback: als zusätzliche Zeile unten
-    if(explainTxt){
-      tbody.innerHTML += `
-        <tr>
-          <td>Begründung</td>
-          <td><span class="muted">${esc(explainTxt)}</span></td>
-        </tr>
-      `;
-    }
+  } else if(explainTxt){
+    tbody.innerHTML += `
+      <tr>
+        <td>Begründung</td>
+        <td><span class="muted">${esc(explainTxt)}</span></td>
+      </tr>
+    `;
   }
 }
+
+
+
+
+
+
+
+
+
+
+function stressExplainText(mode){
+  if(mode === "green")   return "Grün: Sehr stabil – keine Stress-Trigger aktiv.";
+  if(mode === "yellow")  return "Gelb: Leichter Stress – einzelne Warnsignale (z.B. höhere Volatilität oder Bewertung) aber noch kein Krisenbild.";
+  if(mode === "red")     return "Rot: Hoher Stress – mehrere Warnsignale gleichzeitig (z.B. hoher Drawdown, schwache Cashflows, hohe Verschuldung).";
+  if(mode === "darkred") return "Dunkelrot: Krisenmodus – starke finanzielle/marktseitige Risiken (z.B. FCF negativ + hohe Schulden + Kurs nahe Tief).";
+  return "Auto (später): Wird anhand deiner Regeln berechnet.";
+}
+
+
 
 
 
@@ -3709,21 +4267,130 @@ function closeNutzenOverlay(){
 const NUTZEN_ROLE_CATALOG = [
   "Dividenden-Aristokrat",
   "Dividenden-Wachstum",
-  "High Dividend",
   "Value",
   "Wachstum",
   "Quality",
-  "GARP (Wachstum, preis ist nicht teuer)",
+  "GARP",
   "Turnaround",
   "Zykliker",
   "Spekulation",
   "Krisenfall",
+  "Defensiv",
+  "Stabil defensiv",
+  "Pricing Power",
+  "Recurring Revenue / Abo Modell",
+  "Balance Sheet Strong",
+  "Leveraged / Schuldenlastig",
   "Small Cap",
   "Mid Cap",
   "Large Cap",
-  "Defensiv",
-  "Stabil defensiv"
+  "Mega Cap"
 ];
+
+
+
+// Normalisiert alte/abweichende Rollennamen → neue Katalog-Namen
+function normalizeNutzenRoleName(role){
+  if(!role) return "";
+
+  const r = String(role).trim();
+
+  // 1) Harte Mappings (alt → neu)
+  const map = {
+    "Dividenden Aristokrat": "Dividenden-Aristokrat",
+    "Dividenden-Aristokrat": "Dividenden-Aristokrat",
+
+    "Dividenden Wachstum": "Dividenden-Wachstum",
+    "Dividenden-Wachstum": "Dividenden-Wachstum",
+
+    "High Dividend": null, // entfernt
+
+    "GARP (Wachstum, preis ist nicht teuer)": "GARP",
+    "GARP (Wachstum, Preis ist nicht teuer)": "GARP",
+    "GARP": "GARP",
+
+    "Kriesenfall": "Krisenfall", // Tippfehler
+    "Krisenfall": "Krisenfall",
+
+    "stabil Defensiv": "Stabil defensiv",
+    "Stabil defensiv": "Stabil defensiv",
+
+    "Recurring Revenue/ Abo Modell": "Recurring Revenue / Abo Modell",
+    "Recurring Revenue/Abo Modell": "Recurring Revenue / Abo Modell",
+    "Recurring Revenue / Abo Modell": "Recurring Revenue / Abo Modell",
+
+    "Balance Sheet strong": "Balance Sheet Strong",
+    "Balance Sheet Strong": "Balance Sheet Strong",
+
+    "leveraged/ Schuldenlastig": "Leveraged / Schuldenlastig",
+    "Leveraged/ Schuldenlastig": "Leveraged / Schuldenlastig",
+    "Leveraged / Schuldenlastig": "Leveraged / Schuldenlastig",
+
+    "Small Cap": "Small Cap",
+    "Mid Cap": "Mid Cap",
+    "Large Cap": "Large Cap",
+    "Mega Cap": "Mega Cap",
+
+    "Value": "Value",
+    "Wachstum": "Wachstum",
+    "Quality": "Quality",
+    "Turnaround": "Turnaround",
+    "Zykliker": "Zykliker",
+    "Spekulation": "Spekulation",
+    "Defensiv": "Defensiv",
+    "Pricing Power": "Pricing Power",
+  };
+
+  if(Object.prototype.hasOwnProperty.call(map, r)){
+    return map[r] ?? ""; // null/undefined => entfernen
+  }
+
+  // 2) Fallback: leichte "Fuzzy"-Normalisierung (nur wenn nicht im Mapping)
+  const lower = r.toLowerCase();
+
+  if(lower.includes("dividenden") && lower.includes("arist")) return "Dividenden-Aristokrat";
+  if(lower.includes("dividenden") && lower.includes("wach"))  return "Dividenden-Wachstum";
+  if(lower.startsWith("garp")) return "GARP";
+  if(lower.includes("krisen") || lower.includes("kriesen")) return "Krisenfall";
+  if(lower.includes("stabil") && lower.includes("def")) return "Stabil defensiv";
+  if(lower.includes("recurring") || lower.includes("abo")) return "Recurring Revenue / Abo Modell";
+  if(lower.includes("balance") && lower.includes("sheet")) return "Balance Sheet Strong";
+  if(lower.includes("lever") || lower.includes("schulden")) return "Leveraged / Schuldenlastig";
+
+  // Cap Größen
+  if(lower.includes("mega cap")) return "Mega Cap";
+  if(lower.includes("large cap")) return "Large Cap";
+  if(lower.includes("mid cap")) return "Mid Cap";
+  if(lower.includes("small cap")) return "Small Cap";
+
+  // Unbekannt: unverändert zurückgeben (oder "" wenn du hart filtern willst)
+  return r;
+}
+
+
+// Hilfsfunktion: normalisiert ein Rollen-Array + filtert alles raus,
+// was nicht mehr existiert oder leer ist, und entfernt Duplikate
+function normalizeNutzenRolesArray(roles){
+  const arr = Array.isArray(roles) ? roles : [];
+  const out = [];
+  const seen = new Set();
+
+  for(const x of arr){
+    const n = normalizeNutzenRoleName(x);
+    if(!n) continue;
+
+    // Optional: nur Rollen zulassen, die im Katalog sind
+    if(Array.isArray(NUTZEN_ROLE_CATALOG) && !NUTZEN_ROLE_CATALOG.includes(n)) continue;
+
+    if(!seen.has(n)){
+      seen.add(n);
+      out.push(n);
+    }
+  }
+  return out;
+}
+
+
 
 
 
@@ -3739,7 +4406,6 @@ function roleBadgeHtml(st){
    OVERLAY: Fairer Preis / Kaufen / Nachkaufen – UI only
    =============================== */
 
-function ovGetEl(id){ return document.getElementById(id); }
 
 function ovRenderActionsSummary(){
   const fp = ovGetEl("ov_fairPrice")?.value;
@@ -3765,33 +4431,99 @@ function ovRenderActionsSummary(){
    1) HELPERS: Parsing / Utilities
    ========================================= */
 
-function nzStr(x){ return (x ?? "").toString().trim(); }
+function nzStr(x){
+  const s = (x ?? "").toString().trim();
+  if(!s) return "";
+
+  const low = s.toLowerCase();
+
+  // Missing tokens / placeholders
+  if(
+    low === "n/a" || low === "na" || low === "n.a." ||
+    low === "null" || low === "undefined" ||
+    low === "none" ||
+    low === "k.a." || low === "k.a" ||
+    low === "–" || low === "-"
+  ){
+    return "";
+  }
+
+  return s;
+}
+
+
+function nzParseVolPack(raw){
+  const s = nzStr(raw);
+  if(!s) return { v1: NaN, v5: NaN, v10: NaN };
+
+  const m1  = s.match(/1Y\s*[:=]?\s*([-\d.,]+)\s*%?/i);
+  const m5  = s.match(/5Y\s*[:=]?\s*([-\d.,]+)\s*%?/i);
+  const m10 = s.match(/10Y\s*[:=]?\s*([-\d.,]+)\s*%?/i);
+
+  const nums = s.match(/[-]?\d+(?:[.,]\d+)?/g) || [];
+
+  const v1  = m1  ? nzPct(m1[1])  : (nums[0] ? nzPct(nums[0]) : NaN);
+  const v5  = m5  ? nzPct(m5[1])  : (nums[1] ? nzPct(nums[1]) : NaN);
+  const v10 = m10 ? nzPct(m10[1]) : (nums[2] ? nzPct(nums[2]) : NaN);
+
+  return { v1, v5, v10 };
+}
+
+
 
 function nzNum(raw){
-  // akzeptiert "1.234,56", "1234.56", "12%", "–"
+  // akzeptiert "1.234,56", "1234.56", "12%", "–", "-", "n/a", "na"
+  // akzeptiert Suffix: k/K/t (=Tausend), m/M (=Millionen), b/B (=Billionen=1e9), T (=Trillionen=1e12)
   let s = nzStr(raw);
-  if(!s || s === "–" || s === "-" ) return NaN;
-  s = s.replace(/\s/g,"");
-  // Prozent raus (separat gibt es nzPct)
-  s = s.replace("%","");
-  // deutsche Zahl -> Punkt als Tausender, Komma als Dezimal
-  // wenn beides vorkommt, sehr wahrscheinlich DE-Format
-  if(s.includes(",") && s.includes(".")){
-    s = s.replace(/\./g,"").replace(",",".");
-  } else if(s.includes(",")){
-    s = s.replace(",",".");
+  if(!s) return NaN;
+
+  const s0  = String(s).trim();
+  const low = s0.toLowerCase();
+
+  // Missing tokens / not available
+  if(
+    low === "–" || low === "-" ||
+    low === "n/a" || low === "na" || low === "n.a." ||
+    low === "null" || low === "none" ||
+    low === "k.a." || low === "k.a"
+  ){
+    return NaN;
   }
-  // K/M/B/T Shortcuts (optional)
+
+  // remove spaces + percent sign (pct handled separately by nzPct)
+  s = s0.replace(/\s/g, "").replace("%", "");
+
+  // DE number format handling
+  if(s.includes(",") && s.includes(".")){
+    s = s.replace(/\./g, "").replace(",", ".");
+  } else if(s.includes(",")){
+    s = s.replace(",", ".");
+  }
+
+  // Suffix shortcuts (case-sensitive)
+  // k/K/t = 1e3, m/M = 1e6, b/B = 1e9, T = 1e12
   const m = s.match(/^(-?\d+(?:\.\d+)?)([kKmMbBtT])$/);
   if(m){
     const v = Number(m[1]);
-    const u = m[2].toLowerCase();
-    const mul = (u==="k")?1e3:(u==="m")?1e6:(u==="b")?1e9:1e12;
-    return v * mul;
+    if(!Number.isFinite(v)) return NaN;
+
+    const u = m[2];
+    const mul =
+      (u === "k" || u === "K" || u === "t") ? 1e3 :
+      (u === "m" || u === "M") ? 1e6 :
+      (u === "b" || u === "B") ? 1e9 :
+      (u === "T")              ? 1e12 :
+      NaN;
+
+    return Number.isFinite(mul) ? v * mul : NaN;
   }
+
   const n = Number(s);
   return Number.isFinite(n) ? n : NaN;
 }
+
+
+
 
 function nzPct(raw){
   // "12,3%" => 12.3 (Prozentpunkte)
@@ -3818,7 +4550,45 @@ function nzRangePct(raw){
   return (hi - lo) / lo; // z.B. 0.50 = 50%
 }
 
+
 function nzClamp(x, a, b){ return Math.max(a, Math.min(b, x)); }
+
+
+
+// FCF Conversion Rechner (robust):
+// bevorzugt: FCF / Net Income
+// fallback: (OCF + CapEx) / Net Income  (CapEx ist meist negativ)
+// Output: ratio (0..1..), plus Quelle/Erklärung
+function nzCalcFcfConversion(m){
+  const ni   = nzNum(nzGet(m, "Net Income 1Y", "Net Income Y1", "Net Income 1Y"));
+  if(!Number.isFinite(ni) || ni === 0) return { ratio: NaN, src: "missing_ni" };
+
+  const fcfRaw = nzNum(nzGet(m, "FCF 1Y"));
+  const ocf    = nzNum(nzGet(m, "Operating Cash Flow 1Y"));
+  const capex  = nzNum(nzGet(m, "Capital Expenditures 1Y"));
+
+  // 1) Wenn FCF vorhanden -> FCF/NI
+  if(Number.isFinite(fcfRaw)){
+    return { ratio: fcfRaw / ni, src: "fcf_over_ni" };
+  }
+
+  // 2) Fallback: FCF ≈ OCF + CapEx  (CapEx typischerweise negativ)
+  if(Number.isFinite(ocf) && Number.isFinite(capex)){
+    const fcfDerived = ocf + capex;
+    return { ratio: fcfDerived / ni, src: "ocf_plus_capex_over_ni" };
+  }
+
+  return { ratio: NaN, src: "missing_inputs" };
+}
+
+// nur fürs UI/Labels
+function nzFmtPct01(x){
+  if(!Number.isFinite(x)) return "–";
+  return (x * 100).toFixed(0) + "%";
+}
+
+
+
 
 function nzSelectedCagrYear(){
   const sel = document.getElementById("nutzen_cagrYears");
@@ -3831,21 +4601,20 @@ function nzSelectedCagrYear(){
    ========================================= */
 
 function nutzenComputeFairPrice(m){
-  // 1) wenn Fairer Preis befüllt -> nehmen
-  const fairGiven = nzNum(m["Fairer Preis"]);
+  const fairGiven = nzNum(nzGet(m, "Fairer Preis"));
   if(Number.isFinite(fairGiven) && fairGiven > 0) return fairGiven;
 
-  // 2) sonst EPS * KGV Target (wenn möglich)
-  const eps = nzNum(m["EPS (Diluted, FY)"]);
-  const peT = nzNum(m["KGV Target"]);
+  const eps = nzNum(nzGet(m, "EPS 1Y (Diluted, FY)"));
+  const peT = nzNum(nzGet(m, "KGV target")); // <- wichtig: canonical
   if(Number.isFinite(eps) && eps > 0 && Number.isFinite(peT) && peT > 0){
     return eps * peT;
   }
   return NaN;
 }
 
+
 function nutzenComputeActions(m, fair){
-  const current = nzNum(m["Kurs aktuell"]);
+  const current = nzNum(nzGet(m, "Kurs aktuell"));
   if(!Number.isFinite(current) || current <= 0 || !Number.isFinite(fair) || fair <= 0){
     return { buy:"auto", add:"auto", why:["Zu wenig Daten (Kurs/Fair fehlen)."] };
   }
@@ -3905,7 +4674,8 @@ function nutzenComputeBuyBands(ev){
     };
   }
 
-  const vol = nzPct(ev.map?.["Volatilität annualisiert (Std-Abw.) 1Y"]);
+  const vol = nzPct(nzGet(ev.map, "Volatilität annualisiert (Std-Abw.) 1Y")); 
+// dank Aliases klappt auch 1Y/5Y/10Y-Pack, wenn du es so mappst
   const stress = (ev?.stress?.mode || "green"); // green/yellow/red
 
   // ---- Baseline Multiples ----
@@ -3991,137 +4761,568 @@ function nzIsPeUsable(pe){
    ========================================= */
 
 function nutzenComputeStress(m){
+  // Severity: green=0, yellow=1, red=2, darkred=3
+  const sevName = ["green","yellow","red","darkred"];
+  const sevLabel = { green:"Grün", yellow:"Gelb", red:"Rot", darkred:"Dunkelrot" };
   const triggers = [];
 
-  const netIncomePos = nzYesNo(m["Net income positiv (ja/nein)"]);
-  const fcfPos       = nzYesNo(m["FCF Positiv (ja/nein)"]);
+  // --- robust getter: versucht mehrere Header-Varianten ---
+  const get = (...keys) => {
+   for(const k of keys){
+    const v = nzGet(m, k);
+    if(v !== undefined && v !== null && String(v).trim() !== "") return v;
+    }
+    return "";
+  };
 
-  const icr          = nzNum(m["Zinsdeckung (ICR)"]);
-  const netDebtEbitda= nzNum(m["Net Dept/ EBITDA"]);
-  const debtFcf      = nzNum(m["Debt/ FCF"]);
+  // --- values (nach deinen HEADERS) ---
+  const quick   = nzNum(get("Quick Ratio 1Y"));
+  const currentR= nzNum(get("Current Ratio 1Y"));
 
-  const opm1y        = nzPct(m["Operating Margin 1Y"]);
-  const fcfMargin    = nzPct(m["FCF-Margin"]);
+  const cashST  = nzNum(get("Cash & Short-Term Investments 1Y"));
 
-  const vol          = nzPct(m["Volatilität annualisiert (Std-Abw.) 1Y"]);
-  const beta         = nzNum(m["Beta"]);
-  const revYoy       = nzPct(m["Revenue Growth 1Y (YoY)"]);
+  const icr     = nzNum(get("Zinsdeckung 1Y (Interest Coverage)", "Zinsdeckung (ICR)"));
+  const nde     = nzNum(get("Net Debt / EBITDA Ratio 1Y", "Net Dept/ EBITDA", "Net Dept/ EBITDA Ratio 1Y"));
+  const dcf     = nzNum(get("Debt / FCF Ratio 1Y", "Debt/ FCF", "Debt/ FCF Ratio"));
 
-  const roic         = nzPct(m["ROIC"]);
-  const roce         = nzPct(m["ROCE"]);
+  const ocf     = nzNum(get("Operating Cash Flow 1Y"));
+  const capex   = nzNum(get("Capital Expenditures 1Y"));
+  const fcf     = nzNum(get("FCF 1Y"));
 
+  const fcfPos  = nzYesNo(get("FCF positiv (Ja/Nein)", "FCF Positiv (ja/nein)", "FCF Positiv (Ja/Nein)"));
+  const fcfMgn  = nzPct(get("FCF-Marge 1Y", "FCF-Margin 1Y", "FCF-Margin"));
+  const fcfConvRaw = nzNum(get("FCF Conversion 1Y", "FCF Conversion"));
 
-  // helpers
-  const icrBad1   = Number.isFinite(icr) && icr > 0 && icr < 1;
-  const icr1to6   = Number.isFinite(icr) && icr >= 1 && icr < 6;
+  const netIncomePos = nzYesNo(get("Net income positiv (Ja/Nein)", "Net income positiv (ja/nein)"));
+  const opm1y   = nzPct(get("Operating Margin 1Y"));
+  const pm1y    = nzPct(get("Profit Margin 1Y"));
+  const opmCagr4= nzPct(get("Operating Margin pp 4Y (CAGR)"));
 
-  const ndeHigh25to4 = Number.isFinite(netDebtEbitda) && netDebtEbitda > 2.5 && netDebtEbitda <= 4;
-  const ndeOver5     = Number.isFinite(netDebtEbitda) && netDebtEbitda > 5;
-  const ndeNotSane   = !Number.isFinite(netDebtEbitda); // "nicht sinnvoll" / fehlt
+  const vol1y   = nzPct(get("Volatilität annualisiert (Std-Abw.) 1Y"));
+  const beta    = nzNum(get("Beta"));
+  const sharesCh= nzPct(get("Shares Change (YoY)"));
 
-  const debtFcf6to12 = Number.isFinite(debtFcf) && debtFcf > 6 && debtFcf <= 12;
-  const debtFcfOver12= Number.isFinite(debtFcf) && debtFcf > 12;
-  const debtFcfNotSane = !Number.isFinite(debtFcf)  || debtFcf <= 0;; // "nicht sinnvoll" / fehlt
+  const roic    = nzPct(get("ROIC 1Y", "ROIC"));
+  const roce    = nzPct(get("ROCE 1Y", "ROCE"));
 
-  const opm0to10  = Number.isFinite(opm1y) && opm1y >= 0 && opm1y <= 10;
-  const opmNeg    = Number.isFinite(opm1y) && opm1y < 0;
+  const price   = nzNum(get("Kurs aktuell"));
+  const r52     = nzParse52w(get("52-Week Range", "52 Week Range"));
+  const rangePct= nzRangePct(get("52-Week Range", "52 Week Range"));
 
-  const vol35to60 = Number.isFinite(vol) && vol >= 35 && vol < 60;
-  const vol60plus = Number.isFinite(vol) && vol >= 60;
+  // --- helpers ---
+  const clampSev = (x)=> Math.max(0, Math.min(3, x));
+  const worsenOnce = (sev, why)=>{
+    const n = clampSev(sev + 1);
+    if(n !== sev) triggers.push("Verstärker: " + why);
+    return n;
+  };
+  const improveOnce = (sev, why)=>{
+    const n = clampSev(sev - 1);
+    if(n !== sev) triggers.push("Entlastung: " + why);
+    return n;
+  };
 
-  const beta13to18= Number.isFinite(beta) && beta >= 1.3 && beta < 1.8;
-  const beta18plus= Number.isFinite(beta) && beta >= 1.8;
+  // normalize conversion: akzeptiere 0.6 oder 60 als "60%"
+  const fcfConv = Number.isFinite(fcfConvRaw)
+    ? (fcfConvRaw > 1.5 ? fcfConvRaw / 100 : fcfConvRaw)
+    : NaN;
 
-  const revNeg    = Number.isFinite(revYoy) && revYoy < 0;
-  const revVeryNeg= Number.isFinite(revYoy) && revYoy <= -5;
+  const marketVolHigh = Number.isFinite(vol1y) && vol1y >= 45;
+  const marketBetaHigh= Number.isFinite(beta) && beta >= 1.5;
+  const near52Low = (Number.isFinite(price) && Number.isFinite(r52.low) && r52.low > 0)
+    ? (price <= r52.low * 1.15)
+    : false;
 
-  const fcfWeakMargin = (fcfPos === true) && Number.isFinite(fcfMargin) && fcfMargin < 5;
+  // =========================================================
+  // Block A — Liquidität
+  // =========================================================
+  let A = 1; // default = gelb (konservativ bei fehlenden Daten)
+  const quickKnown = Number.isFinite(quick);
+  const currKnown  = Number.isFinite(currentR);
 
-  // ------------------------
-  // ROT (Krisenfall)
-  // ------------------------
-  // Basis: NetIncome negativ + FCF negativ + mind. 1 harter Trigger
-  const hardRed =
-    icrBad1 ||
-    ndeOver5 || ndeNotSane ||
-    debtFcfOver12 || debtFcfNotSane ||
-    opmNeg;
-
-  const isRedBase = (netIncomePos === false) && (fcfPos === false) && hardRed;
-
-  // optional Rot-Plus (nur als Trigger-Hinweis)
-  const isRedPlus = isRedBase && revVeryNeg && vol60plus;
-
-  if(isRedBase){
-    if(netIncomePos === false) triggers.push("Net Income negativ");
-    if(fcfPos === false) triggers.push("FCF negativ");
-    if(icrBad1) triggers.push("ICR < 1");
-    if(ndeOver5) triggers.push("Net Debt/EBITDA > 5");
-    if(ndeNotSane) triggers.push("Net Debt/EBITDA nicht sinnvoll/fehlt");
-    if(debtFcfOver12) triggers.push("Debt/FCF > 12 (extrem)");
-    if(debtFcfNotSane) triggers.push("Debt/FCF nicht sinnvoll/fehlt");
-    if(opmNeg) triggers.push("Operating Margin < 0%");
-    if(isRedPlus) triggers.push("Rot-Plus: Revenue YoY ≤ -5% & Vol ≥ 60%");
-    return { mode:"red", triggers };
+  if(!quickKnown && !currKnown){
+    A = 1;
+    triggers.push("A Liquidität: zu wenig Daten (Quick/Current fehlt)");
+  } else {
+    // Dunkelrot
+    if( (quickKnown && quick < 0.8) || (currKnown && currentR < 1.0) ) {
+      A = 3;
+    }
+    // Rot
+    else if( (quickKnown && quick < 1.0) || (currKnown && currentR < 1.2) ){
+      A = 2;
+    }
+    // Gelb
+    else if(
+      (quickKnown && quick >= 1.0 && quick < 1.2) ||
+      (currKnown  && currentR >= 1.2 && currentR < 1.5)
+    ){
+      A = 1;
+    }
+    // Grün (beide Bedingungen)
+    else if( (quickKnown && quick >= 1.2) && (currKnown && currentR >= 1.5) ){
+      A = 0;
+    } else {
+      // Mischfall: z.B. Quick gut, Current knapp darunter => gelb
+      A = 1;
+    }
   }
 
-  // ------------------------
-  // GRÜN (alle Kernkriterien erfüllt)
-  // ------------------------
-  const greenCore =
-    (netIncomePos === true) &&
-    (fcfPos === true) &&
-    (Number.isFinite(icr) && icr >= 6) &&
-    (Number.isFinite(netDebtEbitda) && netDebtEbitda <= 2.5) &&
-    (Number.isFinite(debtFcf) && debtFcf <= 6) &&
-    (Number.isFinite(opm1y) && opm1y > 10) &&
-    (Number.isFinite(vol) && vol <= 35) &&
-    (Number.isFinite(beta) && beta <= 1.3);
+  triggers.push(`Block A (Liquidität): ${sevLabel[sevName[A]]}` +
+    (quickKnown ? ` | Quick=${quick}` : "") +
+    (currKnown ? ` | Current=${currentR}` : "")
+  );
 
-  const greenOptionalQuality =
-    (Number.isFinite(roic) && roic >= 10) || (Number.isFinite(roce) && roce >= 12);
-
-  if(greenCore){
-    // optionaler Hinweis
-    if(greenOptionalQuality) triggers.push("Qualitäts-Plus: ROIC/ROCE ok");
-    return { mode:"green", triggers };
+  // Cash&STI Verstärker: wenn sehr niedrig und schon gelb/rot/dunkelrot => 1 Stufe schlechter
+  // (ohne Verhältnis-Daten nehmen wir konservativ: <=0 oder NaN -> kein Verstärker; nur wenn klar sehr klein)
+  if(Number.isFinite(cashST) && cashST <= 0 && A >= 1){
+    A = worsenOnce(A, "Cash & Short-Term Investments sehr niedrig");
   }
 
-  // ------------------------
-  // GELB (nicht Rot) + Trigger
-  // ------------------------
-  // mindestens 1 (besser 2) Trigger aus deiner Liste
-  let yellowCount = 0;
+  // =========================================================
+  // Block B — Zinslast & Leverage  (FIX: Debt/FCF nicht mehr alleine Dunkelrot)
+  // =========================================================
+  let B = 1; // default gelb bei fehlenden Daten
+  const icrKnown = Number.isFinite(icr);
+  const ndeKnown = Number.isFinite(nde);
+  const dcfKnown = Number.isFinite(dcf);
 
-  if(icr1to6){ triggers.push("ICR 1 bis < 6"); yellowCount++; }
-  if(ndeHigh25to4){ triggers.push("Net Debt/EBITDA > 2,5 bis 4"); yellowCount++; }
-  if(debtFcf6to12){ triggers.push("Debt/FCF > 6 bis 12"); yellowCount++; }
-  if(debtFcfNotSane){ triggers.push("Debt/FCF nicht sinnvoll (FCF sehr klein/fehlt)"); yellowCount++; }
-  if(opm0to10){ triggers.push("Operating Margin 0 bis 10%"); yellowCount++; }
-  if(fcfWeakMargin){ triggers.push("FCF positiv, aber FCF-Marge < 5%"); yellowCount++; }
-  if(vol35to60){ triggers.push("Volatilität 35% bis 60%"); yellowCount++; }
-  if(beta13to18){ triggers.push("Beta 1,3 bis 1,8"); yellowCount++; }
-  if(revNeg){ triggers.push("Revenue YoY < 0%"); yellowCount++; }
+  if(!icrKnown && !ndeKnown && !dcfKnown){
+    B = 1;
+    triggers.push("B Zins/Leverage: zu wenig Daten (ICR/NDE/DCF fehlt)");
+  } else {
 
-  if(yellowCount >= 1){
-    return { mode:"yellow", triggers };
+    // 1) Primär: ICR + NetDebt/EBITDA (sauber & stabil)
+    if( (icrKnown && icr < 1) || (ndeKnown && nde >= 6) ){
+      B = 3; // Dunkelrot
+    }
+    else if(
+      (icrKnown && icr >= 1 && icr < 2) ||
+      (ndeKnown && nde >= 4 && nde < 6)
+    ){
+      B = 2; // Rot
+    }
+    else if(
+      (icrKnown && icr >= 2 && icr < 3) ||
+      (ndeKnown && nde >= 3 && nde < 4)
+    ){
+      B = 1; // Gelb
+    }
+    else if(
+      (icrKnown ? icr >= 3 : true) &&
+      (ndeKnown ? nde < 3 : true)
+    ){
+      B = 0; // Grün
+    } else {
+      B = 1;
+    }
+
+    // 2) Sekundär: Debt/FCF nur als Verstärker (max +1), nie alleine Dunkelrot
+    const fcfOk = (fcfPos === true) || (Number.isFinite(fcf) && fcf > 0);
+    if(dcfKnown && fcfOk){
+      if(dcf >= 50 && B < 3) { B = Math.min(3, B + 1); triggers.push("Verstärker B: Debt/FCF sehr hoch (≥50)"); }
+      else if(dcf >= 25 && B < 2) { B = Math.min(2, B + 1); triggers.push("Verstärker B: Debt/FCF hoch (≥25)"); }
+      else if(dcf >= 15 && B < 1) { B = Math.min(1, B + 1); triggers.push("Verstärker B: Debt/FCF erhöht (≥15)"); }
+    }
   }
 
-  // ------------------------
-  // Fallback: eher Grün wenn nichts auffällig, sonst Gelb
-  // (hier: wenn Daten fehlen, lieber Gelb)
-  // ------------------------
-  const missingCore =
-    (netIncomePos === null) || (fcfPos === null) ||
-    !Number.isFinite(icr) || !Number.isFinite(netDebtEbitda) || !Number.isFinite(debtFcf);
+  triggers.push(`Block B (Zins/Leverage): ${sevLabel[sevName[B]]}` +
+    (icrKnown ? ` | ICR=${icr}` : "") +
+    (ndeKnown ? ` | NetDebt/EBITDA=${nde}` : "") +
+    (dcfKnown ? ` | Debt/FCF=${dcf}` : "")
+  );
 
-  if(missingCore){
-    return { mode:"yellow", triggers:["Zu wenig Daten für eindeutiges Grün/Rot."] };
+
+  // =========================================================
+  // Block C — Cashflow/FCF
+  // =========================================================
+  let C = 1;
+
+  const ocfKnown = Number.isFinite(ocf);
+  const fcfKnown = Number.isFinite(fcf);
+  const fcfMgnKnown = Number.isFinite(fcfMgn);
+  const fcfConvKnown = Number.isFinite(fcfConv);
+
+  const fcfYes = (fcfPos === true);
+  const fcfNo  = (fcfPos === false);
+
+  // Dunkelrot
+  const cDark =
+    (ocfKnown && fcfKnown && ocf <= 0 && fcf < 0) ||
+    (fcfNo && fcfMgnKnown && fcfMgn < 0);
+
+  if(cDark){
+    C = 3;
+  } else {
+    // Rot
+    if( (fcfKnown && fcf < 0) || fcfNo ){
+      C = 2;
+    }
+    // Grün
+    else if( (ocfKnown && ocf > 0) && (fcfKnown && fcf > 0) && fcfYes ){
+      C = 0;
+    }
+    // Gelb: FCF >=0 aber Conversion schwach oder Marge sehr niedrig
+    else {
+      const convWeak = fcfConvKnown && (fcfConv < 0.5);
+      const mgnVeryLow = fcfMgnKnown && (fcfMgn >= 0 && fcfMgn < 5);
+      if( (fcfKnown && fcf >= 0) && (convWeak || mgnVeryLow) ){
+        C = 1;
+      } else {
+        // Default bei Mischdaten: gelb
+        C = 1;
+      }
+    }
   }
 
-  return { mode:"green", triggers:["Keine Stress-Trigger erkannt."] };
+  // CapEx-Erklärung/Entschärfung: wenn FCF<0 aber OCF stark positiv und CapEx der Haupttreiber,
+  // dann eher Gelb statt Rot (nicht wenn Dunkelrot!)
+  if(C === 2 && fcfKnown && fcf < 0 && ocfKnown && ocf > 0 && Number.isFinite(capex)){
+    // typischer CapEx ist negativ
+    const capexAbs = Math.abs(capex);
+    const ocfAbs   = Math.abs(ocf);
+    if(capexAbs > 0 && ocfAbs > 0 && capexAbs >= 0.7 * ocfAbs){
+      C = 1;
+      triggers.push("C Hinweis: FCF negativ wirkt capex-getrieben (OCF positiv, CapEx hoch) → Gelb statt Rot");
+    }
+  }
+
+  triggers.push(`Block C (Cashflow/FCF): ${sevLabel[sevName[C]]}` +
+    (ocfKnown ? ` | OCF=${ocf}` : "") +
+    (fcfKnown ? ` | FCF=${fcf}` : "") +
+    (fcfPos!==null ? ` | FCFPos=${fcfPos ? "Ja":"Nein"}` : "")
+  );
+
+  // =========================================================
+  // Block D — Profitabilität
+  // =========================================================
+  let D = 1;
+
+  const niYes = (netIncomePos === true);
+  const niNo  = (netIncomePos === false);
+
+  const opmKnown = Number.isFinite(opm1y);
+  const pmKnown  = Number.isFinite(pm1y);
+  const opmTrendKnown = Number.isFinite(opmCagr4);
+
+  // Dunkelrot
+  if( niNo && ( (opmKnown && opm1y <= 0) || (pmKnown && pm1y <= 0) ) ){
+    D = 3;
+  }
+  // Rot
+  else if( niNo || (opmKnown && opm1y <= 0) || (pmKnown && pm1y <= 0) ){
+    D = 2;
+  }
+  // Grün (mit Bonus-Info)
+  else if( niYes && (opmKnown && opm1y > 0) && (pmKnown && pm1y > 0) ){
+    D = 0;
+    if(opmTrendKnown && opmCagr4 >= 0){
+      triggers.push("D Bonus: Operating Margin Trend (4Y pp CAGR) ≥ 0");
+    }
+  }
+  // Gelb: Margen positiv, aber Trend schlecht
+  else {
+    if(opmTrendKnown && opmCagr4 < 0){
+      D = 1;
+    } else {
+      D = 1;
+    }
+  }
+
+  triggers.push(`Block D (Profitabilität): ${sevLabel[sevName[D]]}` +
+    (netIncomePos!==null ? ` | NIPos=${netIncomePos ? "Ja":"Nein"}` : "") +
+    (opmKnown ? ` | OPM=${opm1y}%` : "") +
+    (pmKnown ? ` | PM=${pm1y}%` : "")
+  );
+
+  // =========================================================
+  // Gesamt (Health)
+  // =========================================================
+  const blocks = { A, B, C, D };
+
+  const darkCount = [A,B,C,D].filter(x => x === 3).length;
+  const redCount  = [A,B,C,D].filter(x => x === 2).length;
+  const yelCount  = [A,B,C,D].filter(x => x === 1).length;
+
+  const marketStress = marketVolHigh || near52Low;
+
+  let baseMode = "green";
+
+  // 1) Dunkelrot
+  if(A === 3 || B === 3){
+    baseMode = "darkred";
+  } else if(redCount >= 2 && marketStress){
+    baseMode = "darkred";
+  }
+  // 2) Rot
+  else if(redCount >= 2){
+    baseMode = "red";
+  } else if(redCount >= 1 && yelCount >= 2){
+    baseMode = "red";
+  }
+  // 3) Gelb
+  else if(yelCount >= 2){
+    baseMode = "yellow";
+  } else if(redCount === 1){
+    baseMode = "yellow";
+  }
+  // 4) Grün
+  else {
+    baseMode = "green";
+  }
+
+  let baseSev = baseMode === "green" ? 0 : baseMode === "yellow" ? 1 : baseMode === "red" ? 2 : 3;
+
+  triggers.push(`Gesamt (Basis): ${sevLabel[baseMode]} | Rot=${redCount}, Gelb=${yelCount}, Dunkelrot=${darkCount}` +
+    (marketStress ? " | Marktstress bestätigt (Vol hoch oder nahe 52W Low)" : "")
+  );
+
+  // =========================================================
+  // Verstärker / Entlastung (±1 Stufe max. einmal)
+  // =========================================================
+  let finalSev = baseSev;
+
+  // Verschlechtert: nur wenn Gelb oder Rot-nah (=> baseSev >= 1) und nicht schon Dunkelrot
+  if(finalSev >= 1 && finalSev < 3){
+    const dilutionHigh = Number.isFinite(sharesCh) && sharesCh >= 5; // 5%+ YoY als "stark"
+    const betaVolHigh  = marketBetaHigh && marketVolHigh;
+    const rangeVeryWide= Number.isFinite(rangePct) && rangePct >= 1.0; // >=100% Spanne
+
+    if(dilutionHigh || betaVolHigh || rangeVeryWide){
+      const why = [
+        dilutionHigh ? `Shares Change YoY hoch (${sharesCh.toFixed(1)}%)` : null,
+        betaVolHigh  ? `Beta & Vol hoch (Beta=${beta}, Vol=${vol1y}%)` : null,
+        rangeVeryWide? `52W Range sehr breit (${(rangePct*100).toFixed(0)}%)` : null
+      ].filter(Boolean).join(" | ");
+      finalSev = worsenOnce(finalSev, why);
+    }
+  }
+
+  // Verbessert: nur wenn NICHT Rot/Dunkelrot
+  if(finalSev <= 1){
+    const qualityStrong = (
+      (Number.isFinite(roic) && roic >= 15) ||
+      (Number.isFinite(roce) && roce >= 15)
+    );
+    const icrStrong = Number.isFinite(icr) && icr >= 5;
+
+    if(qualityStrong && fcfPos === true && icrStrong){
+      finalSev = improveOnce(finalSev, "Sehr starke Qualität (ROIC/ROCE hoch) + FCF positiv + ICR ≥ 5");
+    }
+  }
+
+
+  const mode = sevName[finalSev];
+  triggers.push(`Gesamt (Final): ${sevLabel[mode]}`);
+
+  const baseLine =
+    `BASE: Gesamt = ${sevLabel[mode]} (A=${sevLabel[sevName[A]]}, B=${sevLabel[sevName[B]]}, C=${sevLabel[sevName[C]]}, D=${sevLabel[sevName[D]]})`;
+
+  const healthLine =
+    `HEALTH: ${(triggers && triggers.length) ? triggers.join(" | ") : "keine Trigger"}`;
+
+  const why = baseLine + "\n" + healthLine;
+
+  return { mode, triggers, blocks, why };
+
+
+}
+ 
+
+
+
+
+
+
+
+/* =========================
+   ROLES ENGINE (Phase 5)
+   ========================= */
+
+function roleChk(label, ok, missing=false){
+  return { label, ok: !!ok, missing: !!missing };
 }
 
+function roleBuildWhy(checks){
+  return (checks || []).map(c => {
+    const icon = c.missing ? "…" : (c.ok ? "✅" : "❌");
+    return `${icon} ${c.label}`;
+  });
+}
+
+function roleHealthLabel(pct, known){
+  if(known <= 0) return "Health: – (zu wenig Daten)";
+  if(pct >= 0.75) return "Health: stark";
+  if(pct >= 0.60) return "Health: ok";
+  return "Health: schwach";
+}
+
+function roleEval(baseChecks, healthChecks, healthMinPct=0.60){
+  const baseOk = (baseChecks || []).every(c => c.missing ? true : !!c.ok);
+
+  const known = (healthChecks || []).filter(c => !c.missing);
+  const okCnt = known.filter(c => !!c.ok).length;
+  const max   = known.length;
+  const pct   = max > 0 ? okCnt / max : 0;
+
+  let state = "off";
+if(baseOk){
+  if(max === 0) state = "on";     // <- statt "warn"
+  else state = (pct >= healthMinPct) ? "on" : "warn";
+}
+  return { state, baseOk, okCnt, max, pct };
+}
+
+function roleSet(out, role, baseChecks, healthChecks, healthMinPct=0.60){
+  const ev = roleEval(baseChecks, healthChecks, healthMinPct);
+  const header =
+    `BASE: ${ev.baseOk ? "✅ ok" : "❌ nicht"} | ` +
+    `HEALTH: ${ev.max ? `${ev.okCnt}/${ev.max}` : "–"} (${roleHealthLabel(ev.pct, ev.max)})`;
+
+  out[role] = {
+    state: ev.state,
+    why: [
+      header,
+      ...roleBuildWhy(baseChecks).map(x => "BASE: " + x),
+      ...roleBuildWhy(healthChecks).map(x => "HEALTH: " + x),
+    ]
+  };
+}
+
+function scoreChecks(checks){
+  const known = checks.filter(c => !c.missing);
+  const okCnt = known.filter(c => c.ok).length;
+  return { okCnt, knownCnt: known.length };
+}
+
+
+
+
+
+
+function buildNutzenCtx(m){
+  // Vol-Pack einmal parsen
+  const volPack = nzParseVolPack(nzGet(m, "Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y"));
+
+  const ctx = {
+    // Wachstum / Profit
+    revCagr4: nzPct(nzGet(m, "Revenue 4Y (CAGR)")),
+    epsCagr4: nzPct(nzGet(m, "EPS Growth 4Y (CAGR)")),
+    revYoy:   nzPct(nzGet(m, "Revenue Growth 1Y (YoY)")),
+
+    opm1y:    nzPct(nzGet(m, "Operating Margin 1Y")),
+    opmCagr4: nzPct(nzGet(m, "Operating Margin 4Y pp (CAGR)")),
+
+    // Margen
+    profitMargin1y: nzPct(nzGet(m, "Profit Margin 1Y")),
+    grossMargin1y:  nzPct(nzGet(m, "Gross Margin 1Y")),
+    pm1y: nzPct(nzGet(m, "Profit Margin 1Y")),
+    gm1y: nzPct(nzGet(m, "Gross Margin 1Y")),
+
+    // EBITDA
+    ebitda: nzNum(nzGet(m, "EBITDA 1Y")),
+    ebitdaMargin: nzPct(nzGet(m, "EBITDA Margin 1Y")),
+
+    // Dividende
+    dpsCagr4: nzPct(nzGet(m, "Dividende (DPS) 4Y (CAGR)")),
+    divYears: nzNum(nzGet(m, "Dividend Growth years")),
+    divYield: nzPct(nzGet(m, "Div.-Rendite aktuell (%)")),
+    payout: nzPct(nzGet(m, "Payout Ratio 1Y")),
+    fcfPayout: nzPct(nzGet(m, "FCF-Payout")),
+    divFreq: nzStr(nzGet(m, "Div.-Frequency")),
+    divGrowthTxt: nzLower(nzGet(m, "Dividend Growth")),
+
+    // Bewertung / Preise
+    pe:    nzNum(nzGet(m, "KGV (PE Ratio) 1Y")),
+    fair:  nutzenComputeFairPrice(m),
+    price: nzNum(nzGet(m, "Kurs aktuell")),
+    fcfYield: nzPct(nzGet(m, "FCF Yield 1Y")),
+
+    // Cashflow / FCF
+    ocf:       nzNum(nzGet(m, "Operating Cash Flow 1Y")),
+    capex:     nzNum(nzGet(m, "Capital Expenditures 1Y")),
+    fcf:       nzNum(nzGet(m, "FCF 1Y")),
+    fcfConv:   nzPct(nzGet(m, "FCF Conversion")),
+    fcfMargin: nzPct(nzGet(m, "FCF-Marge 1Y")),
+    fcfPos:    nzYesNo(nzGet(m, "FCF positiv (Ja/Nein)")),
+
+    // Cash
+    cash: nzNum(nzGet(m, "Cash & Short-Term Investments 1Y")),
+
+    // Profit flags
+    netIncomePos: nzYesNo(nzGet(m, "Net Income positiv (Ja/Nein)")),
+
+    // Risiko (aus Pack)
+    beta: nzNum(nzGet(m, "Beta")),
+    vol:  volPack.v1,
+    vol5y: volPack.v5,
+    vol10y: volPack.v10,
+    rangePct: nzRangePct(nzGet(m, "52-Week Range")),
+
+    // 52W Low/High optional (nur wenn du sie irgendwoher hast)
+    range52Low:  nzNum(nzGet(m, "52W Low")),
+    range52High: nzNum(nzGet(m, "52W High")),
+
+    // Debt / Liquidity / Coverage
+    debtFcf: nzNum(nzGet(m, "Debt / FCF Ratio")),
+    netDebtEbitda: nzNum(nzGet(m, "Net Debt / EBITDA Ratio 1Y")),
+    icr: nzNum(nzGet(m, "Zinsdeckung 1Y (Interest Coverage)")),
+    quick: nzNum(nzGet(m, "Quick Ratio 1Y")),
+    currentRatio: nzNum(nzGet(m, "Current Ratio 1Y")),
+    current: nzNum(nzGet(m, "Current Ratio 1Y")), // Alias
+
+    // Qualität
+    roic: nzPct(nzGet(m, "ROIC 1Y")),
+    roce: nzPct(nzGet(m, "ROCE 1Y")),
+
+    // Größe/Shares
+    mcap: nzNum(nzGet(m, "Marktkapitalisierung")),
+    sharesChangeYoY: nzPct(nzGet(m, "Shares Change (YoY)")),
+    sharesChg: nzPct(nzGet(m, "Shares Change (YoY)")),
+
+    // Engine hooks
+    has: (x) => Number.isFinite(x),
+    opt: (x, pred) => {
+      if(!Number.isFinite(x)) return { ok:true, missing:true };
+      return { ok: !!pred(x), missing:false };
+    },
+    chk: roleChk,
+  };
+
+  // Derived: FCF Conversion berechnen (wenn Spalte fehlt)
+// Achtung: ratio ist 0..1 (z.B. 0.65 = 65%)
+const conv = nzCalcFcfConversion(m);
+ctx.fcfConvCalc = conv.ratio;
+ctx.fcfConvCalcSrc = conv.src;
+
+  // Derived
+  ctx.peUsable = nzIsPeUsable(ctx.pe);
+
+  ctx.mos85 = (Number.isFinite(ctx.fair) && ctx.fair>0 && Number.isFinite(ctx.price) && ctx.price>0)
+    ? (ctx.price <= 0.85 * ctx.fair) : false;
+
+  ctx.mos90 = (Number.isFinite(ctx.fair) && ctx.fair>0 && Number.isFinite(ctx.price) && ctx.price>0)
+    ? (ctx.price <= 0.90 * ctx.fair) : false;
+
+  ctx.regularDiv = nzIsRegularDividend(ctx.divFreq);
+
+  ctx.divGrowthTxtMissing = !nzStr(nzGet(m, "Dividend Growth"));
+  ctx.divGrowthLooksBad = (() => {
+    const t = nzLower(nzGet(m, "Dividend Growth"));
+    if(!t) return false;
+    return t.includes("cut") || t.includes("kürz") || t.includes("negativ") || t.includes("stop") || t.includes("suspend");
+  })();
+
+  ctx.peg = (() => {
+    const pe = ctx.pe;
+    const g  = ctx.epsCagr4;
+    if(!Number.isFinite(pe) || pe <= 0) return NaN;
+    if(!Number.isFinite(g) || g <= 0) return NaN;
+    return pe / g;
+  })();
+
+  return ctx;
+}
 
 
 
@@ -4133,832 +5334,739 @@ function nutzenComputeStress(m){
    ========================================= */
 
 function nutzenComputeRoles(m){
-  const y = nzSelectedCagrYear();
-
-  function fmtPct(x){ return Number.isFinite(x) ? `${x.toFixed(1)}%` : "–"; }
-  function fmtNum(x){ return Number.isFinite(x) ? `${x.toFixed(2)}` : "–"; }
-  function okLine(ok, txt){ return `${ok ? "✅" : "❌"} ${txt}`; }
-  function unkLine(txt){ return `… ${txt}`; }
-
-
-  function chk(label, ok, missing=false){
-  return { label, ok, missing };
-}
-
-function buildWhy(checks){
-  // Checklist für ON/OFF: zeigt immer alle Punkte
-  return checks.map(c => {
-    const icon = c.missing ? "…" : (c.ok ? "✅" : "❌");
-    return `${icon} ${c.label}`;
-  });
-}
-
-// true/false/fehlend sauber unterscheiden
-function okOrMissing(isOk, isMissing){
-  if(isMissing) return { ok:false, missing:true };
-  return { ok: !!isOk, missing:false };
-}
-
-
-function has(x){ return Number.isFinite(x); } // nur Kurzform
-
-  // Wachstumsfelder (für Wachstum/GARP etc. nimm IMMER 4Y nach deiner Vorgabe)
-  const revCagr4 = nzPct(m["Revenue Growth 4Y (CAGR)"]);
-  const epsCagr4 = nzPct(m["EPS Growth 4Y (CAGR)"]);
-  const revYoy   = nzPct(m["Revenue Growth 1Y (YoY)"]);
-
-  const dpsCagr4 = nzPct(m["Dividende (DPS) 4Y (CAGR)"]);
-  const divYears = nzNum(m["Dividend Growth Years"]);
-  const divYield = nzPct(m["Div.-Rendite aktuell (%)"]);
-  const payout   = nzPct(m["Payout Ratio 1Y"]);
-  const fcfPayout = nzPct(m["FCF-Payout"]);
-  const divFreq  = nzStr(m["Div- Frequency"]);
-  const divGrowthTxt = nzLower(m["Dividend growth"]); // falls dort "cut" / "negativ" o.ä. steht
-
-  const pe  = nzNum(m["KGV (PE Ratio) 1Y"]);
-  const fair = nutzenComputeFairPrice(m);
-  const current = nzNum(m["Kurs aktuell"]);
-
-  const fcfYield = nzPct(m["FCF Yield 1Y"]);
-  const fcfMargin = nzPct(m["FCF-Margin"]);
-  const opm1y = nzPct(m["Operating Margin 1Y"]);
-  const opmCagr4 = nzPct(m["Operating Margin pp 4Y (CAGR)"]);
-
-  const roic = nzPct(m["ROIC"]);
-  const roce = nzPct(m["ROCE"]);
-
-  const debtFcf = nzNum(m["Debt/ FCF"]);
-  const netDebtEbitda = nzNum(m["Net Dept/ EBITDA"]);
-  const icr = nzNum(m["Zinsdeckung (ICR)"]);
-
-  const beta = nzNum(m["Beta"]);
-  const vol  = nzPct(m["Volatilität annualisiert (Std-Abw.) 1Y"]);
-  const rangePct = nzRangePct(m["52 Week Range"]);
-
-  const netIncomePos = nzYesNo(m["Net income positiv (ja/nein)"]);
-  const fcfPos = nzYesNo(m["FCF Positiv (ja/nein)"]);
-
-  const mcap = nzNum(m["Marktkapitalisierung"]);
-
-  const peUsable = nzIsPeUsable(pe);
-
-  // Margin of Safety (fair/current)
-  const mosOk = (Number.isFinite(fair) && fair > 0 && Number.isFinite(current) && current > 0)
-    ? (current <= 0.85 * fair) : false;
-  const mosOk90 = (Number.isFinite(fair) && fair > 0 && Number.isFinite(current) && current > 0)
-    ? (current <= 0.90 * fair) : false;
-
-  // Dividend sanity (Yield-Trap Filter)
-  const payoutOk = !Number.isFinite(payout) || payout <= 100; // wenn fehlt -> nicht blocken
-  const fcfPayoutOk = !Number.isFinite(fcfPayout) || fcfPayout <= 80;
-  const fcfMustBePos = (fcfPos !== false);
-
-  const regularDiv = nzIsRegularDividend(divFreq);
-
-  // Dividend growth text check (optional, wenn du da "negativ" reinschreibst)
-  const divGrowthLooksBad = divGrowthTxt.includes("cut") || divGrowthTxt.includes("kürz") || divGrowthTxt.includes("negativ") || divGrowthTxt.includes("stop");
-
-  // --- Rollen nach deinen Regeln ---
-
-  // Dividenden-Aristokrat
-  const isAristocrat =
-    (Number.isFinite(divYears) && divYears >= 25) &&
-    regularDiv &&
-    (Number.isFinite(dpsCagr4) ? dpsCagr4 > 0 : true) &&
-    (Number.isFinite(payout) ? (payout >= 30 && payout <= 70) : true) &&
-    (Number.isFinite(fcfPayout) ? fcfPayout <= 80 : true) &&
-    (fcfPos !== false) &&
-    (netIncomePos !== false) &&
-    (Number.isFinite(debtFcf) ? debtFcf < 8 : true) &&
-    (Number.isFinite(icr) ? icr > 4 : true) &&
-    (Number.isFinite(beta) ? beta < 1.2 : true);
-
-  // Dividenden-Wachstum
-  const isDivGrowth =
-    (Number.isFinite(divYears) && divYears >= 5) &&
-    (Number.isFinite(dpsCagr4) && dpsCagr4 >= 5) &&
-    !divGrowthLooksBad &&
-    (Number.isFinite(payout) ? (payout >= 25 && payout <= 60) : true) &&
-    (Number.isFinite(fcfPayout) ? fcfPayout <= 70 : true) &&
-    (fcfPos !== false) &&
-    (netIncomePos !== false) &&
-    (Number.isFinite(revCagr4) ? revCagr4 >= 3 : true) &&
-    (Number.isFinite(epsCagr4) ? epsCagr4 >= 5 : true) &&
-    (Number.isFinite(debtFcf) ? debtFcf < 8 : true) &&
-    (Number.isFinite(icr) ? icr > 4 : true);
-
-  // High Dividend (+ Yield-Trap Filter)
-  const isHighDividend =
-    (Number.isFinite(divYield) && divYield >= 4) &&
-    regularDiv &&
-    payoutOk &&
-    (Number.isFinite(payout) ? payout <= 80 : true) &&
-    fcfPayoutOk &&
-    fcfMustBePos &&
-    (netIncomePos !== false) &&
-    (Number.isFinite(debtFcf) ? debtFcf < 10 : true) &&
-    (Number.isFinite(icr) ? icr > 3 : true);
-
-  // Value
-  const isValue =
-    (
-      (peUsable && pe <= 18) ||
-      mosOk ||
-      (Number.isFinite(fcfYield) && fcfYield >= 5)
-    ) &&
-    (fcfPos !== false) &&
-    (netIncomePos !== false) &&
-    (
-      (Number.isFinite(roic) && roic >= 10) ||
-      (Number.isFinite(roce) && roce >= 10)
-    ) &&
-    (Number.isFinite(netDebtEbitda) ? netDebtEbitda < 3 : true) &&
-    (Number.isFinite(debtFcf) ? debtFcf < 8 : true) &&
-    (Number.isFinite(opm1y) ? opm1y > 0 : true);
-
-  // Wachstum
-  const isGrowth =
-    (Number.isFinite(revCagr4) && revCagr4 >= 10) &&
-    (Number.isFinite(revYoy) ? revYoy >= 8 : true) &&
-    (Number.isFinite(epsCagr4) ? epsCagr4 >= 12 : (netIncomePos !== false && fcfPos !== false)) &&
-    (Number.isFinite(opm1y) ? opm1y > 0 : true) &&
-    (fcfPos !== false) &&
-    (Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true) &&
-    (
-      (Number.isFinite(roic) && roic >= 10) ||
-      (Number.isFinite(roce) && roce >= 10)
-    );
-
-  // Quality
-  const isQuality =
-    (
-      (Number.isFinite(roic) && roic >= 12) &&
-      (Number.isFinite(roce) ? roce >= 12 : true)
-    ) &&
-    (Number.isFinite(opm1y) ? opm1y >= 15 : true) &&
-    (Number.isFinite(opmCagr4) ? opmCagr4 >= 0 : true) &&
-    (fcfPos !== false) &&
-    (Number.isFinite(fcfMargin) ? fcfMargin >= 10 : true) &&
-    (netIncomePos !== false) &&
-    (Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true) &&
-    (Number.isFinite(debtFcf) ? debtFcf <= 6 : true) &&
-    (Number.isFinite(icr) ? icr > 6 : true) &&
-    (Number.isFinite(beta) ? beta <= 1.2 : true);
-
-  // GARP
-  const isGarp =
-    (Number.isFinite(revCagr4) && revCagr4 >= 8) &&
-    (Number.isFinite(epsCagr4) && epsCagr4 >= 10) &&
-    (Number.isFinite(opm1y) ? opm1y >= 10 : true) &&
-    (
-      (Number.isFinite(roic) && roic >= 10) ||
-      (Number.isFinite(roce) && roce >= 10)
-    ) &&
-    (fcfPos !== false) &&
-    (Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true) &&
-    (
-      (peUsable ? pe <= 30 : true) ||
-      mosOk90
-    ) &&
-    (Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true) &&
-    (Number.isFinite(icr) ? icr > 5 : true);
-
-
-    // ===========================
-// Turnaround Inputs (optional)
-// ===========================
-
-// Net Income / FCF Zeitreihe (wenn du sie in der Tabelle hast; sonst NaN)
-const netIncome1 = nzNum(m["Net Income 1Y"]);
-const netIncome2 = nzNum(m["Net Income 2Y"]);
-
-const fcf1 = nzNum(m["FCF 1Y"]);
-const fcf2 = nzNum(m["FCF 2Y"]);
-const fcf3 = nzNum(m["FCF 3Y"]);
-const fcf4 = nzNum(m["FCF 4Y"]);
-
-const fcfMargin1 = nzPct(m["FCF-Margin 1Y"]);
-const fcfMargin2 = nzPct(m["FCF-Margin 2Y"]);
-
-// Operating Margin Vorjahr (du nutzt opmPrev im Trendvergleich)
-const opmPrev = nzPct(m["Operating Margin 2Y"]);
-
-// EPS (FY) und Vorjahr
-const epsFY     = nzNum(m["EPS (Diluted, FY)"]);
-const epsPrevFY = nzNum(m["EPS (Diluted, FY-1)"]);
-
-// EPS YoY 1Y (wird in Turnaround schon gebraucht)
-const epsYoy1 = nzPct(m["EPS Growth 1Y (YoY)"]);
-const epsYoy2 = nzPct(m["EPS Growth 2Y (YoY)"]);
-const epsYoy3 = nzPct(m["EPS Growth 3Y (YoY)"]);
-const epsYoy4 = nzPct(m["EPS Growth 4Y (YoY)"]);
-
-// ICR Vorjahr
-const icrPrev = nzNum(m["Zinsdeckung (ICR) 2Y"]);
-
-// Leverage Vorjahr (optional)
-const ndePrev = nzNum(m["Net Dept/ EBITDA 2Y"]);
-const dcfPrev = nzNum(m["Debt/ FCF 2Y"]);
-
-// =====================
-// Turnaround (neu)
-// ====================
-
-
-
-// Helper: Trend “hoch” (steigend) bei Zahlwerten
-function trendUp(a, b){
-  // a = aktueller, b = vorheriger
-  if(!Number.isFinite(a) || !Number.isFinite(b)) return { ok:false, missing:true };
-  return { ok: a > b, missing:false };
-}
-
-// Helper: “negativ -> weniger negativ” (z.B. -10 -> -2)
-function lessNegative(a, b){
-  if(!Number.isFinite(a) || !Number.isFinite(b)) return { ok:false, missing:true };
-  // a aktueller, b vorher
-  return { ok: (b < 0 && a < 0 && a > b), missing:false };
-}
-
-// Helper: “von negativ zu positiv”
-function flippedToPositive(a, b){
-  if(!Number.isFinite(a) || !Number.isFinite(b)) return { ok:false, missing:true };
-  return { ok: (b < 0 && a > 0), missing:false };
-}
-
-// 52W Low/High (für “vom Tief erholt”)
-const r52 = nzParse52w(m["52 Week Range"]);
-const nearLow = (Number.isFinite(current) && Number.isFinite(r52.low) && Number.isFinite(r52.high))
-  ? (current <= r52.low * 1.10)  // nahe Tief (≤ +10%)
-  : null;
-const reboundFromLow = (Number.isFinite(current) && Number.isFinite(r52.low))
-  ? (current >= r52.low * 1.25)  // ≥ +25% vom Tief
-  : null;
-
-// --- Kernidee Turnaround nach deiner Definition ---e
-// 1) Ausgangslage: NI oder FCF war “schlecht” (negativ) ODER ist aktuell noch schlecht
-const wasBadNow =
-  (netIncomePos === false) || (fcfPos === false);
-
-// 2) “Drehung / Verbesserung” Signale (Trend)
-const niFlip = flippedToPositive(netIncome1, netIncome2);        // - -> +
-const niLessNeg = lessNegative(netIncome1, netIncome2);          // -10 -> -2
-const fcfFlip = flippedToPositive(fcf1, fcf2);                   // - -> +
-const fcfLessNeg = lessNegative(fcf1, fcf2);
-const fcfMarginUp = trendUp(fcfMargin1, fcfMargin2);
-
-const opmUp = trendUp(opm1y, opmPrev);                           // Marge steigt ggü. Vorjahr
-const opmTurning = (Number.isFinite(opmCagr4) ? (opmCagr4 > 0) : null); // 4Y(CAGR) dreht positiv (oder weniger negativ → wenn du willst, kannst du hier auch "> -1" erlauben)
-const revBackPos = (Number.isFinite(revYoy) ? (revYoy > 0) : null);
-
-// EPS dreht: entweder YoY positiv ODER FY besser als FY-1 ODER FY > 0 nach negativ
-const epsUp = trendUp(epsFY, epsPrevFY);
-const epsBackPos = (Number.isFinite(epsYoy1) ? (epsYoy1 > 0) : null);
-
-// ICR verbessert sich (Richtung >1–2)
-const icrUp = trendUp(icr, icrPrev);
-const icrNowOk = (Number.isFinite(icr) ? (icr >= 1.5) : null);
-
-// Leverage “hoch aber sinkend”
-const ndeDown = (Number.isFinite(netDebtEbitda) && Number.isFinite(ndePrev)) ? (netDebtEbitda < ndePrev) : null;
-const dcfDown = (Number.isFinite(debtFcf) && Number.isFinite(dcfPrev)) ? (debtFcf < dcfPrev) : null;
-const leverageHigh = (Number.isFinite(netDebtEbitda) ? netDebtEbitda > 3 : false) || (Number.isFinite(debtFcf) ? debtFcf > 8 : false);
-
-// --- ECHT vs PROXY ---
-// ECHT wenn wir wenigstens NI oder FCF oder OPM Trend vergleichen können:
-const hasTrendData =
-  !niFlip.missing || !niLessNeg.missing || !fcfFlip.missing || !fcfLessNeg.missing || !opmUp.missing || (opmTurning !== null) || (icrUp.missing === false);
-
-// “Turnaround-Score”: du willst mehrere Signale gleichzeitig
-let taSignals = 0;
-
-function addSig(cond){
-  if(cond === true) taSignals++;
-}
-
-addSig(niFlip.ok || niLessNeg.ok);
-addSig(fcfFlip.ok || fcfLessNeg.ok);
-addSig(fcfMarginUp.ok);
-addSig(opmUp.ok || opmTurning === true);
-addSig(revBackPos === true);
-addSig(epsUp.ok || epsBackPos === true);
-addSig(icrUp.ok || icrNowOk === true);
-addSig( (ndeDown === true) || (dcfDown === true) );
-addSig(reboundFromLow === true); // nur Signal, nicht Pflicht
-
-// ECHT: “war schlecht” + mindestens 3 Turnaround-Signale (du kannst 2/4 wählen)
-const isTurnaroundTrue =
-  wasBadNow &&
-  hasTrendData &&
-  (taSignals >= 3) &&
-  (revBackPos !== false); // wenn revYoy bekannt und negativ => eher kein Turnaround
-
-// PROXY: wenn Trends fehlen -> strenger mit 1Y Signalen
-// Proxy = NI/FCF schlecht + (Rev wieder >0) + (OPM >0 oder OPM4Y dreht) + (EPS/ICR nicht katastrophal) und idealerweise Kurs vom Tief erholt
-const isTurnaroundProxy =
-  wasBadNow &&
-  !hasTrendData &&
-  (revBackPos === true) &&
-  ((Number.isFinite(opm1y) && opm1y > 0) || (opmTurning === true)) &&
-  ((epsBackPos === true) || (Number.isFinite(epsFY) && epsFY > 0) || (icrNowOk === true)) &&
-  (reboundFromLow !== false); // wenn bekannt und NICHT erholt -> eher kein
-
-const isTurnaround = isTurnaroundTrue || isTurnaroundProxy;
-const turnaroundNote = isTurnaroundTrue ? "Echt (Trend erkannt)" : (isTurnaroundProxy ? "Proxy (Trend fehlt)" : "");
-
-
-
-// =====================
-// Zykliker (neu)
-// =====================
-
-// --- 0) optional: mehrjährige Felder (wenn vorhanden) ---
-// Wenn du diese Header NICHT hast, bleiben die Werte NaN und es läuft Proxy.
-const revYoy1 = nzPct(m["Revenue Growth 1Y (YoY)"]);
-const revYoy2 = nzPct(m["Revenue Growth 2Y (YoY)"]);
-const revYoy3 = nzPct(m["Revenue Growth 3Y (YoY)"]);
-const revYoy4 = nzPct(m["Revenue Growth 4Y (YoY)"]);
-
-
-
-// Optional (wenn du sowas hast)
-const opm1 = nzPct(m["Operating Margin 1Y"]);
-const opm2 = nzPct(m["Operating Margin 2Y"]);
-const opm3 = nzPct(m["Operating Margin 3Y"]);
-const opm4 = nzPct(m["Operating Margin 4Y"]);
-
-
-// --- 1) Helper: “stark schwankend” über mehrere Jahre ---
-// Schwankend = mindestens 1x positiv UND 1x negativ in der Reihe
-function hasPlusAndMinus(arr){
-  const vals = arr.filter(v => Number.isFinite(v));
-  if(vals.length < 2) return { ok:false, missing:true };
-  const hasPos = vals.some(v => v > 0);
-  const hasNeg = vals.some(v => v < 0);
-  return { ok: hasPos && hasNeg, missing:false };
-}
-
-// “sehr volatil” = Range zwischen min/max groß (z.B. > 25 Prozentpunkte)
-function rangeLarge(arr, pp){
-  const vals = arr.filter(v => Number.isFinite(v));
-  if(vals.length < 2) return { ok:false, missing:true };
-  const lo = Math.min(...vals), hi = Math.max(...vals);
-  return { ok: (hi - lo) >= pp, missing:false };
-}
-
-// --- 2) “Echter Zykliker” (wenn Zeitreihe da ist) ---
-const revSwing = hasPlusAndMinus([revYoy1,revYoy2,revYoy3,revYoy4]);        // + und –
-const epsSwing = hasPlusAndMinus([epsYoy1,epsYoy2,epsYoy3,epsYoy4]);        // + und –
-const opmSwing = rangeLarge([opm1,opm2,opm3,opm4], 8);                      // Marge schwankt stark
-const fcfSwing = hasPlusAndMinus([fcf1,fcf2,fcf3,fcf4]);                    // FCF dreht
-
-const betaCyc = Number.isFinite(beta) && beta > 1.2;                        // oft >1,2
-const betaStrong = Number.isFinite(beta) && beta > 1.5;                     // “oft >1,5”
-const volCyc  = Number.isFinite(vol) && vol >= 35;                          // relativ hoch
-const rangeBroad = Number.isFinite(rangePct) && rangePct >= 0.8;            // breite 52W-Range
-
-// PE “trügerisch”: wir können nur markieren, wenn PE nicht nutzbar/negativ oder extrem
-const peTricky = (!peUsable) || (peUsable && pe >= 45);
-
-// ECHT = (Rev ODER EPS) zeigt +/– Wechsel UND Risiko/Range passt
-const isCyclicalTrue =
-  ( (revSwing.ok || epsSwing.ok) ) &&
-  (betaCyc || volCyc || rangeBroad) &&
-  (opmSwing.ok || fcfSwing.ok || peTricky);
-
-// --- 3) Proxy-Zykliker (wenn Zeitreihe fehlt) ---
-// Wenn wir Rev/EPS-Swing nicht prüfen können, nehmen wir “Zykliker-Profil”
-const missingTimeSeries = revSwing.missing && epsSwing.missing;
-const isCyclicalProxy =
-  missingTimeSeries &&
-  (betaCyc && volCyc && rangeBroad) &&
-  ( (Number.isFinite(opm1) && opm1 < 12) || (fcfPos === false) || peTricky );
-
-// Final
-const isCyclical = isCyclicalTrue || isCyclicalProxy;
-const cyclicalNote = isCyclicalTrue ? "Echt (Zeitreihe erkannt)" : (isCyclicalProxy ? "Proxy (Zeitreihe fehlt)" : "");
-
-
-const volVeryHigh = Number.isFinite(vol) && vol >= 60;
-const debtFcfNotSane = !Number.isFinite(debtFcf) || debtFcf <= 0;
-
-// =====================
-// Spekulation (neu)
-// =====================
-
-// 52W Range extrem breit: rangePct ist (high-low)/low
-const rangeExtreme = Number.isFinite(rangePct) && rangePct >= 1.2; // >=120% Spanne
-
-// Vol sehr hoch (45–60+)
-const volHigh = Number.isFinite(vol) && vol >= 45;
-
-// Beta hoch
-const betaHigh = Number.isFinite(beta) && beta >= 1.8;
-
-// Net income negativ (stark schwankend kann man ohne Zeitreihe nicht exakt messen)
-const niBad = (netIncomePos === false);
-
-// FCF negativ oder Marge sehr niedrig/negativ
-const fcfBad = (fcfPos === false) || (Number.isFinite(fcfMargin) && fcfMargin < 3);
-const fcfVeryBad = (fcfPos === false) || (Number.isFinite(fcfMargin) && fcfMargin < 0);
-
-// Debt/FCF sehr hoch oder “nicht sinnvoll”
-const debtFcfVeryHigh = (Number.isFinite(debtFcf) && debtFcf > 12) || debtFcfNotSane;
-
-// PE sehr hoch oder negativ/nicht nutzbar
-const peTooHigh = (Number.isFinite(pe) && pe >= 45);
-const peNotUsable = !Number.isFinite(pe) || pe <= 0; // negativ/fehlend
-const peSpec = peTooHigh || peNotUsable;
-
-// Optional: Hype-Hinweis (nur, wenn du Kurs 4Y CAGR hast)
-const priceCagr4 = nzPct(m["Kurs 4Y (CAGR)"]); // nur falls Feld existiert
-const hypeMove = Number.isFinite(priceCagr4) && priceCagr4 >= 30; // “extrem” frei wählbar
-
-// Fundamentaldaten “nicht stabil”: NI oder FCF schlecht
-const fundamentalsBad = (niBad || fcfBad);
-
-// --- Score Modell ---
-// Idee: Spekulation, wenn (Risk-Vol/Beta/Range) + (Fundamentals/Valuation) zusammenkommen.
-let specScore = 0;
-
-// Risiko/Schwankung
-if(volHigh) specScore++;
-if(volVeryHigh) specScore++;      // extra Punkt
-if(betaHigh) specScore++;
-if(rangeExtreme) specScore++;
-
-// Fundamentals
-if(niBad) specScore++;
-if(fcfBad) specScore++;
-if(fcfVeryBad) specScore++;       // extra Punkt
-if(debtFcfVeryHigh) specScore++;
-
-// Bewertung/PE
-if(peTooHigh) specScore++;
-if(peNotUsable) specScore++;      // extra Punkt
-
-// Harte Mindestbedingung: Mindestens 1 “Schwankungs”-Signal
-const hasSwing = volHigh || betaHigh || rangeExtreme;
-
-// Spekulation = Swing + Score >= 4
-// (dadurch wird es nicht zu “leicht” getriggert)
-const isSpec = hasSwing && (specScore >= 4);
-
-// Optional: Hype nur als Hinweis in Why, nicht als Kriterium
-
-
-  // Krisenfall 
-// Stress weiter berechnen (für Ampel/Overlay), aber NICHT für Krisenfall-Rolle verwenden
-const { mode: stressMode, triggers: stressTriggers } = nutzenComputeStress(m);
-
-// --- Krisenfall (Rolle) = harte Kriterien ---
-const interestExp = nzNum(m["Interest Expense 1Y"]); // Feld muss so heißen wie in deiner Tabelle!
-const range52 = nzParse52w(m["52 Week Range"]);
-const currentPrice = nzNum(m["Kurs aktuell"]);
-
-// Nähe zum 52W-Tief (z.B. <= 15% über Low)
-const near52wLow = (Number.isFinite(range52.low) && Number.isFinite(currentPrice) && range52.low > 0)
-  ? (currentPrice <= range52.low * 1.15)
-  : false;
-
-// “hoch/steigend” bei Interest Expense kann man ohne Zeitreihe NICHT sauber erkennen.
-// Daher: wenn InterestExpense vorhanden und >0 => Druckpunkt; wenn fehlt -> "unknown" (nicht blockend).
-const interestPressure = Number.isFinite(interestExp) ? (interestExp > 0) : null;
-
-// Debt/FCF “nicht sinnvoll” wenn fehlt oder <=0 oder extrem hoch
-
-const debtFcfExtreme = (Number.isFinite(debtFcf) && debtFcf > 12) || debtFcfNotSane;
-
-// NetDebt/EBITDA sehr hoch oder “nicht sinnvoll”
-const ndeExtreme = (!Number.isFinite(netDebtEbitda)) || (netDebtEbitda > 5);
-
-// Operating Margin stark negativ (z.B. < 0)
-const opmVeryBad = Number.isFinite(opm1y) && opm1y < 0;
-
-// Revenue YoY deutlich negativ (z.B. <= -5)
-const revBad = Number.isFinite(revYoy) && revYoy <= -5;
-
-// Volatilität sehr hoch (z.B. >= 60)
-
-
-// ICR kritisch
-const icrCritical = Number.isFinite(icr) && icr < 1;
-
-// Basisbedingungen (müssen erfüllt sein)
-const crisisBase =
-  (netIncomePos === false) &&
-  (fcfPos === false) &&
-  icrCritical;
-
-// Zusätzliche Krisen-Trigger (wir verlangen mehrere davon)
-let crisisScore = 0;
-if(ndeExtreme) crisisScore++;
-if(debtFcfExtreme) crisisScore++;
-if(opmVeryBad) crisisScore++;
-if(revBad) crisisScore++;
-if(near52wLow) crisisScore++;
-if(volVeryHigh) crisisScore++;
-if(interestPressure === true) crisisScore++; // optionaler Zusatz
-
-// Krisenfall = Base + mindestens 2 zusätzliche Trigger
-const isCrisis = crisisBase && (crisisScore >= 2);
-
-  // Size
-  const isSmall = Number.isFinite(mcap) && mcap > 0 && mcap < 2e9;
-  const isMid   = Number.isFinite(mcap) && mcap >= 2e9 && mcap < 10e9;
-  const isLarge = Number.isFinite(mcap) && mcap >= 10e9;
-
-  // Defensiv / stabil defensiv
-  const isDefensive =
-    (Number.isFinite(beta) && beta <= 1.0) &&
-    (Number.isFinite(vol) ? vol <= 30 : true) &&
-    (Number.isFinite(rangePct) ? rangePct <= 0.6 : true);
-
-  const isStableDef =
-    (netIncomePos !== false) &&
-    (fcfPos !== false) &&
-    (Number.isFinite(opm1y) ? opm1y > 0 : true) &&
-    (Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true) &&
-    (Number.isFinite(icr) ? icr > 6 : true) &&
-    (Number.isFinite(debtFcf) ? debtFcf <= 6 : true) &&
-    isDefensive;
-
-
-  const status = {};
-
-function healthLabel(pct, known){
-  if(known <= 0) return "Health: – (zu wenig Daten)";
-  if(pct >= 0.75) return "Health: stark";
-  if(pct >= 0.60) return "Health: ok";
-  return "Health: schwach";
-}
-
-function evalRole(baseChecks, healthChecks, healthMinPct=0.60){
-  // Base: fehlende Werte blocken NICHT hart
-  const baseOk = baseChecks.every(c => c.missing ? true : !!c.ok);
-
-  // Health: nur bekannte Checks zählen
-  const known = healthChecks.filter(c => !c.missing);
-  const okCnt = known.filter(c => !!c.ok).length;
-  const max   = known.length;
-  const pct   = max > 0 ? okCnt / max : 0;
-
-  let state = "off";
-  if(baseOk){
-    if(max === 0) state = "warn";              // Base ok, aber kaum Health-Daten
-    else state = (pct >= healthMinPct) ? "on" : "warn";
+  /* =========================
+     A) Kleine Check-Engine
+     ========================= */
+  function chk(label, ok, missing=false){ return { label, ok: !!ok, missing: !!missing }; }
+
+  function buildWhy(checks){
+    return (checks || []).map(c => {
+      const icon = c.missing ? "…" : (c.ok ? "✅" : "❌");
+      return `${icon} ${c.label}`;
+    });
   }
 
-  return { state, baseOk, okCnt, max, pct };
+  function healthLabel(pct, known){
+    if(known <= 0) return "Health: – (zu wenig Daten)";
+    if(pct >= 0.75) return "Health: stark";
+    if(pct >= 0.60) return "Health: ok";
+    return "Health: schwach";
+  }
+
+  function evalRole(baseChecks, healthChecks, healthMinPct=0.60){
+    const baseOk = (baseChecks || []).every(c => c.missing ? true : !!c.ok);
+
+    const known = (healthChecks || []).filter(c => !c.missing);
+    const okCnt = known.filter(c => !!c.ok).length;
+    const max   = known.length;
+    const pct   = max > 0 ? okCnt / max : 0;
+
+let state = "off";
+if(baseOk){
+  if(max === 0) state = "on";     // <- statt "warn"
+  else state = (pct >= healthMinPct) ? "on" : "warn";
 }
+    return { state, baseOk, okCnt, max, pct };
+  }
 
-function setRole(role, baseChecks, healthChecks, healthMinPct=0.60){
-  const ev = evalRole(baseChecks, healthChecks, healthMinPct);
+  function setRole(out, role, baseChecks, healthChecks, healthMinPct=0.60){
+    const ev = evalRole(baseChecks, healthChecks, healthMinPct);
+    const header =
+      `BASE: ${ev.baseOk ? "✅ ok" : "❌ nicht"} | ` +
+      `HEALTH: ${ev.max ? `${ev.okCnt}/${ev.max}` : "–"} (${healthLabel(ev.pct, ev.max)})`;
 
-  const header =
-    `BASE: ${ev.baseOk ? "✅ ok" : "❌ nicht"} | ` +
-    `HEALTH: ${ev.max ? `${ev.okCnt}/${ev.max}` : "–"} (${healthLabel(ev.pct, ev.max)})`;
+    out[role] = {
+      state: ev.state, // on | warn | off
+      why: [
+        header,
+        ...buildWhy(baseChecks).map(x => "BASE: " + x),
+        ...buildWhy(healthChecks).map(x => "HEALTH: " + x),
+      ]
+    };
+  }
 
-  status[role] = {
-    state: ev.state, // "on" | "warn" | "off"
-    why: [
-      header,
-      ...buildWhy(baseChecks).map(x => "BASE: " + x),
-      ...buildWhy(healthChecks).map(x => "HEALTH: " + x),
-    ]
+  function missingNum(x){ return !Number.isFinite(x); }
+  function missingYesNo(x){ return (x !== true && x !== false); }
+
+  /* =========================
+     B) Context (alles 1x parsen)
+     ========================= */
+  const ctx = buildNutzenCtx(m);
+
+
+
+  /* =========================
+     C) Derived helpers (MoS etc.)
+     ========================= */
+  ctx.peUsable = nzIsPeUsable(ctx.pe);
+
+ctx.mos85 = (Number.isFinite(ctx.fair) && ctx.fair>0 && Number.isFinite(ctx.price) && ctx.price>0)
+  ? (ctx.price <= 0.85 * ctx.fair) : false;
+
+ctx.mos90 = (Number.isFinite(ctx.fair) && ctx.fair>0 && Number.isFinite(ctx.price) && ctx.price>0)
+  ? (ctx.price <= 0.90 * ctx.fair) : false;
+
+  ctx.regularDiv = nzIsRegularDividend(ctx.divFreq);
+
+  ctx.divGrowthLooksBad =
+    ctx.divGrowthTxt.includes("cut") ||
+    ctx.divGrowthTxt.includes("kürz") ||
+    ctx.divGrowthTxt.includes("negativ") ||
+    ctx.divGrowthTxt.includes("stop");
+
+  /* =========================
+     D) ROLE RULES – HIER baust du nach und nach aus
+     =========================
+     Jede Rolle: base(ctx)->checks, health(ctx)->checks, healthMin
+     Wenn du noch keine Regeln hast: lass base/health weg.
+     ========================= */
+
+
+
+
+
+// =====================
+// TURNAROUND – nach deinen Regeln (Gate A/B/C + Risky Flag)
+// benötigt in ctx: netIncomePos, fcfPos, opm1y, pm1y, opmPpCagr1/2/3/4, ebitda, ebitdaMargin,
+//                  fcfConv, revYoy, revCagr1/2/3, epsFY, epsCagr1/2 (optional),
+//                  icr, quick, current, netDebtEbitda, debtFcf, cash,
+//                  beta, vol, range52Low (optional), range52High (optional), price (optional)
+//
+// Hinweis: ctx.current = Current Ratio (wie wir’s zuletzt getrennt haben), ctx.price = Kurs aktuell
+// Wenn du noch keinen 52W low/high im ctx hast, ist "nearLow" einfach missing.
+
+function buildTurnaroundRole(ctx){
+  // ---------- Helpers ----------
+  const has = ctx.has || ((x)=>Number.isFinite(x));
+  const chk = ctx.chk || ((label, ok, missing=false)=>({label, ok:!!ok, missing:!!missing}));
+
+  // "optional" check: fehlt => missing=true und ok=true (blockt nicht)
+  const opt = ctx.opt || ((x, pred)=>{
+    if(!Number.isFinite(x)) return { ok:true, missing:true };
+    return { ok: !!pred(x), missing:false };
+  });
+
+  function countOk(checks){
+    const known = checks.filter(c => !c.missing);
+    const okCnt = known.filter(c => c.ok).length;
+    return { okCnt, knownCnt: known.length };
+  }
+
+  function anyOk(checks){
+    const known = checks.filter(c => !c.missing);
+    if(known.length === 0) return { ok:false, missing:true };
+    return { ok: known.some(c=>c.ok), missing:false };
+  }
+
+  // ---------- Inputs ----------
+  const netIncomePos = ctx.netIncomePos;         // true/false/null
+  const fcfPos       = ctx.fcfPos;               // true/false/null
+
+  const opm1y = ctx.opm1y;                       // %
+  const pm1y  = ctx.pm1y ?? ctx.profitMargin1y;  // %
+  const icr   = ctx.icr;                         // number
+  const quick = ctx.quick;                       // number
+  const currentRatio = ctx.currentRatio; // Current Ratio
+  const netDebtEbitda = ctx.netDebtEbitda;       // number
+  const debtFcf = ctx.debtFcf;                   // number
+  const cash = ctx.cash;                         // number
+
+  const opmPp1 = ctx.opmPpCagr1 ?? ctx.opmPpCagr1y ?? ctx.opmPp1; // %p.a. (pp-CAGR)
+  const opmPp2 = ctx.opmPpCagr2 ?? ctx.opmPpCagr2y ?? ctx.opmPp2;
+  const opmPp3 = ctx.opmPpCagr3 ?? ctx.opmPpCagr3y ?? ctx.opmPp3;
+  const opmPp4 = ctx.opmPpCagr4 ?? ctx.opmCagr4; // falls du opmCagr4 als pp-CAGR nutzt
+
+  const ebitda = ctx.ebitda;
+  const ebitdaMargin = ctx.ebitdaMargin;
+
+  const convRatio = ctx.fcfConvCalc; // 0..1 (z.B. 0.65)
+
+  const revYoy  = ctx.revYoy;
+  const revCagr1 = ctx.revCagr1 ?? ctx.revCagr1y;
+  const revCagr2 = ctx.revCagr2 ?? ctx.revCagr2y;
+  const revCagr3 = ctx.revCagr3 ?? ctx.revCagr3y;
+
+  const epsFY = ctx.epsFY ?? ctx.eps1y ?? ctx.eps; // EPS 1Y (FY)
+  const epsCagr1 = ctx.epsCagr1 ?? ctx.epsGrowthCagr1;
+  const epsCagr2 = ctx.epsCagr2 ?? ctx.epsGrowthCagr2;
+
+  const beta = ctx.beta;
+  const vol  = ctx.vol;
+
+  // 52W low/high optional
+  const low52 = ctx.range52Low;
+  const price = ctx.price; // Kurs aktuell (wenn du es im ctx hast)
+  const nearLow = (has(low52) && has(price) && low52 > 0) ? (price <= low52 * 1.10) : null;
+
+  // =========================================================
+  // Gate A — „Vorher schwach / Problemfall“ (mind. 1 Treffer)
+  // =========================================================
+  const gateA_checks = [
+    chk(`Problem: Net Income negativ`, netIncomePos === false, netIncomePos === null),
+    chk(`Problem: Operating Margin < 0`, has(opm1y) ? opm1y < 0 : false, !has(opm1y)),
+    chk(`Problem: Profit Margin < 0`, has(pm1y) ? pm1y < 0 : false, !has(pm1y)),
+    chk(`Problem: FCF negativ`, fcfPos === false, fcfPos === null),
+    chk(`Problem: Zinsdeckung < 1.5`, has(icr) ? icr < 1.5 : false, !has(icr)),
+    chk(`Problem: Current Ratio < 1.0`, has(currentRatio) ? currentRatio < 1.0 : false, !has(currentRatio)),
+  ];
+  const gateA_any = anyOk(gateA_checks);
+
+  // ======================================================
+  // Gate B — „Messbare Verbesserung“ (mind. 2 Treffer)
+  // ======================================================
+  // Margin improves: irgendein pp-CAGR > 0
+  const opmImproveKnown = [opmPp1, opmPp2, opmPp3, opmPp4].some(has);
+  const opmImproveOk = [opmPp1, opmPp2, opmPp3, opmPp4].some(v => has(v) && v > 0);
+
+  // EBITDA improves: EBITDA > 0 UND EBITDA-Marge positiv (proxy)
+  const ebitdaOk = (has(ebitda) && ebitda > 0) && (has(ebitdaMargin) ? (ebitdaMargin > 0) : true);
+  const ebitdaMissing = !(has(ebitda) || has(ebitdaMargin));
+
+  // FCF conversion (nur wenn NI nicht negativ)
+const convRelevant = (netIncomePos !== false);
+const convOk = convRelevant && Number.isFinite(convRatio) && convRatio >= 0.60;
+
+  // Revenue improving: YoY>0 oder RevCAGR1>0; optional stärker: 2Y/3Y>0
+  const revOk =
+    (has(revYoy) && revYoy > 0) ||
+    (has(revCagr1) && revCagr1 > 0) ||
+    (has(revCagr2) && revCagr2 > 0) ||
+    (has(revCagr3) && revCagr3 > 0);
+
+  const revMissing = !(has(revYoy) || has(revCagr1) || has(revCagr2) || has(revCagr3));
+
+  // EPS: EPS>0 oder EPS-CAGR(1/2)>0 (wenn vorhanden)
+  const epsOk =
+    (has(epsFY) && epsFY > 0) ||
+    (has(epsCagr1) && epsCagr1 > 0) ||
+    (has(epsCagr2) && epsCagr2 > 0);
+
+  const epsMissing = !(has(epsFY) || has(epsCagr1) || has(epsCagr2));
+
+  const gateB_checks = [
+    chk(`Verbesserung: OPM pp-CAGR > 0 (1–4Y)`, opmImproveOk, !opmImproveKnown),
+    chk(`Verbesserung: EBITDA > 0 & EBITDA-Marge positiv`, ebitdaOk, ebitdaMissing),
+    chk(`Verbesserung: Net Income positiv (Flip)`, netIncomePos === true, netIncomePos === null),
+    chk(`Verbesserung: FCF positiv (Flip)`, fcfPos === true, fcfPos === null),
+    chk(
+  `Verbesserung: FCF Conversion ≥ 60% (aktuell: ${nzFmtPct01(convRatio)})`,
+  convOk,
+  !convRelevant || !Number.isFinite(convRatio)
+),
+    chk(`Verbesserung: Revenue > 0 (YoY oder CAGR)`, revOk, revMissing),
+    chk(`Verbesserung: EPS > 0 oder EPS-CAGR > 0`, epsOk, epsMissing),
+  ];
+  const gateB_cnt = countOk(gateB_checks);
+
+  // ============================================================
+  // Gate C — „Nicht kurz vor Umkippen“ (mind. 2 Mindest-Sicherheiten)
+  // ============================================================
+  const debtFcfOk = (has(debtFcf) && debtFcf <= 8);
+  const debtFcfMissing = !has(debtFcf);
+  const debtFcfAutoBad = !fcfPos || fcfPos === false; // wenn FCF negativ/unknown => nicht ok (nach deiner Regel)
+
+  const gateC_checks = [
+    chk(`Stabilität: Zinsdeckung ≥ 2`, has(icr) ? icr >= 2 : false, !has(icr)),
+    chk(`Stabilität: Quick ≥ 1 ODER Current ≥ 1.2`, (has(quick) && quick >= 1) || (has(currentRatio) && currentRatio >= 1.2), !(has(quick) || has(currentRatio))),
+    chk(`Stabilität: NetDebt/EBITDA ≤ 4`, has(netDebtEbitda) ? netDebtEbitda <= 4 : false, !has(netDebtEbitda)),
+    chk(`Stabilität: Debt/FCF ≤ 8 (nur wenn FCF positiv)`, (!debtFcfAutoBad) && debtFcfOk, debtFcfMissing || debtFcfAutoBad),
+    chk(`Stabilität: Cash vorhanden (>0)`, has(cash) ? cash > 0 : false, !has(cash)),
+  ];
+  const gateC_cnt = countOk(gateC_checks);
+
+  // =========================
+  // Warnflaggen → Risky
+  // =========================
+  const risky_checks = [
+    chk(`Risky: Zinsdeckung < 1`, has(icr) ? icr < 1 : false, !has(icr)),
+    chk(`Risky: NetDebt/EBITDA > 6`, has(netDebtEbitda) ? netDebtEbitda > 6 : false, !has(netDebtEbitda)),
+    chk(`Risky: Current Ratio < 0.9`, has(currentRatio) ? currentRatio < 0.9 : false, !has(currentRatio)),
+    chk(`Risky: Vol ≥ 60%`, has(vol) ? vol >= 60 : false, !has(vol)),
+    chk(`Risky: Beta ≥ 2`, has(beta) ? beta >= 2 : false, !has(beta)),
+    chk(`Risky: Kurs nahe 52W Low (≤ +10%)`, (nearLow === true), nearLow === null),
+  ];
+  const riskyAny = risky_checks.filter(c=>!c.missing).some(c=>c.ok);
+
+  // =========================
+  // Final Decision
+  // =========================
+  const gateA_ok = (gateA_any.missing ? false : gateA_any.ok);
+  const gateB_ok = (gateB_cnt.okCnt >= 2);
+  const gateC_ok = (gateC_cnt.okCnt >= 2);
+
+  const isTurnaround = gateA_ok && gateB_ok && gateC_ok;
+
+  // Output: Base/Health so wie dein Role-System es will
+  // Base = Gates (A/B/C), Health = Warnflaggen + Details
+  const base = [
+    chk(`Gate A: mind. 1 Schwäche`, gateA_ok, gateA_any.missing),
+    chk(`Gate B: mind. 2 Verbesserungen (aktuell: ${gateB_cnt.okCnt}/${gateB_cnt.knownCnt})`, gateB_ok, gateB_cnt.knownCnt===0),
+    chk(`Gate C: mind. 2 Stabilitäten (aktuell: ${gateC_cnt.okCnt}/${gateC_cnt.knownCnt})`, gateC_ok, gateC_cnt.knownCnt===0),
+  ];
+
+  const health = [
+    ...gateA_checks.map(x => ({...x, label:`A: ${x.label}`})),
+    ...gateB_checks.map(x => ({...x, label:`B: ${x.label}`})),
+    ...gateC_checks.map(x => ({...x, label:`C: ${x.label}`})),
+    ...risky_checks.map(x => ({...x, label:`⚠️ ${x.label}`})),
+    chk(`Turnaround Risk-Flag`, isTurnaround ? !riskyAny : false, !isTurnaround), // wenn Turnaround true und riskyAny true => health fail
+  ];
+
+  return {
+    isTurnaround,
+    risky: isTurnaround && riskyAny,
+    base,
+    health,
+    note: isTurnaround ? (riskyAny ? "Risky" : "OK") : "OFF"
   };
 }
 
-  // ========== CHECKLISTEN (Beispiele) ==========
 
-  // Aristokrat Checkliste
-const aristocratBase = [
-  chk(`Dividend Growth Years ≥ 25 (aktuell: ${Number.isFinite(divYears)?divYears:"–"})`, Number.isFinite(divYears) && divYears >= 25, !Number.isFinite(divYears)),
-  chk(`Dividende regelmäßig (Frequency: ${divFreq || "–"})`, !!regularDiv, !divFreq),
-  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-];
 
-const aristocratHealth = [
-  chk(`DPS 4Y CAGR > 0% (aktuell: ${fmtPct(dpsCagr4)})`, Number.isFinite(dpsCagr4) ? dpsCagr4 > 0 : true, !Number.isFinite(dpsCagr4)),
-  chk(`Payout 30–70% (aktuell: ${fmtPct(payout)})`, Number.isFinite(payout) ? (payout >= 30 && payout <= 70) : true, !Number.isFinite(payout)),
-  chk(`FCF-Payout ≤ 80% (aktuell: ${fmtPct(fcfPayout)})`, Number.isFinite(fcfPayout) ? (fcfPayout <= 80) : true, !Number.isFinite(fcfPayout)),
-  chk(`Debt/FCF < 8`, Number.isFinite(debtFcf) ? debtFcf < 8 : true, !Number.isFinite(debtFcf)),
-  chk(`ICR > 4`, Number.isFinite(icr) ? icr > 4 : true, !Number.isFinite(icr)),
-  chk(`Beta < 1.2`, Number.isFinite(beta) ? beta < 1.2 : true, !Number.isFinite(beta)),
-];
+const ROLE_RULES = {
+  "Dividenden-Aristokrat": {
+    minPct: 0.60,
+    base: (ctx) => [
+      ctx.chk(`Dividend Growth Years ≥ 25`, ctx.has(ctx.divYears) && ctx.divYears >= 25, !ctx.has(ctx.divYears)),
+      ctx.chk(`Dividende regelmäßig`, ctx.regularDiv === true, ctx.regularDiv === null),
+      ctx.chk(`Net Income positiv`, ctx.netIncomePos === true, ctx.netIncomePos === null),
+      ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
+    ],
+    health: (ctx) => [
+      ctx.chk(`DPS 4Y CAGR > 0%`, ctx.opt(ctx.dpsCagr4, v => v > 0)),
+      ctx.chk(`Payout 30–70%`, ctx.opt(ctx.payout, v => v >= 30 && v <= 70)),
+      ctx.chk(`FCF-Payout ≤ 80%`, ctx.opt(ctx.fcfPayout, v => v <= 80)),
+      ctx.chk(`NetDebt/EBITDA < 3`, ctx.opt(ctx.netDebtEbitda, v => v < 3)),
+      ctx.chk(`ICR ≥ 3`, ctx.opt(ctx.icr, v => v >= 3)),
+      ctx.chk(`Beta ≤ 1.2`, ctx.opt(ctx.beta, v => v <= 1.2)),
+    ]
+  },
 
-  // Dividenden-Wachstum Checkliste
-const divGrowthBase = [
-  chk(`Dividend Growth Years ≥ 5`, Number.isFinite(divYears) && divYears >= 5, !Number.isFinite(divYears)),
-  chk(`DPS 4Y CAGR ≥ 5%`, Number.isFinite(dpsCagr4) && dpsCagr4 >= 5, !Number.isFinite(dpsCagr4)),
-  chk(`Keine Kürzung/Stop (Text)`, !divGrowthLooksBad, !divGrowthTxt),
-  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-];
+  "Dividenden-Wachstum": {
+    minPct: 0.60,
+    base: (ctx) => [
+      ctx.chk(`Dividend Growth Years ≥ 5`, ctx.has(ctx.divYears) && ctx.divYears >= 5, !ctx.has(ctx.divYears)),
+      ctx.chk(`DPS 4Y CAGR ≥ 5%`, ctx.has(ctx.dpsCagr4) && ctx.dpsCagr4 >= 5, !ctx.has(ctx.dpsCagr4)),
+      ctx.chk(`Keine Kürzung (Text)`, ctx.divGrowthLooksBad === false, ctx.divGrowthTxtMissing),
+      ctx.chk(`Net Income positiv`, ctx.netIncomePos === true, ctx.netIncomePos === null),
+      ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
+    ],
+    health: (ctx) => [
+      ctx.chk(`Payout ≤ 70%`, ctx.opt(ctx.payout, v => v <= 70)),
+      ctx.chk(`FCF-Payout ≤ 70%`, ctx.opt(ctx.fcfPayout, v => v <= 70)),
+      ctx.chk(`Revenue 4Y CAGR ≥ 3%`, ctx.opt(ctx.revCagr4, v => v >= 3)),
+      ctx.chk(`EPS 4Y CAGR ≥ 5%`, ctx.opt(ctx.epsCagr4, v => v >= 5)),
+      ctx.chk(`NetDebt/EBITDA ≤ 3.5`, ctx.opt(ctx.netDebtEbitda, v => v <= 3.5)),
+      ctx.chk(`ICR ≥ 3`, ctx.opt(ctx.icr, v => v >= 3)),
+    ]
+  },
 
-const divGrowthHealth = [
-  chk(`Payout 25–60%`, Number.isFinite(payout) ? (payout >= 25 && payout <= 60) : true, !Number.isFinite(payout)),
-  chk(`FCF-Payout ≤ 70%`, Number.isFinite(fcfPayout) ? (fcfPayout <= 70) : true, !Number.isFinite(fcfPayout)),
-  chk(`Revenue 4Y CAGR ≥ 3%`, Number.isFinite(revCagr4) ? revCagr4 >= 3 : true, !Number.isFinite(revCagr4)),
-  chk(`EPS 4Y CAGR ≥ 5%`, Number.isFinite(epsCagr4) ? epsCagr4 >= 5 : true, !Number.isFinite(epsCagr4)),
-  chk(`Debt/FCF < 8`, Number.isFinite(debtFcf) ? debtFcf < 8 : true, !Number.isFinite(debtFcf)),
-  chk(`ICR > 4`, Number.isFinite(icr) ? icr > 4 : true, !Number.isFinite(icr)),
-];
+  "Value": {
+    minPct: 0.60,
+    base: (ctx) => [
+      ctx.chk(`Billig: PE≤18 ODER MOS ODER FCF-Yield≥5`, (ctx.peUsable && ctx.pe <= 18) || ctx.mos85 || (ctx.has(ctx.fcfYield) && ctx.fcfYield >= 5), false),
+      ctx.chk(`Net Income positiv`, ctx.netIncomePos === true, ctx.netIncomePos === null),
+      ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
+    ],
+    health: (ctx) => [
+      ctx.chk(`ROIC/ROCE ≥ 10%`, (ctx.has(ctx.roic)&&ctx.roic>=10) || (ctx.has(ctx.roce)&&ctx.roce>=10), !(ctx.has(ctx.roic)||ctx.has(ctx.roce))),
+      ctx.chk(`NetDebt/EBITDA < 3`, ctx.opt(ctx.netDebtEbitda, v => v < 3)),
+      ctx.chk(`Debt/FCF < 10`, ctx.opt(ctx.debtFcf, v => v < 10)),
+      ctx.chk(`OPM > 0%`, ctx.opt(ctx.opm1y, v => v > 0)),
+    ]
+  },
 
-  // High Dividend Checkliste
-const highDivBase = [
-  chk(`Div.-Rendite ≥ 4%`, Number.isFinite(divYield) && divYield >= 4, !Number.isFinite(divYield)),
-  chk(`Dividende regelmäßig`, !!regularDiv, !divFreq),
-  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-];
+  "Wachstum": {
+    minPct: 0.60,
+    base: (ctx) => [
+      ctx.chk(`Revenue 4Y CAGR ≥ 10%`, ctx.has(ctx.revCagr4) && ctx.revCagr4 >= 10, !ctx.has(ctx.revCagr4)),
+      ctx.chk(`EPS 4Y CAGR ≥ 12%`, ctx.has(ctx.epsCagr4) && ctx.epsCagr4 >= 12, !ctx.has(ctx.epsCagr4)),
+      ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
+    ],
+    health: (ctx) => [
+      ctx.chk(`OPM > 0%`, ctx.opt(ctx.opm1y, v => v > 0)),
+      ctx.chk(`FCF-Marge ≥ 5%`, ctx.opt(ctx.fcfMargin, v => v >= 5)),
+      ctx.chk(`ROIC/ROCE ≥ 10%`, (ctx.has(ctx.roic)&&ctx.roic>=10) || (ctx.has(ctx.roce)&&ctx.roce>=10), !(ctx.has(ctx.roic)||ctx.has(ctx.roce))),
+      ctx.chk(`PE nicht absurd (≤45 oder fehlend)`, (!ctx.peUsable) || (ctx.pe <= 45), false),
+    ]
+  },
 
-const highDivHealth = [
-  chk(`Payout ≤ 80%`, Number.isFinite(payout) ? payout <= 80 : true, !Number.isFinite(payout)),
-  chk(`FCF-Payout ≤ 80%`, Number.isFinite(fcfPayout) ? fcfPayout <= 80 : true, !Number.isFinite(fcfPayout)),
-  chk(`Debt/FCF < 10`, Number.isFinite(debtFcf) ? debtFcf < 10 : true, !Number.isFinite(debtFcf)),
-  chk(`ICR > 3`, Number.isFinite(icr) ? icr > 3 : true, !Number.isFinite(icr)),
-  chk(`Kein Yield-Trap (PayoutOk/FCF)`, payoutOk && fcfPayoutOk && fcfMustBePos, false),
-];
+  "Quality": {
+    minPct: 0.65,
+    base: (ctx) => [
+      ctx.chk(`ROIC ≥ 12%`, ctx.has(ctx.roic) && ctx.roic >= 12, !ctx.has(ctx.roic)),
+      ctx.chk(`Net Income positiv`, ctx.netIncomePos === true, ctx.netIncomePos === null),
+      ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
+    ],
+    health: (ctx) => [
+      ctx.chk(`ROCE ≥ 12%`, ctx.opt(ctx.roce, v => v >= 12)),
+      ctx.chk(`OPM ≥ 15%`, ctx.opt(ctx.opm1y, v => v >= 15)),
+      ctx.chk(`OPM Trend ≥ 0 (4Y pp CAGR)`, ctx.opt(ctx.opmCagr4, v => v >= 0)),
+      ctx.chk(`FCF-Marge ≥ 10%`, ctx.opt(ctx.fcfMargin, v => v >= 10)),
+      ctx.chk(`NetDebt/EBITDA ≤ 3`, ctx.opt(ctx.netDebtEbitda, v => v <= 3)),
+      ctx.chk(`ICR ≥ 5`, ctx.opt(ctx.icr, v => v >= 5)),
+      ctx.chk(`Beta ≤ 1.2`, ctx.opt(ctx.beta, v => v <= 1.2)),
+    ]
+  },
 
-  // Value Checkliste (kurz, aber korrekt)
-const valueBase = [
-  chk(`Billig: KGV≤18 ODER MOS ODER FCF Yield≥5`, (peUsable && pe <= 18) || mosOk || (Number.isFinite(fcfYield) && fcfYield >= 5), false),
-  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-];
+  "GARP": {
+    minPct: 0.60,
+    base: (ctx) => [
+      ctx.chk(`Revenue 4Y CAGR ≥ 8%`, ctx.has(ctx.revCagr4) && ctx.revCagr4 >= 8, !ctx.has(ctx.revCagr4)),
+      ctx.chk(`EPS 4Y CAGR ≥ 10%`, ctx.has(ctx.epsCagr4) && ctx.epsCagr4 >= 10, !ctx.has(ctx.epsCagr4)),
+      // Proxy für PEG: PEG ≈ PE / EPS-CAGR
+      ctx.chk(`Preis ok: PE≤30 ODER PEG≤2 (Proxy) ODER MOS≤0.9`, (ctx.peUsable && ctx.pe <= 30) || (ctx.has(ctx.peg) && ctx.peg <= 2) || ctx.mos90, false),
+    ],
+    health: (ctx) => [
+      ctx.chk(`OPM ≥ 10%`, ctx.opt(ctx.opm1y, v => v >= 10)),
+      ctx.chk(`ROIC/ROCE ≥ 10%`, (ctx.has(ctx.roic)&&ctx.roic>=10) || (ctx.has(ctx.roce)&&ctx.roce>=10), !(ctx.has(ctx.roic)||ctx.has(ctx.roce))),
+      ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
+      ctx.chk(`NetDebt/EBITDA ≤ 3.5`, ctx.opt(ctx.netDebtEbitda, v => v <= 3.5)),
+      ctx.chk(`ICR ≥ 4`, ctx.opt(ctx.icr, v => v >= 4)),
+    ]
+  },
 
-const valueHealth = [
-  chk(`ROIC/ROCE ≥ 10%`, (Number.isFinite(roic)&&roic>=10) || (Number.isFinite(roce)&&roce>=10), !(Number.isFinite(roic)||Number.isFinite(roce))),
-  chk(`NetDebt/EBITDA < 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda < 3 : true, !Number.isFinite(netDebtEbitda)),
-  chk(`Debt/FCF < 8`, Number.isFinite(debtFcf) ? debtFcf < 8 : true, !Number.isFinite(debtFcf)),
-  chk(`Operating Margin > 0`, Number.isFinite(opm1y) ? opm1y > 0 : true, !Number.isFinite(opm1y)),
-  chk(`Beta nicht hoch (≤1.3)`, Number.isFinite(beta) ? beta <= 1.3 : true, !Number.isFinite(beta)),
-];
-
-  // Wachstum (kurz)
-const growthBase = [
-  chk(`Revenue 4Y CAGR ≥ 10%`, Number.isFinite(revCagr4) && revCagr4 >= 10, !Number.isFinite(revCagr4)),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
-];
-
-const growthHealth = [
-  chk(`Revenue YoY ≥ 8%`, Number.isFinite(revYoy) ? revYoy >= 8 : true, !Number.isFinite(revYoy)),
-  chk(`EPS 4Y CAGR ≥ 12%`, Number.isFinite(epsCagr4) ? epsCagr4 >= 12 : true, !Number.isFinite(epsCagr4)),
-  chk(`Operating Margin > 0%`, Number.isFinite(opm1y) ? opm1y > 0 : true, !Number.isFinite(opm1y)),
-  chk(`FCF-Marge ≥ 5%`, Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true, !Number.isFinite(fcfMargin)),
-  chk(`ROIC/ROCE ≥ 10%`, (Number.isFinite(roic)&&roic>=10) || (Number.isFinite(roce)&&roce>=10), !(Number.isFinite(roic)||Number.isFinite(roce))),
-];
-
-  // Quality (kurz)
-const qualityBase = [
-  chk(`ROIC ≥ 12%`, Number.isFinite(roic) && roic >= 12, !Number.isFinite(roic)),
-  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-];
-
-const qualityHealth = [
-  chk(`ROCE ≥ 12%`, Number.isFinite(roce) ? roce >= 12 : true, !Number.isFinite(roce)),
-  chk(`Operating Margin ≥ 15%`, Number.isFinite(opm1y) ? opm1y >= 15 : true, !Number.isFinite(opm1y)),
-  chk(`OPM-Trend ≥ 0 (4Y)` , Number.isFinite(opmCagr4) ? opmCagr4 >= 0 : true, !Number.isFinite(opmCagr4)),
-  chk(`FCF-Marge ≥ 10%`, Number.isFinite(fcfMargin) ? fcfMargin >= 10 : true, !Number.isFinite(fcfMargin)),
-  chk(`NetDebt/EBITDA ≤ 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true, !Number.isFinite(netDebtEbitda)),
-  chk(`Debt/FCF ≤ 6`, Number.isFinite(debtFcf) ? debtFcf <= 6 : true, !Number.isFinite(debtFcf)),
-  chk(`ICR > 6`, Number.isFinite(icr) ? icr > 6 : true, !Number.isFinite(icr)),
-  chk(`Beta ≤ 1.2`, Number.isFinite(beta) ? beta <= 1.2 : true, !Number.isFinite(beta)),
-];
-
-  // GARP (kurz)
-const garpBase = [
-  chk(`Revenue 4Y CAGR ≥ 8%`, Number.isFinite(revCagr4) && revCagr4 >= 8, !Number.isFinite(revCagr4)),
-  chk(`EPS 4Y CAGR ≥ 10%`, Number.isFinite(epsCagr4) && epsCagr4 >= 10, !Number.isFinite(epsCagr4)),
-  chk(`Preis ok: PE≤30 oder MOS≤0,9`, (peUsable && pe <= 30) || mosOk90, false),
-];
-
-const garpHealth = [
-  chk(`Operating Margin ≥ 10%`, Number.isFinite(opm1y) ? opm1y >= 10 : true, !Number.isFinite(opm1y)),
-  chk(`ROIC/ROCE ≥ 10%`, (Number.isFinite(roic)&&roic>=10) || (Number.isFinite(roce)&&roce>=10), !(Number.isFinite(roic)||Number.isFinite(roce))),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-  chk(`FCF-Marge ≥ 5%`, Number.isFinite(fcfMargin) ? fcfMargin >= 5 : true, !Number.isFinite(fcfMargin)),
-  chk(`NetDebt/EBITDA ≤ 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true, !Number.isFinite(netDebtEbitda)),
-  chk(`ICR > 5`, Number.isFinite(icr) ? icr > 5 : true, !Number.isFinite(icr)),
-];
-
-const turnBase = [
-  chk(`Ausgangslage: NI oder FCF negativ`, wasBadNow, (netIncomePos===null && fcfPos===null)),
-  chk(`Turnaround erkannt (Echt/Proxy)`, isTurnaround, false),
-];
-
-const turnHealth = [
-  chk(`Signale ≥ 3 (aktuell: ${taSignals})`, Number.isFinite(taSignals) ? (taSignals >= 3) : false, !Number.isFinite(taSignals)),
-  chk(`Revenue YoY nicht negativ`, (revBackPos !== false), (revBackPos===null)),
-  chk(`ICR Richtung ok (≥1.5 oder steigend)`, (icrNowOk===true) || icrUp.ok, (!Number.isFinite(icr) && icrUp.missing)),
-  chk(`Leverage sinkt (NDE oder Debt/FCF)`, (ndeDown===true) || (dcfDown===true), (ndeDown===null && dcfDown===null)),
-  chk(`Kurs vom Tief erholt (Signal)`, reboundFromLow === true, reboundFromLow===null),
-];
-
-const cycBase = [
-  chk(`Zykliker-Profil erkannt (Echt/Proxy)`, isCyclical, false),
-];
-
-const cycHealth = [
-  chk(`Rev Swing (+/–)`, revSwing.ok, revSwing.missing),
-  chk(`EPS Swing (+/–)`, epsSwing.ok, epsSwing.missing),
-  chk(`OPM Swing groß`, opmSwing.ok, opmSwing.missing),
-  chk(`Beta/Vol/Range passen`, (betaCyc || volCyc || rangeBroad), false),
-];
+   "Turnaround": {
+     minPct: 0.50,
+     base:  (ctx) => buildTurnaroundRole(ctx).base,
+     health:(ctx) => buildTurnaroundRole(ctx).health,
+   },
   
-const specBase = [
-  chk(`Mindestens 1 Swing-Signal (Vol/Beta/Range)`, hasSwing, false),
-  chk(`SpecScore ≥ 4 (aktuell: ${specScore})`, Number.isFinite(specScore) ? specScore >= 4 : false, !Number.isFinite(specScore)),
-];
+  "Zykliker": {
+    minPct: 0.50,
+    base: (ctx) => {
+      const sig = [
+        ctx.chk(`Volatilität 5Y/10Y hoch`, (ctx.opt(ctx.vol5y, v=>v>=35).ok) || (ctx.opt(ctx.vol10y, v=>v>=35).ok),
+          (!ctx.has(ctx.vol5y) && !ctx.has(ctx.vol10y))),
+        ctx.chk(`Beta hoch`, ctx.opt(ctx.beta, v=>v>=1.2), !ctx.has(ctx.beta)),
+        ctx.chk(`52W-Range breit`, ctx.opt(ctx.rangePct, v=>v>=0.8), !ctx.has(ctx.rangePct)),
+        ctx.chk(`Marge dünn/schwankungsanfällig (Proxy)`, ctx.opt(ctx.opm1y, v=>v>0 && v<12), !ctx.has(ctx.opm1y)),
+        ctx.chk(`FCF/NetIncome nicht stabil (Proxy)`, (ctx.netIncomePos === false) || (ctx.fcfPos === false),
+          (ctx.netIncomePos===null && ctx.fcfPos===null)),
+        ctx.chk(`Leverage erhöht (Debt/FCF oder NDE)`, (ctx.opt(ctx.debtFcf, v=>v>=10).ok) || (ctx.opt(ctx.netDebtEbitda, v=>v>=3).ok),
+          (!ctx.has(ctx.debtFcf) && !ctx.has(ctx.netDebtEbitda))),
+      ];
+      const sc = scoreChecks(sig);
+      return [
+        ctx.chk(`Base-Score ≥ 3 (aktuell: ${sc.okCnt}/${sc.knownCnt})`, sc.knownCnt ? sc.okCnt >= 3 : false, sc.knownCnt === 0),
+      ];
+    },
+    health: (ctx) => {
+      const h = [
+        ctx.chk(`Cash hoch ODER Quick ≥ 1 ODER Current ≥ 1.5`, 
+          (ctx.opt(ctx.cash, v=>v>0).ok) || (ctx.opt(ctx.quick, v=>v>=1).ok) || (ctx.opt(ctx.currentRatio, v=>v>=1.5).ok),
+          (!ctx.has(ctx.cash) && !ctx.has(ctx.quick) && !ctx.has(ctx.current))),
+        ctx.chk(`Interest Coverage > 3 (besser > 5)`, ctx.opt(ctx.icr, v=>v>3), !ctx.has(ctx.icr)),
+        ctx.chk(`NetDebt/EBITDA moderat (≤3)`, ctx.opt(ctx.netDebtEbitda, v=>v<=3), !ctx.has(ctx.netDebtEbitda)),
+        ctx.chk(`OCF positiv`, ctx.opt(ctx.ocf, v=>v>0), !ctx.has(ctx.ocf)),
+        ctx.chk(`CapEx flexibel/FCF nicht dauerhaft negativ (Proxy)`, (ctx.fcfPos !== false) || ctx.opt(ctx.fcf, v=>v>=0), (!ctx.has(ctx.fcf) && ctx.fcfPos===null)),
+        ctx.chk(`ROIC/ROCE ordentlich`, (ctx.opt(ctx.roic, v=>v>=8).ok) || (ctx.opt(ctx.roce, v=>v>=8).ok),
+          (!ctx.has(ctx.roic) && !ctx.has(ctx.roce))),
+      ];
+      const sc = scoreChecks(h);
+      return [
+        ...h,
+        ctx.chk(`Health-Score ≥ 4 (aktuell: ${sc.okCnt}/${sc.knownCnt})`, sc.knownCnt ? sc.okCnt >= 4 : true, sc.knownCnt === 0),
+      ];
+    }
+  },
 
-const specHealth = [
-  chk(`Fundamentals schwach (NI oder FCF)`, fundamentalsBad, false),
-  chk(`Debt/FCF extrem/unsinnig`, debtFcfVeryHigh, false),
-  chk(`PE sehr hoch/negativ`, peSpec, false),
-  chk(`Hype Move (Hinweis)`, hypeMove, !Number.isFinite(priceCagr4)),
-];
-  
-const crisisBaseChecks = [
-  chk(`Net Income negativ`, netIncomePos === false, netIncomePos === null),
-  chk(`FCF negativ`, fcfPos === false, fcfPos === null),
-  chk(`ICR < 1`, icrCritical, !Number.isFinite(icr)),
-];
+   "Spekulation": {
+    minPct: 0.50,
+    base: (ctx) => {
+      const sig = [
+        ctx.chk(`Beta hoch (≥1.8)`, ctx.opt(ctx.beta, v=>v>=1.8), !ctx.has(ctx.beta)),
+        ctx.chk(`Volatilität 1Y hoch (≥45%)`, ctx.opt(ctx.vol, v=>v>=45), !ctx.has(ctx.vol)),
+        ctx.chk(`52W-Range sehr breit (≥120%)`, ctx.opt(ctx.rangePct, v=>v>=1.2), !ctx.has(ctx.rangePct)),
+        ctx.chk(`Net Income negativ`, ctx.netIncomePos === false, ctx.netIncomePos===null),
+        ctx.chk(`FCF negativ oder FCF-Marge sehr niedrig`, (ctx.fcfPos === false) || (ctx.opt(ctx.fcfMargin, v=>v<3).ok),
+          (ctx.fcfPos===null && !ctx.has(ctx.fcfMargin))),
+        ctx.chk(`Bewertung extrem (PE sehr hoch/negativ/unbrauchbar)`, (!ctx.peUsable) || (ctx.has(ctx.pe) && ctx.pe>=45),
+          (!ctx.has(ctx.pe) && ctx.peUsable===false)),
+        ctx.chk(`Leverage/Refi-Risiko (Debt/FCF hoch oder ICR niedrig)`, (ctx.opt(ctx.debtFcf, v=>v>=12).ok) || (ctx.opt(ctx.icr, v=>v<3).ok),
+          (!ctx.has(ctx.debtFcf) && !ctx.has(ctx.icr))),
+      ];
+      const sc = scoreChecks(sig);
+      return [
+        ctx.chk(`Base-Score ≥ 3 (aktuell: ${sc.okCnt}/${sc.knownCnt})`, sc.knownCnt ? sc.okCnt >= 3 : false, sc.knownCnt === 0),
+      ];
+    },
+    health: (ctx) => [
+      ctx.chk(`Hinweis: Spekulation = Screening (kein Qualitätslabel)`, true, false),
+    ]
+  },
 
-const crisisHealthChecks = [
-  chk(`Score ≥ 2 (aktuell: ${crisisScore})`, Number.isFinite(crisisScore) ? crisisScore >= 2 : false, !Number.isFinite(crisisScore)),
-  chk(`NetDebt/EBITDA extrem/fehlt`, ndeExtreme, false),
-  chk(`Debt/FCF extrem/unsinnig`, debtFcfExtreme, false),
-  chk(`Operating Margin < 0`, opmVeryBad, !Number.isFinite(opm1y)),
-  chk(`Revenue YoY ≤ -5%`, revBad, !Number.isFinite(revYoy)),
-  chk(`Nahe 52W Low`, near52wLow, !(Number.isFinite(range52.low)&&Number.isFinite(currentPrice))),
-  chk(`Volatilität ≥ 60%`, volVeryHigh, !Number.isFinite(vol)),
-  chk(`Interest Expense Druck`, interestPressure === true, interestPressure === null),
-];
-  const smallChecks = [ chk(`Market Cap < 2 Mrd`, Number.isFinite(mcap) && mcap < 2e9, !Number.isFinite(mcap)) ];
-  const midChecks   = [ chk(`Market Cap 2–10 Mrd`, Number.isFinite(mcap) && mcap >= 2e9 && mcap < 10e9, !Number.isFinite(mcap)) ];
-  const largeChecks = [ chk(`Market Cap > 10 Mrd`, Number.isFinite(mcap) && mcap >= 10e9, !Number.isFinite(mcap)) ];
 
-const defBase = [
-  chk(`Beta ≤ 1.0`, Number.isFinite(beta) && beta<=1.0, !Number.isFinite(beta)),
-];
+  "Krisenfall": {
+    minPct: 0.50,
+    base: (ctx) => {
+      const acute = [
+        ctx.chk(`ICR < 1`, ctx.opt(ctx.icr, v=>v<1), !ctx.has(ctx.icr)),
+        ctx.chk(`OCF ≤ 0`, ctx.opt(ctx.ocf, v=>v<=0), !ctx.has(ctx.ocf)),
+        ctx.chk(`FCF negativ oder FCF positiv = Nein`, (ctx.fcfPos === false) || ctx.opt(ctx.fcf, v=>v<0), (ctx.fcfPos===null && !ctx.has(ctx.fcf))),
+        ctx.chk(`Quick < 1 oder Current < 1`, (ctx.opt(ctx.quick, v=>v<1).ok) || (ctx.opt(ctx.currentRatio, v=>v<1).ok),
+          (!ctx.has(ctx.quick) && !ctx.has(ctx.currentRatio))),
+      ];
 
-const defHealth = [
-  chk(`Vol ≤ 30%`, Number.isFinite(vol) ? vol <= 30 : true, !Number.isFinite(vol)),
-  chk(`52W Range ≤ 60%`, Number.isFinite(rangePct) ? rangePct <= 0.6 : true, !Number.isFinite(rangePct)),
-];
+      const otherBlocks = [
+        ctx.chk(`Leverage hoch (NDE ≥ 5 oder Debt/FCF ≥ 15)`, (ctx.opt(ctx.netDebtEbitda, v=>v>=5).ok) || (ctx.opt(ctx.debtFcf, v=>v>=15).ok),
+          (!ctx.has(ctx.netDebtEbitda) && !ctx.has(ctx.debtFcf))),
+        ctx.chk(`Profitabilität negativ (OPM ≤ 0 oder Profit Margin ≤ 0)`, (ctx.opt(ctx.opm1y, v=>v<=0).ok) || (ctx.opt(ctx.pm1y, v=>v<=0).ok),
+          (!ctx.has(ctx.opm1y) && !ctx.has(ctx.pm1y))),
+        ctx.chk(`Umsatztrend schwach (Revenue YoY < 0)`, ctx.opt(ctx.revYoy, v=>v<0), !ctx.has(ctx.revYoy)),
+        ctx.chk(`Marktstress (Vol 1Y hoch oder nahe 52W Low Proxy: Range sehr breit)`, (ctx.opt(ctx.vol, v=>v>=60).ok) || (ctx.opt(ctx.rangePct, v=>v>=0.8).ok),
+          (!ctx.has(ctx.vol) && !ctx.has(ctx.rangePct))),
+      ];
 
-const stabDefBase = [
-  chk(`Defensiv erfüllt`, isDefensive, false),
-  chk(`Net Income positiv`, netIncomePos === true, netIncomePos === null),
-  chk(`FCF positiv`, fcfPos === true, fcfPos === null),
-];
+      const a = scoreChecks(acute);
+      const o = scoreChecks(otherBlocks);
 
-const stabDefHealth = [
-  chk(`Operating Margin > 0`, Number.isFinite(opm1y) ? opm1y > 0 : true, !Number.isFinite(opm1y)),
-  chk(`NetDebt/EBITDA ≤ 3`, Number.isFinite(netDebtEbitda) ? netDebtEbitda <= 3 : true, !Number.isFinite(netDebtEbitda)),
-  chk(`Debt/FCF ≤ 6`, Number.isFinite(debtFcf) ? debtFcf <= 6 : true, !Number.isFinite(debtFcf)),
-  chk(`ICR > 6`, Number.isFinite(icr) ? icr > 6 : true, !Number.isFinite(icr)),
-];
+      // PDF-Idee: 1 akuter Trigger + mindestens 1 weiterer Block schwach
+      const ok = (a.knownCnt ? a.okCnt >= 1 : false) && (o.knownCnt ? o.okCnt >= 1 : false);
 
-  // ========== SETZEN ==========
-setRole("Dividenden-Aristokrat", aristocratBase, aristocratHealth, 0.60);
-setRole("Dividenden-Wachstum", divGrowthBase, divGrowthHealth, 0.60);
-setRole("High Dividend", highDivBase, highDivHealth, 0.60);
+      return [
+        ctx.chk(`Akut-Trigger ≥1 UND weiterer Block schwach`, ok,
+          (a.knownCnt===0 && o.knownCnt===0)),
+      ];
+    },
+    health: (ctx) => [
+      // Health (managbar vs existenziell) kannst du später fein machen – PDF beschreibt die Dimensionen.
+      ctx.chk(`Health-Hinweis: Cash + Quick/Current ok = eher “managbar”`, true, false),
+    ]
+  },
 
-setRole("Value", valueBase, valueHealth, 0.60);
-setRole("Wachstum", growthBase, growthHealth, 0.60);
-setRole("Quality", qualityBase, qualityHealth, 0.65); // Quality etwas strenger
-setRole("GARP (Wachstum, preis ist nicht teuer)", garpBase, garpHealth, 0.60);
 
-setRole("Turnaround", turnBase, turnHealth, 0.50);    // Turnaround: Health lockerer
-setRole("Zykliker", cycBase, cycHealth, 0.50);
-setRole("Spekulation", specBase, specHealth, 0.50);
+  "Defensiv": {
+    minPct: 0.60,
+    base: (ctx)=>[
+      ctx.chk(`Beta ≤ 1.0`, ctx.has(ctx.beta) && ctx.beta <= 1.0, !ctx.has(ctx.beta)),
+    ],
+    health:(ctx)=>[
+      ctx.chk(`Vol ≤ 30%`, ctx.opt(ctx.vol, v => v <= 30)),
+      ctx.chk(`52W Range ≤ 60%`, ctx.opt(ctx.rangePct, v => v <= 0.6)),
+    ]
+  },
 
-setRole("Krisenfall", crisisBaseChecks, crisisHealthChecks, 0.50);
+  "Stabil defensiv": {
+    minPct: 0.65,
+    base: (ctx)=>[
+      ctx.chk(`Beta ≤ 0.9`, ctx.opt(ctx.beta, v => v <= 0.9), !ctx.has(ctx.beta)),
+      ctx.chk(`Vol 5Y/10Y moderat/niedrig (Proxy ≤ 30%)`, 
+        (ctx.opt(ctx.vol5y, v=>v<=30).ok) || (ctx.opt(ctx.vol10y, v=>v<=30).ok),
+        (!ctx.has(ctx.vol5y) && !ctx.has(ctx.vol10y))),
+      ctx.chk(`Net Income positiv`, ctx.netIncomePos === true, ctx.netIncomePos === null),
+      ctx.chk(`Operating Margin > 0`, ctx.opt(ctx.opm1y, v => v > 0), !ctx.has(ctx.opm1y)),
+      ctx.chk(`Profit Margin > 0`, ctx.opt(ctx.pm1y, v => v > 0), !ctx.has(ctx.pm1y)),
+      ctx.chk(`OCF > 0`, ctx.opt(ctx.ocf, v => v > 0), !ctx.has(ctx.ocf)),
+      ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
+      ctx.chk(`FCF-Marge > 0`, ctx.opt(ctx.fcfMargin, v => v > 0), !ctx.has(ctx.fcfMargin)),
+      ctx.chk(`Interest Coverage > 5`, ctx.opt(ctx.icr, v => v > 5), !ctx.has(ctx.icr)),
+      ctx.chk(`Quick ≥ 1 ODER Current ≥ 1.5`, (ctx.opt(ctx.quick, v=>v>=1).ok) || (ctx.opt(ctx.currentRatio, v=>v>=1.5).ok),
+        (!ctx.has(ctx.quick) && !ctx.has(ctx.currentRatio))),
+      ctx.chk(`Leverage moderat (NDE ≤ 3 & Debt/FCF ≤ 10)`, 
+        (ctx.opt(ctx.netDebtEbitda, v=>v<=3).ok) && (ctx.opt(ctx.debtFcf, v=>v<=10).ok),
+        (!ctx.has(ctx.netDebtEbitda) && !ctx.has(ctx.debtFcf))),
+    ],
+    health:(ctx)=>[
+      ctx.chk(`OPM Trend (4Y pp) ≥ 0`, ctx.opt(ctx.opmCagr4, v => v >= 0), !ctx.has(ctx.opmCagr4)),
+      ctx.chk(`ROIC/ROCE hoch`, (ctx.opt(ctx.roic, v=>v>=12).ok) || (ctx.opt(ctx.roce, v=>v>=12).ok),
+        (!ctx.has(ctx.roic) && !ctx.has(ctx.roce))),
+      ctx.chk(`Shares Change (YoY) nicht stark positiv`, ctx.opt(ctx.sharesChg, v=>v<=5), !ctx.has(ctx.sharesChg)),
+      ctx.chk(`Dividende gedeckt (optional)`, 
+        (ctx.opt(ctx.payout, v=>v<=70).ok) && (ctx.opt(ctx.fcfPayout, v=>v<=80).ok),
+        (!ctx.has(ctx.payout) && !ctx.has(ctx.fcfPayout))),
+    ]
+  },
 
-setRole("Defensiv", defBase, defHealth, 0.60);
-setRole("Stabil defensiv", stabDefBase, stabDefHealth, 0.65);
+  "Pricing Power": {
+    minPct: 0.60,
+    base:(ctx)=> {
+      const sig = [
+        ctx.chk(`Gross Margin solide/hoch`, ctx.opt(ctx.gm1y, v => v >= 40), !ctx.has(ctx.gm1y)),
+        ctx.chk(`Operating Margin klar positiv`, ctx.opt(ctx.opm1y, v => v > 0), !ctx.has(ctx.opm1y)),
+        ctx.chk(`OPM Trend ≥ 0 (4Y pp CAGR)`, ctx.opt(ctx.opmCagr4, v => v >= 0), !ctx.has(ctx.opmCagr4)),
+        ctx.chk(`Profit Margin positiv & Net Income positiv`, (ctx.opt(ctx.pm1y, v=>v>0).ok) && (ctx.netIncomePos === true),
+          (!ctx.has(ctx.pm1y) && ctx.netIncomePos===null)),
+        ctx.chk(`ROIC/ROCE hoch`, (ctx.opt(ctx.roic, v=>v>=12).ok) || (ctx.opt(ctx.roce, v=>v>=12).ok),
+          (!ctx.has(ctx.roic) && !ctx.has(ctx.roce))),
+        ctx.chk(`OCF>0 & FCF positiv & FCF-Marge>0`, (ctx.opt(ctx.ocf, v=>v>0).ok) && (ctx.fcfPos===true) && (ctx.opt(ctx.fcfMargin, v=>v>0).ok),
+          (!ctx.has(ctx.ocf) && ctx.fcfPos===null && !ctx.has(ctx.fcfMargin))),
+      ];
+      const sc = scoreChecks(sig);
+      return [
+        ctx.chk(`Base-Score ≥ 4 (aktuell: ${sc.okCnt}/${sc.knownCnt})`, sc.knownCnt ? sc.okCnt >= 4 : false, sc.knownCnt === 0),
+      ];
+    },
+    health:(ctx)=>[
+      // PDF-Health Themen: Margen-Resilienz, Cashflow-Qualität, ROIC/ROCE, Bilanzstress, Risiko, Bewertung
+      ctx.chk(`Margen-Resilienz: EBITDA/Profit/Gross positiv & Trend nicht fallend`, 
+        (ctx.opt(ctx.ebitdaMargin, v=>v>0).ok) && (ctx.opt(ctx.pm1y, v=>v>0).ok) && (ctx.opt(ctx.gm1y, v=>v>0).ok) && (ctx.opt(ctx.opmCagr4, v=>v>=0).ok),
+        (!ctx.has(ctx.ebitdaMargin) && !ctx.has(ctx.pm1y) && !ctx.has(ctx.gm1y) && !ctx.has(ctx.opmCagr4))),
+      ctx.chk(`Bilanzstress niedrig: ICR hoch + Leverage moderat`, 
+        (ctx.opt(ctx.icr, v=>v>3).ok) && (ctx.opt(ctx.netDebtEbitda, v=>v<=3).ok),
+        (!ctx.has(ctx.icr) && !ctx.has(ctx.netDebtEbitda))),
+    ]
+  },
 
-// Size kannst du entweder lassen wie gehabt (ohne Health) oder auch als Base-only:
-setRole("Small Cap", smallChecks, [], 0.0);
-setRole("Mid Cap", midChecks, [], 0.0);
-setRole("Large Cap", largeChecks, [], 0.0);
 
-  // Safety
-  for(const r of NUTZEN_ROLE_CATALOG){
-    if(!status[r]) status[r] = { state:"off", why:["… noch keine Checkliste"] };
+
+  "Recurring Revenue / Abo Modell": {
+    minPct: 0.55,
+    base:(ctx)=> {
+      const sig = [
+        ctx.chk(`Revenue 4Y CAGR > 0 & Revenue YoY > 0`, (ctx.opt(ctx.revCagr4, v=>v>0).ok) && (ctx.opt(ctx.revYoy, v=>v>0).ok),
+          (!ctx.has(ctx.revCagr4) && !ctx.has(ctx.revYoy))),
+        ctx.chk(`Gross Margin hoch/robust`, ctx.opt(ctx.gm1y, v=>v>=40), !ctx.has(ctx.gm1y)),
+        ctx.chk(`OPM Trend ≥ 0 (4Y pp CAGR)`, ctx.opt(ctx.opmCagr4, v=>v>=0), !ctx.has(ctx.opmCagr4)),
+        ctx.chk(`OCF > 0`, ctx.opt(ctx.ocf, v=>v>0), !ctx.has(ctx.ocf)),
+        ctx.chk(`FCF positiv ODER FCF Conversion solide`, (ctx.fcfPos===true) || (ctx.opt(ctx.fcfConv, v=>v>=0.6).ok),
+          (ctx.fcfPos===null && !ctx.has(ctx.fcfConv))),
+        ctx.chk(`CapEx moderat ggü. OCF (Proxy)`, (ctx.has(ctx.capex) && ctx.has(ctx.ocf)) ? (Math.abs(ctx.capex) <= 0.6*Math.abs(ctx.ocf)) : true,
+          (!ctx.has(ctx.capex) || !ctx.has(ctx.ocf))),
+      ];
+      const sc = scoreChecks(sig);
+      return [
+        ctx.chk(`Base-Score ≥ 4 (aktuell: ${sc.okCnt}/${sc.knownCnt})`, sc.knownCnt ? sc.okCnt >= 4 : false, sc.knownCnt === 0),
+      ];
+    },
+    health:(ctx)=> {
+      const h = [
+        ctx.chk(`FCF positiv & FCF-Marge > 0`, (ctx.fcfPos===true) && ctx.opt(ctx.fcfMargin, v=>v>0).ok, (ctx.fcfPos===null && !ctx.has(ctx.fcfMargin))),
+        ctx.chk(`Net Income positiv`, ctx.netIncomePos===true, ctx.netIncomePos===null),
+        ctx.chk(`ROIC/ROCE ordentlich`, (ctx.opt(ctx.roic, v=>v>=10).ok) || (ctx.opt(ctx.roce, v=>v>=10).ok),
+          (!ctx.has(ctx.roic) && !ctx.has(ctx.roce))),
+        ctx.chk(`Interest Coverage > 3 (besser > 5)`, ctx.opt(ctx.icr, v=>v>3), !ctx.has(ctx.icr)),
+        ctx.chk(`Leverage moderat + Quick/Current ok`, 
+         (ctx.opt(ctx.netDebtEbitda, v=>v<=3).ok) && ((ctx.opt(ctx.quick, v=>v>=1).ok) || (ctx.opt(ctx.currentRatio, v=>v>=1.2).ok)),
+         (!ctx.has(ctx.netDebtEbitda) && !ctx.has(ctx.quick) && !ctx.has(ctx.currentRatio))),
+        ctx.chk(`Vol 5Y/10Y moderat (Proxy ≤ 35%)`, 
+          (ctx.opt(ctx.vol5y, v=>v<=35).ok) || (ctx.opt(ctx.vol10y, v=>v<=35).ok),
+          (!ctx.has(ctx.vol5y) && !ctx.has(ctx.vol10y))),
+      ];
+      const sc = scoreChecks(h);
+      return [
+        ...h,
+        ctx.chk(`Health-Score ≥ 4 (aktuell: ${sc.okCnt}/${sc.knownCnt})`, sc.knownCnt ? sc.okCnt >= 4 : true, sc.knownCnt === 0),
+      ];
+    }
+  },
+
+
+  "Balance Sheet Strong": {
+    minPct: 0.60,
+    base:(ctx)=>[
+      // Block 1: Liquidität
+      ctx.chk(`Quick ≥ 1.0`, ctx.opt(ctx.quick, v=>v>=1.0), !ctx.has(ctx.quick)),
+      ctx.chk(`Current ≥ 1.5 (oder mind. ≥ 1.2 ok)`, ctx.opt(ctx.currentRatio, v=>v>=1.2), !ctx.has(ctx.currentRatio)),
+      ctx.chk(`Cash-Puffer sichtbar (Cash > 0)`, ctx.opt(ctx.cash, v=>v>0), !ctx.has(ctx.cash)),
+
+      // Block 2: Zinsdienst
+      ctx.chk(`ICR ≥ 5 (≥3 ok)`, ctx.opt(ctx.icr, v=>v>=3), !ctx.has(ctx.icr)),
+
+      // Block 3: moderate Verschuldung
+      ctx.chk(`NetDebt/EBITDA ≤ 3 (≤2 stark)`, ctx.opt(ctx.netDebtEbitda, v=>v<=3), !ctx.has(ctx.netDebtEbitda)),
+      ctx.chk(`Debt/FCF nicht hoch (Warnsignal bei neg. FCF)`, (ctx.fcfPos===false) ? false : ctx.opt(ctx.debtFcf, v=>v<10),
+        (ctx.fcfPos===null && !ctx.has(ctx.debtFcf))),
+
+      // Block 4: Cashflow stützt Bilanz
+      ctx.chk(`OCF > 0`, ctx.opt(ctx.ocf, v=>v>0), !ctx.has(ctx.ocf)),
+      ctx.chk(`FCF positiv (oder FCF ≥ 0)`, (ctx.fcfPos===true) || ctx.opt(ctx.fcf, v=>v>=0), (ctx.fcfPos===null && !ctx.has(ctx.fcf))),
+      ctx.chk(`FCF Conversion solide`, ctx.opt(ctx.fcfConv, v=>v>=0.6), !ctx.has(ctx.fcfConv)),
+    ],
+    health:(ctx)=>[
+      ctx.chk(`Streng: Quick≥1.2 & Current≥1.5`, (ctx.opt(ctx.quick, v=>v>=1.2).ok) && (ctx.opt(ctx.currentRatio, v=>v>=1.5).ok),
+        (!ctx.has(ctx.quick) && !ctx.has(ctx.currentRatio))),
+      ctx.chk(`Streng: ICR ≥ 5`, ctx.opt(ctx.icr, v=>v>=5), !ctx.has(ctx.icr)),
+      ctx.chk(`Streng: NetDebt/EBITDA ≤ 2`, ctx.opt(ctx.netDebtEbitda, v=>v<=2), !ctx.has(ctx.netDebtEbitda)),
+    ]
+  },
+
+  "Leveraged / Schuldenlastig": {
+    minPct: 0.50,
+    base:(ctx)=>[
+      ctx.chk(
+        `Leveraged-Trigger (NDE≥3 ODER Debt/FCF≥10 ODER ICR≤3 ODER (FCF negativ + Schulden))`,
+        (ctx.opt(ctx.netDebtEbitda, v=>v>=3).ok) ||
+        (ctx.opt(ctx.debtFcf, v=>v>=10).ok) ||
+        (ctx.opt(ctx.icr, v=>v<=3).ok) ||
+        ((ctx.fcfPos===false) && (ctx.has(ctx.netDebtEbitda) ? ctx.netDebtEbitda>0 : true)),
+        (!ctx.has(ctx.netDebtEbitda) && !ctx.has(ctx.debtFcf) && !ctx.has(ctx.icr) && ctx.fcfPos===null)
+      ),
+    ],
+    health:(ctx)=>[
+      ctx.chk(`Managebar: ICR>3 & OCF>0 & FCFPos=Ja & Quick≥1`, 
+        (ctx.opt(ctx.icr, v=>v>3).ok) && (ctx.opt(ctx.ocf, v=>v>0).ok) && (ctx.fcfPos===true) && (ctx.opt(ctx.quick, v=>v>=1).ok),
+        (!ctx.has(ctx.icr) && !ctx.has(ctx.ocf) && ctx.fcfPos===null && !ctx.has(ctx.quick))),
+      ctx.chk(`Riskant: ICR≤2 ODER FCF negativ ODER Quick/Current<1 ODER NDE≥5`,
+        (ctx.opt(ctx.icr, v=>v<=2).ok) || (ctx.fcfPos===false) || (ctx.opt(ctx.quick, v=>v<1).ok) || (ctx.opt(ctx.currentRatio, v=>v<1).ok) || (ctx.opt(ctx.netDebtEbitda, v=>v>=5).ok),
+        false),
+      ctx.chk(`Krisennah: ICR<1 ODER OCF≤0 + hohe Leverage`, 
+        (ctx.opt(ctx.icr, v=>v<1).ok) || ((ctx.opt(ctx.ocf, v=>v<=0).ok) && ((ctx.opt(ctx.netDebtEbitda, v=>v>=5).ok)||(ctx.opt(ctx.debtFcf, v=>v>=15).ok))),
+        false),
+    ]
+  },
+
+  // Market-Cap Größen (gängige Schwellen; du kannst sie jederzeit ändern)  [oai_citation:1‡Wikipedia](https://en.wikipedia.org/wiki/Market_capitalization?utm_source=chatgpt.com)
+  "Small Cap": { minPct:0.0, base:(ctx)=>[ctx.chk(`MCap 300M–2B`, ctx.has(ctx.mcap)&&ctx.mcap>=3e8&&ctx.mcap<2e9, !ctx.has(ctx.mcap))], health:()=>[] },
+  "Mid Cap":   { minPct:0.0, base:(ctx)=>[ctx.chk(`MCap 2B–10B`,  ctx.has(ctx.mcap)&&ctx.mcap>=2e9&&ctx.mcap<1e10, !ctx.has(ctx.mcap))], health:()=>[] },
+  "Large Cap": { minPct:0.0, base:(ctx)=>[ctx.chk(`MCap 10B–200B`,ctx.has(ctx.mcap)&&ctx.mcap>=1e10&&ctx.mcap<2e11, !ctx.has(ctx.mcap))], health:()=>[] },
+  "Mega Cap":  { minPct:0.0, base:(ctx)=>[ctx.chk(`MCap ≥ 200B`,  ctx.has(ctx.mcap)&&ctx.mcap>=2e11, !ctx.has(ctx.mcap))], health:()=>[] },
+};
+
+
+
+
+
+
+
+  /* =========================
+     E) Auswertung über Catalog
+     ========================= */
+  const out = {};
+
+  for(const rawRole of (NUTZEN_ROLE_CATALOG || [])){
+    const role = normalizeNutzenRoleName(rawRole);
+    if(!role) continue;
+
+    const rule = ROLE_RULES[role];
+    if(!rule){
+      // wenn im Katalog aber keine Rule definiert:
+      out[role] = { state:"off", why:["… noch keine Regeln definiert"] };
+      continue;
+    }
+
+    const baseChecks = typeof rule.base === "function" ? rule.base(ctx) : [];
+    const healthChecks = typeof rule.health === "function" ? rule.health(ctx) : [];
+    const min = Number.isFinite(rule.minPct) ? rule.minPct : 0.60;
+
+    setRole(out, role, baseChecks, healthChecks, min);
   }
-  return status;
+
+  // Safety: falls normalize names Rollen erzeugt, die nicht im Catalog sind
+  for(const r of (NUTZEN_ROLE_CATALOG || [])){
+    const rr = normalizeNutzenRoleName(r);
+    if(rr && !out[rr]) out[rr] = { state:"off", why:["… noch keine Regeln"] };
+  }
+
+  return out;
 }
 
 
 
 
 
+
+
+
+
+/* =========================
+   STRESS MODULE
+   ========================= */
+
+// optional: nur Alias, damit überall der gleiche Name genutzt wird
+function computeStressFlag(m){
+  return nutzenComputeStress(m);
+}
 
 
 
@@ -4966,7 +6074,7 @@ setRole("Large Cap", largeChecks, [], 0.0);
 function nutzenEvaluateAll(){
   const m = nutzenGetTableMap();
   const fair = nutzenComputeFairPrice(m);
-  const stress = nutzenComputeStress(m);
+  const stress = computeStressFlag(m);
   const roles = nutzenComputeRoles(m);
   const actions = nutzenComputeActions(m, fair);
 
@@ -5004,6 +6112,7 @@ function nutzenApplyAutoToUI(ev){
   const isAutoMain = !selMain || selMain.value === "auto";
   const isAutoOv   = !selOv   || selOv.value   === "auto";
 
+
   if(isAutoMain || isAutoOv){
     const mode = ev.stress.mode; // green/yellow/red
     nutzenSyncStress(mode);
@@ -5019,20 +6128,28 @@ function nutzenApplyAutoToUI(ev){
 
   // Overlay Actions Felder automatisch füllen (wenn leer)
   const fp = ovGetEl("ov_fairPrice");
+if(fp && !fp.dataset.manual && !nzStr(fp.value) && Number.isFinite(ev.fair)){
+  fp.value = ev.fair.toFixed(2);
+}
   const cp = ovGetEl("ov_currentPrice");
   const buy = ovGetEl("ov_buySelect");
   const add = ovGetEl("ov_addSelect");
 
   if(fp && !nzStr(fp.value) && Number.isFinite(ev.fair)) fp.value = ev.fair.toFixed(2);
 
-  const current = nzNum(ev.map["Kurs aktuell"]);
-  if(cp && !nzStr(cp.value) && Number.isFinite(current)) cp.value = current.toFixed(2);
+const currentPrice = nzNum(ev.map["Kurs aktuell"]);
+if(cp && !nzStr(cp.value) && Number.isFinite(currentPrice)) cp.value = currentPrice.toFixed(2);
 
-  if(buy && buy.value === "auto" && ev.actions.buy !== "auto") buy.value = ev.actions.buy;
-  if(add && add.value === "auto" && ev.actions.add !== "auto") add.value = ev.actions.add;
+if(buy) buy.value = ev.actions.buy || "auto";
+if(add) add.value = ev.actions.add || "auto";
 
   ovRenderActionsSummary();
-}
+
+
+
+   }
+
+
 
 function renderNutzenRolesBox(){
   const host = document.getElementById("nutzen_roles");
@@ -5049,9 +6166,10 @@ function renderNutzenRolesBox(){
       </div>
 
       <div class="roleGrid">
-        ${NUTZEN_ROLE_CATALOG.map(role => {
-          const st = statusMap[role]?.state || "unknown";
-          const why = statusMap[role]?.why || [];
+${NUTZEN_ROLE_CATALOG.map(roleRaw => {
+  const role = normalizeNutzenRoleName(roleRaw) || roleRaw;
+  const st = statusMap[role]?.state || "unknown";
+  const why = statusMap[role]?.why || [];
           const whyHtml = (why.length)
             ? `<ul class="roleChecks">${why.map(x => `<li class="muted">${String(x).replace(/</g,"&lt;").replace(/>/g,"&gt;")}</li>`).join("")}</ul>`
             : `<div class="roleMeta">–</div>`;
@@ -5071,10 +6189,14 @@ function renderNutzenRolesBox(){
       </div>
     </div>
   `;
+      
 
   // nach Render: Auto-UI anwenden (Stress/Fair/Actions)
   nutzenApplyAutoToUI(ev);
 }
+
+
+
 
 function nutzenOverlayFillRoles(){
   const box = document.getElementById("nutzenOverlayRoles");
@@ -5082,49 +6204,110 @@ function nutzenOverlayFillRoles(){
   if(!box) return;
 
   const ev = nutzenEvaluateAll();
-  const statusMap = ev.roles;
+  const statusMap = ev.roles || {};
 
-  box.innerHTML = NUTZEN_ROLE_CATALOG.map(role => {
-    const st = statusMap[role]?.state || "unknown";
-    const on = (st === "on");
-    const off = !on;
-    return `<span class="roleChip ${off ? "off" : ""}">${on ? "✅" : "…"} ${role}</span>`;
+  // Chips
+  box.innerHTML = NUTZEN_ROLE_CATALOG.map(roleRaw => {
+    const key  = normalizeNutzenRoleName(roleRaw) || roleRaw;
+    const st   = statusMap[key]?.state || "unknown";
+    const on   = (st === "on");
+    const off  = !on;
+    const icon = on ? "✅" : (st === "warn" ? "⚠️" : "…");
+    return `<span class="roleChip ${off ? "off" : ""}">${icon} ${key}</span>`;
   }).join("");
 
+  // Begründung
   if(why){
-    const t = ev.stress.triggers.length ? ev.stress.triggers.join(" | ") : "Keine Stress-Trigger.";
-    why.textContent = `Auto-Status. Stress: ${ev.stress.mode.toUpperCase()} (${t})`;
+    const lines = [];
+
+    // 1) Base/Health (wenn vorhanden)
+    for(const roleRaw of NUTZEN_ROLE_CATALOG){
+      const key = normalizeNutzenRoleName(roleRaw) || roleRaw;
+      const r = statusMap[key];
+      if(!r?.why?.length) continue;
+      if(r.state === "off") continue;
+      lines.push(`• ${key}: ${r.why[0]}`); // Header "BASE... | HEALTH..."
+    }
+
+    // 2) Fallback wie bei dir: Stress Status
+    if(lines.length === 0){
+      const t = ev.stress?.triggers?.length ? ev.stress.triggers.join(" | ") : "Keine Stress-Trigger.";
+      why.textContent = `Auto-Status. Stress: ${(ev.stress?.mode || "–").toUpperCase()} (${t})`;
+    } else {
+      why.textContent = lines.join("\n");
+    }
   }
 
   nutzenApplyAutoToUI(ev);
 }
+
+
+
+
 
 /* =========================================
    4) Overlay open: use real fills
    ========================================= */
 
 function openNutzenOverlay(){
+
+  bindOverlayActionsUI();
+
   const ov = document.getElementById("nutzenOverlay");
   const bd = document.getElementById("nutzenOverlayBackdrop");
-  if(!ov || !bd) return;
+  if(!ov) return;
 
-  // Inhalte füllen / aktualisieren
-  try { nutzenOverlayFillRoles(); } catch(e) {}
-  try { nutzenOverlayFillRangeBase(); } catch(e) {}
-
-  // Stress Select: nur setzen, wenn leer (sonst überschreibst du manuell)
-  const sel = document.getElementById("nutzenOverlayStressSelect");
-  if(sel && !sel.value) sel.value = "auto";
-
-  // show
-  bd.style.display = "block";
-  ov.style.display = "flex";
-
-  // optional: Klassen für Animationen/Styles
-  bd.classList.add("isOpen");
   ov.classList.add("isOpen");
-
   ov.setAttribute("aria-hidden","false");
+  ov.style.display = "flex";
+  if(bd) bd.style.display = "block";
+
+  const ev = nutzenEvaluateAll();
+
+  const fp = ovGetEl("ov_fairPrice");
+  const cp = ovGetEl("ov_currentPrice"); 
+
+
+
+  // 1) Auto-Werte in UI (fair, kurs, stress mode, buy/add etc.)
+  if(typeof nutzenApplyAutoToUI === "function"){
+    nutzenApplyAutoToUI(ev);
+  }
+
+  // 2) Fallback: falls du noch alte Füllfunktionen hast
+  if(typeof nutzenOverlayFillRoles === "function"){
+    try { nutzenOverlayFillRoles(ev); } catch(e) {}
+  }
+  if(typeof nutzenOverlayFillRangeBase === "function"){
+    try { nutzenOverlayFillRangeBase(ev); } catch(e) {}
+  }
+}
+
+
+
+// ===== Phase 7: Overlay-Glue (robust & einheitlich) =====
+
+function ovGetEl(id){
+  return document.getElementById(id);
+}
+
+function ovIsOpen(){
+  const ov = ovGetEl("nutzenOverlay");
+  if(!ov) return false;
+  return ov.classList.contains("isOpen") || ov.getAttribute("aria-hidden") === "false" || ov.style.display === "flex";
+}
+
+
+
+function closeNutzenOverlay(){
+  const ov = ovGetEl("nutzenOverlay");
+  const bd = ovGetEl("nutzenOverlayBackdrop");
+  if(!ov) return;
+
+  ov.classList.remove("isOpen");
+  ov.setAttribute("aria-hidden", "true");
+  ov.style.display = "none";
+  if(bd) bd.style.display = "none";
 }
 
 
@@ -5136,6 +6319,7 @@ function openNutzenOverlay(){
    ========================================= */
 
 let _nutzenOverlayBound = false;
+
 
 
 function bindNutzenOverlayUI(){
@@ -5189,12 +6373,6 @@ function bindNutzenOverlayUI(){
     selStress.addEventListener("change", () => {
       const v = selStress.value;
 
-      // Manuell gesetzt
-      if(v === "green" || v === "yellow" || v === "red"){
-        nutzenSyncStress(v);
-        return;
-      }
-
       // Zurück auf "auto" => neu berechnen und anwenden
       const ev = nutzenEvaluateAll();
       nutzenSyncStress(ev.stress.mode);
@@ -5207,43 +6385,161 @@ function bindNutzenOverlayUI(){
       const whyMain = document.getElementById("nutzenStressWhy");
       if(whyOv)   whyOv.textContent   = whyTxt;
       if(whyMain) whyMain.textContent = whyTxt;
+
+      function bindNutzenOverlayUI(){
+  // ... dein bisheriger Code (Buttons, Backdrop, Stress-Select etc.)
+
+  // ✅ HIER EINFÜGEN (am Ende der Funktion, vor der letzten })
+  if(!document.body.dataset.nutzenSpaceCloseBound){
+    document.body.dataset.nutzenSpaceCloseBound = "1";
+
+    document.addEventListener("keydown", (e) => {
+      if(e.code !== "Space") return;
+
+      const ov = document.getElementById("nutzenOverlay");
+      if(!ov) return;
+
+      const isOpen =
+        ov.classList.contains("isOpen") ||
+        ov.getAttribute("aria-hidden") === "false" ||
+        ov.style.display === "flex";
+
+      if(!isOpen) return;
+
+      e.preventDefault();
+      closeNutzenOverlay();
+    });
+  }
+}
+
+
     });
   }
 }
 
 
 
+const btnOpen   = document.getElementById("nutzen_overlayBtn");
+const btnClose  = document.getElementById("nutzenOverlayCloseBtn");
+const backdrop  = document.getElementById("nutzenOverlayBackdrop");
+const selStress = document.getElementById("nutzenOverlayStressSelect");
+
+
 let _actionsBound = false;
+
 function bindOverlayActionsUI(){
-  if(_actionsBound) return;
-  _actionsBound = true;
-  // deine bestehende Funktion bleibt – wir rufen sie einfach nur 1x
-  // (Inhalt unverändert)
+  if(window._actionsBound) return;
+  window._actionsBound = true;
+
   const fp = ovGetEl("ov_fairPrice");
   const cp = ovGetEl("ov_currentPrice");
-  const buy = ovGetEl("ov_buySelect");
-  const add = ovGetEl("ov_addSelect");
   const clearBtn = ovGetEl("ov_clearActions");
 
-  if(fp) fp.addEventListener("input", ovRenderActionsSummary);
-  if(cp) cp.addEventListener("input", ovRenderActionsSummary);
-  if(buy) buy.addEventListener("change", ovRenderActionsSummary);
-  if(add) add.addEventListener("change", ovRenderActionsSummary);
+
+  if(fp){
+    fp.addEventListener("input", () => {
+      fp.dataset.manual = "1";          // ✅ merken: User hat Fair manuell gesetzt
+      ovRenderActionsSummary();
+      nutzenOverlayFillRangeBase();     // ✅ Ranges neu berechnen
+    });
+  }
+
+  if(cp){
+    cp.addEventListener("input", () => {
+      cp.dataset.manual = "1";          // optional
+      ovRenderActionsSummary();
+      nutzenOverlayFillRangeBase();     // optional, aber sinnvoll
+    });
+  }
 
   if(clearBtn){
     clearBtn.addEventListener("click", () => {
-      if(fp) fp.value = "";
-      if(cp) cp.value = "";
-      if(buy) buy.value = "auto";
-      if(add) add.value = "auto";
+      if(fp){ fp.value = ""; delete fp.dataset.manual; }
+      if(cp){ cp.value = ""; delete cp.dataset.manual; }
       ovRenderActionsSummary();
+      nutzenOverlayFillRangeBase();     // ✅ zurück auf Auto-Ranges
     });
   }
+
   ovRenderActionsSummary();
 }
 
 
 
+let _nutzenAutoRerenderBound = false;
+
+function bindNutzenAutoRerender(){
+  if(_nutzenAutoRerenderBound) return;
+  _nutzenAutoRerenderBound = true;
+
+  const valRow = document.getElementById("nutzenValueRow");
+  if(!valRow) return;
+
+  // Wenn du in Zellen tippst (contenteditable), kommt "input" zuverlässig
+  valRow.addEventListener("input", () => {
+    renderNutzenRolesBox();        // <- recalcs roles + nutztApplyAutoToUI(ev)
+  });
+
+  // Falls jemand nur klickt/verlässt (manchmal bei contenteditable nötig)
+  valRow.addEventListener("blur", () => {
+    renderNutzenRolesBox();
+  }, true);
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  bindNutzenUI();
+});
+
+
+
+function bindNutzenStressUI(){
+  const selMain = document.getElementById("nutzenStressSelect");
+  const selOv   = document.getElementById("nutzenOverlayStressSelect");
+  if(selMain) selMain.disabled = true;
+  if(selOv)   selOv.disabled   = true;
+
+  // Startwert (falls du direkt was zeigen willst)
+  // Wenn du später aus der Berechnung setzt, kannst du das auch weglassen.
+  nutzenSyncStress("green", "Initial gesetzt (später aus Berechnung).");
+}
+
+
+
+
+window.debugNutzenStress = function(){
+  try{
+    const ev = nutzenEvaluateAll();
+    console.log("EV.STRESS", ev.stress);
+    console.log("EV.MAP", ev.map);
+
+    // wichtige Inputs (roh + geparsed)
+    const m = ev.map || {};
+    const get = (k)=> nzGet(m,k);
+
+    console.log("INPUTS RAW", {
+      quick: get("Quick Ratio 1Y"),
+      current: get("Current Ratio 1Y"),
+      icr: get("Zinsdeckung 1Y (Interest Coverage)"),
+      nde: get("Net Debt / EBITDA Ratio 1Y"),
+      dcf: get("Debt / FCF Ratio 1Y"),
+      fcf: get("FCF 1Y"),
+      fcfPos: get("FCF positiv (Ja/Nein)"),
+      ocf: get("Operating Cash Flow 1Y"),
+      vol1y: get("Volatilität annualisiert (Std-Abw.) 1Y"),
+      volPack: get("Volatilität annualisiert (Std-Abw.) 1Y/5Y/10Y"),
+      range: get("52-Week Range"),
+      price: get("Kurs aktuell"),
+      shares: get("Shares Change (YoY)")
+    });
+
+    return ev;
+  }catch(e){
+    console.error("debugNutzenStress ERROR", e);
+    return null;
+  }
+};
 
 
 
