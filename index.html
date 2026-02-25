@@ -5286,6 +5286,12 @@ function buildNutzenCtx(m){
       if(!Number.isFinite(x)) return { ok:true, missing:true };
       return { ok: !!pred(x), missing:false };
     },
+
+    optReq: (x, pred) => {
+  if(!Number.isFinite(x)) return { ok:false, missing:false }; // fehlt => ❌
+  return { ok: !!pred(x), missing:false };
+},
+
     chk: roleChk,
   };
 
@@ -5445,6 +5451,12 @@ function buildTurnaroundRole(ctx){
     if(!Number.isFinite(x)) return { ok:true, missing:true };
     return { ok: !!pred(x), missing:false };
   });
+
+  
+const optReq = ctx.optReq || ((x, pred)=>{
+  if(!Number.isFinite(x)) return { ok:false, missing:false }; // NaN => FAIL
+  return { ok: !!pred(x), missing:false };
+});
 
   function countOk(checks){
     const known = checks.filter(c => !c.missing);
@@ -5633,12 +5645,37 @@ const ROLE_RULES = {
       ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
     ],
     health: (ctx) => [
-      ctx.chk(`DPS 4Y CAGR > 0%`, ctx.opt(ctx.dpsCagr4, v => v > 0)),
-      ctx.chk(`Payout 30–70%`, ctx.opt(ctx.payout, v => v >= 30 && v <= 70)),
-      ctx.chk(`FCF-Payout ≤ 80%`, ctx.opt(ctx.fcfPayout, v => v <= 80)),
-      ctx.chk(`NetDebt/EBITDA < 3`, ctx.opt(ctx.netDebtEbitda, v => v < 3)),
-      ctx.chk(`ICR ≥ 3`, ctx.opt(ctx.icr, v => v >= 3)),
-      ctx.chk(`Beta ≤ 1.2`, ctx.opt(ctx.beta, v => v <= 1.2)),
+      // Dividenden-spezifisch: "na" => ❌ (nicht offen)
+      (() => {
+        const c = ctx.optReq(ctx.dpsCagr4, v => v > 0);
+        return ctx.chk(`DPS 4Y CAGR > 0%`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.optReq(ctx.payout, v => v >= 30 && v <= 70);
+        return ctx.chk(`Payout 30–70%`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.optReq(ctx.fcfPayout, v => v <= 80);
+        return ctx.chk(`FCF-Payout ≤ 80%`, c.ok, c.missing);
+      })(),
+
+      // Rest: optional (fehlend => offen)
+      (() => {
+        const c = ctx.opt(ctx.netDebtEbitda, v => v < 3);
+        return ctx.chk(`NetDebt/EBITDA < 3`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.opt(ctx.icr, v => v >= 3);
+        return ctx.chk(`ICR ≥ 3`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.opt(ctx.beta, v => v <= 1.2);
+        return ctx.chk(`Beta ≤ 1.2`, c.ok, c.missing);
+      })(),
     ]
   },
 
@@ -5646,20 +5683,52 @@ const ROLE_RULES = {
     minPct: 0.60,
     base: (ctx) => [
       ctx.chk(`Dividend Growth Years ≥ 5`, ctx.has(ctx.divYears) && ctx.divYears >= 5, !ctx.has(ctx.divYears)),
-      ctx.chk(`DPS 4Y CAGR ≥ 5%`, ctx.has(ctx.dpsCagr4) && ctx.dpsCagr4 >= 5, !ctx.has(ctx.dpsCagr4)),
+
+      // Dividenden-spezifisch: "na" => ❌ (nicht offen)
+      (() => {
+        const c = ctx.optReq(ctx.dpsCagr4, v => v >= 5);
+        return ctx.chk(`DPS 4Y CAGR ≥ 5%`, c.ok, c.missing);
+      })(),
+
       ctx.chk(`Keine Kürzung (Text)`, ctx.divGrowthLooksBad === false, ctx.divGrowthTxtMissing),
       ctx.chk(`Net Income positiv`, ctx.netIncomePos === true, ctx.netIncomePos === null),
       ctx.chk(`FCF positiv`, ctx.fcfPos === true, ctx.fcfPos === null),
     ],
     health: (ctx) => [
-      ctx.chk(`Payout ≤ 70%`, ctx.opt(ctx.payout, v => v <= 70)),
-      ctx.chk(`FCF-Payout ≤ 70%`, ctx.opt(ctx.fcfPayout, v => v <= 70)),
-      ctx.chk(`Revenue 4Y CAGR ≥ 3%`, ctx.opt(ctx.revCagr4, v => v >= 3)),
-      ctx.chk(`EPS 4Y CAGR ≥ 5%`, ctx.opt(ctx.epsCagr4, v => v >= 5)),
-      ctx.chk(`NetDebt/EBITDA ≤ 3.5`, ctx.opt(ctx.netDebtEbitda, v => v <= 3.5)),
-      ctx.chk(`ICR ≥ 3`, ctx.opt(ctx.icr, v => v >= 3)),
+      // Dividenden-spezifisch: "na" => ❌ (nicht offen)
+      (() => {
+        const c = ctx.optReq(ctx.payout, v => v <= 70);
+        return ctx.chk(`Payout ≤ 70%`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.optReq(ctx.fcfPayout, v => v <= 70);
+        return ctx.chk(`FCF-Payout ≤ 70%`, c.ok, c.missing);
+      })(),
+
+      // Rest: optional (fehlend => offen)
+      (() => {
+        const c = ctx.opt(ctx.revCagr4, v => v >= 3);
+        return ctx.chk(`Revenue 4Y CAGR ≥ 3%`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.opt(ctx.epsCagr4, v => v >= 5);
+        return ctx.chk(`EPS 4Y CAGR ≥ 5%`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.opt(ctx.netDebtEbitda, v => v <= 3.5);
+        return ctx.chk(`NetDebt/EBITDA ≤ 3.5`, c.ok, c.missing);
+      })(),
+
+      (() => {
+        const c = ctx.opt(ctx.icr, v => v >= 3);
+        return ctx.chk(`ICR ≥ 3`, c.ok, c.missing);
+      })(),
     ]
   },
+
 
   "Value": {
     minPct: 0.60,
