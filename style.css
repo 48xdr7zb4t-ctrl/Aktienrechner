@@ -1,0 +1,755 @@
+/* ===========================
+   0) Design Tokens / Globals
+=========================== */
+:root{
+  --bg:#0b0f17;
+  --panel:#121a2a;
+  --panel2:#0f1625;
+  --text:#e8eefc;
+  --muted:#9fb0d0;  
+  --line:rgba(255,255,255,.10);
+  --accent:#6aa6ff;
+
+  --good:#2ecc71;
+  --warn:#f1c40f;
+  --bad:#e74c3c;
+  --darkbad:#7f1d1d;
+
+  --shadow: 0 12px 40px rgba(0,0,0,.45);
+  --r:16px;
+  --r2:22px;
+
+  --overlayZ:1001;
+  --backdropZ:1000;
+
+  --maxw:1200px;
+}
+
+/* ===========================
+   1) Base / Layout
+=========================== */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text);
+  background:
+    radial-gradient(1200px 800px at 20% 10%, rgba(106,166,255,.22), transparent 60%),
+    radial-gradient(900px 700px at 90% 30%, rgba(46,204,113,.18), transparent 55%),
+    var(--bg);
+}
+
+a{ color:inherit; }
+
+.wrap{
+  max-width:var(--maxw);
+  margin:0 auto;
+  padding:20px;
+}
+
+/* ===========================
+   2) Header / Navigation
+=========================== */
+header{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:var(--r2);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  box-shadow:var(--shadow);
+}
+
+.brand{ display:flex; gap:12px; align-items:center; }
+.logo{
+  width:40px;height:40px;border-radius:14px;
+  background:linear-gradient(135deg, rgba(106,166,255,.9), rgba(46,204,113,.75));
+  box-shadow:0 10px 30px rgba(106,166,255,.18);
+}
+.brand h1{ font-size:16px; margin:0; }
+.brand p{ margin:0; font-size:12px; color:var(--muted); }
+
+.nav{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+/* ===========================
+   3) Buttons / Inputs
+=========================== */
+.btn{
+  appearance:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.15s transform,.15s background,.15s border-color;
+  font-weight:600;
+  font-size:13px;
+}
+.btn:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.18);
+}
+.btn.primary{
+  border-color:rgba(106,166,255,.35);
+  background:rgba(106,166,255,.10);
+}
+
+label{
+  font-size:12px;
+  color:var(--muted);
+  display:block;
+  margin-bottom:6px;
+}
+
+select, input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.18);
+  color:var(--text);
+  outline:none;
+}
+
+/* ===========================
+   4) Grid / Cards / Utilities
+=========================== */
+.grid{
+  display:grid;
+  grid-template-columns:1.4fr .9fr;
+  gap:14px;
+  margin-top:14px;
+}
+
+.card{
+  border:1px solid var(--line);
+  border-radius:var(--r2);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card h2{
+  margin:0;
+  padding:14px 16px;
+  font-size:14px;
+  letter-spacing:.2px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:rgba(0,0,0,.08);
+}
+.card .body{ padding:14px 16px; }
+
+.row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.field{ flex:1; min-width:200px; }
+
+.split{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.muted{ color:var(--muted); }
+
+@media (max-width:980px){
+  .grid{ grid-template-columns:1fr; }
+  .nav{ justify-content:flex-start; }
+  .split{ grid-template-columns:1fr; }
+}
+
+
+/* ===========================
+   5) Chips / Dots
+=========================== */
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(0,0,0,.16);
+  font-size:12px;
+  color:var(--muted);
+}
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  display:inline-block;
+  background:#6b7280;
+}
+
+.dot.good{
+  background:#22c55e;
+}
+
+.dot.warn{
+  background:#f59e0b;
+}
+
+.dot.bad{
+  background:#ef4444;
+}
+
+.dot.darkbad{
+  background:#7f1d1d;
+}
+
+/* ===========================
+   6) Table
+=========================== */
+.tableWrap{
+  overflow:auto;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.18);
+}
+table{ width:100%; border-collapse:collapse; min-width:900px; }
+th,td{
+  padding:10px;
+  border-bottom:1px solid var(--line);
+  font-size:12px;
+  vertical-align:top;
+}
+th{
+  position:sticky;
+  top:0;
+  z-index:2;
+  text-align:left;
+  background:rgba(15,22,37,.95);
+}
+td{ color:rgba(232,238,252,.92); }
+tr:hover td{ background:rgba(255,255,255,.03); }
+
+/* ===========================
+   7) Pages
+=========================== */
+.page{ display:none; }
+.page.isActive{ display:block; }
+
+/* ===========================
+   8) Role/Stress “Why” Blocks
+=========================== */
+#nutzenRoleWhyBase,
+#nutzenRoleWhyHealth{
+  max-height:520px;
+  overflow:auto;
+  padding-right:6px;
+}
+
+.whyRoleBlock{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:10px;
+  background:rgba(0,0,0,.10);
+}
+
+.whyRoleHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.whyRoleTitle{ font-weight:700; font-size:13px; }
+
+.whyRoleMeta{
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+}
+
+.whyLine{
+  font-size:12.5px;
+  line-height:1.55;
+  margin:2px 0;
+}
+
+@media (max-width:980px){
+  .whyCols{ grid-template-columns:1fr; }
+}
+
+/* ===========================
+   8b) Stress Legend Hover Blocks
+=========================== */
+
+#stressLegendAll{
+  max-height:520px;
+  overflow:auto;
+  padding-right:6px;
+}
+
+.whyStressBlock{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:10px;
+  background:rgba(0,0,0,.10);
+}
+
+.whyStressHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  cursor:default;
+}
+
+.whyStressTitle{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  font-size:13px;
+}
+
+.whyStressHint{
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+}
+
+.whyStressBody{
+  display:none;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+
+/* Hover klappt nach unten auf */
+.whyStressBlock:hover .whyStressBody{
+  display:block;
+}
+
+/* optional: kleine “Hover to expand” Optik */
+.whyStressBlock:hover{
+  background:rgba(0,0,0,.14);
+  border-color:rgba(255,255,255,.18);
+}
+
+/* ===========================
+   8c) Stress Why-Now (hover details)
+=========================== */
+
+#stressWhyNow{
+  max-height:520px;
+  overflow:auto;
+  padding-right:6px;
+}
+
+.whyNowBlock{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  margin-bottom:10px;
+  background:rgba(0,0,0,.10);
+}
+
+.whyNowHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.whyNowLeft{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.whyNowTitle{
+  font-weight:700;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.whyNowMeta{
+  font-size:12px;
+  color:var(--muted);
+  white-space:nowrap;
+}
+
+.whyNowBody{
+  display:none;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid var(--line);
+}
+
+.whyNowBlock:hover .whyNowBody{ display:block; }
+
+.whyNowBlock:hover{
+  background:rgba(0,0,0,.14);
+  border-color:rgba(255,255,255,.18);
+}
+
+.trigLine{
+  font-size:12.5px;
+  line-height:1.55;
+  margin:2px 0;
+}
+
+/* ===========================
+   9) Overlay (clean + single source of truth)
+   - Entfernt doppelte Regeln & !important-Spam
+   - Backdrop + Overlay per .isOpen sichtbar
+=========================== */
+.backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  z-index:var(--backdropZ);
+}
+.backdrop.isOpen{ display:block; }
+
+.overlay{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+
+  width:min(980px, calc(100% - 24px));
+  max-height:calc(100vh - 48px);
+  overflow:auto;
+
+  background:linear-gradient(180deg, rgba(18,26,42,.96), rgba(15,22,37,.98));
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--r2);
+  box-shadow:var(--shadow);
+  padding:14px;
+
+  display:none;
+  z-index:var(--overlayZ);
+}
+.overlay.isOpen{ display:block; }
+
+.overlayTop{
+  position:sticky;
+  top:0;
+  z-index:2;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  justify-content:space-between;
+  padding:4px 6px 10px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(18,26,42,.98), rgba(15,22,37,.92));
+  backdrop-filter:blur(6px);
+}
+.overlayTop strong{ font-size:13px; }
+
+main.grid{
+  display:grid;
+  grid-template-columns:minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap:14px;
+  align-items:start;
+}
+
+.overlaySpan2{
+  grid-column: 1 / -1;
+}
+
+@media (max-width:980px){
+  .overlaySpan2{
+    grid-column: 1 / 2;
+  }
+}
+
+main.grid > section{
+  min-width:0;
+}
+
+main.grid > aside{
+  min-width:0;
+  align-self:start;
+  position:sticky;
+  top:14px;
+}
+
+@media (max-width:980px){
+  main.grid{
+    grid-template-columns:1fr;
+  }
+
+  main.grid > aside{
+    position:static;
+    top:auto;
+  }
+}
+
+/* ===== Overlay Mini Boxes ===== */
+.miniGrid{
+  display:grid;
+  grid-template-columns: repeat(5, minmax(140px, 1fr));
+  gap:10px;
+}
+@media (max-width:980px){
+  .miniGrid{ grid-template-columns: 1fr 1fr; }
+}
+
+.miniCard{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(0,0,0,.12);
+  padding:10px 12px;
+}
+.miniLabel{
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:4px;
+}
+.miniValue{
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.2px;
+}
+.miniSub{
+  margin-top:4px;
+  font-size:11px;
+  color:var(--muted);
+}
+
+/* Overlay: Rollen + Kategorien nebeneinander */
+.ovRoleCatRow{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+  align-items:start;
+}
+.ovBlock{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(0,0,0,.10);
+  padding:10px 12px;
+}
+.ovMiniLabel{
+  font-size:11px;
+  margin-bottom:6px;
+}
+@media (max-width:980px){
+  .ovRoleCatRow{ grid-template-columns:1fr; }
+}
+
+
+/* ========== Overlay: Stress klein ========== */
+
+#nutzenOverlayStressExplain{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.25;
+}
+
+/* optional: Stress als “Chip”-Look */
+#nutzenOverlayStressExplain .chip{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.16);
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* ========== Overlay: Rollen/Kategorien groß ========== */
+.ovRoleCatCard h2{
+  font-size:14px;
+}
+#nutzenOverlayRolesExplain{
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:.2px;
+  line-height:1.25;
+}
+#nutzenOverlayCategoriesExplain{
+  font-weight:400;          /* ✅ normal */
+  font-size:14px; 
+  line-height:1.35;
+}
+
+
+.ovCatLine + .ovCatLine{
+  margin-top:10px;         /* EXTRA Leerraum zwischen Kategorien */
+}
+
+
+
+
+/* ✅ Overlay Kategorien: Titel oben, Wert darunter, große Abstände */
+.ovCatBlock{
+  padding:10px 0;
+}
+.ovCatBlock + .ovCatBlock{
+  border-top:1px solid var(--line);
+  margin-top:10px;
+  padding-top:14px;
+}
+.ovCatTitle{
+  font-size:13px;
+  font-weight:900;
+  color:var(--muted);
+  letter-spacing:.2px;
+  margin-bottom:6px;
+}
+.ovCatValue{
+  font-size:16px;
+  font-weight:400; 
+  color:var(--text);
+  line-height:1.25;
+}
+
+.chip.isActiveGreen{
+  border-color: rgba(46,204,113,.45);
+  background: rgba(46,204,113,.14);
+  color: #dff8ea;
+}
+
+.chip.isInactiveBlue{
+  border-color: rgba(106,166,255,.28);
+  background: rgba(106,166,255,.10);
+  color: #cfe0ff;
+}
+
+
+
+/* ===========================
+   ROLES PAGE LAYOUT
+=========================== */
+
+.rolesTopGrid{
+  display:grid;
+  grid-template-columns: 12fr 8fr;
+  gap:12px;
+  align-items:start;
+}
+
+.rolesLeftCol{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  min-width:0;
+}
+
+.rolesBottomFull{
+  margin-top:12px;
+}
+
+@media (max-width:980px){
+  .rolesTopGrid{
+    grid-template-columns:1fr;
+  }
+}
+
+#nutzenRolesActive .miniCard{
+  min-width:140px;
+  flex:0 0 auto;
+}
+
+
+
+
+
+
+/* ===========================
+   Dividend Rechner Controls
+=========================== */
+.divCtrlGrid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap:14px;
+  align-items:start;
+}
+
+.divCtrlBox{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:rgba(0,0,0,.12);
+  padding:12px;
+}
+
+.divCtrlLabel{
+  font-size:12px;
+  color:var(--muted);
+  margin-bottom:8px;
+  font-weight:700;
+}
+
+.divOptionGroup{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.divOptionBtn{
+  appearance:none;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:700;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:.15s transform,.15s background,.15s border-color,.15s color;
+}
+
+.divOptionBtn:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.18);
+}
+
+.divOptionBtn .divStateDot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#6b7280; /* grau */
+  display:inline-block;
+  flex:0 0 10px;
+}
+
+.divOptionBtn.isActive{
+  border-color:rgba(46,204,113,.45);
+  background:rgba(46,204,113,.14);
+  color:#dff8ea;
+}
+
+.divOptionBtn.isActive .divStateDot{
+  background:#22c55e; /* grün */
+}
+
+@media (max-width:980px){
+  .divCtrlGrid{
+    grid-template-columns:1fr;
+  }
+}

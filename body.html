@@ -1,0 +1,978 @@
+<div class="wrap">
+  <header>
+          <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Nutzen-Check</h1>
+          <p class="muted">Grundgerüst: Header-Sets · Rollen · Stress-Flag · Buy-Bands · Erklärungen</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Seiten Navigation">
+        <button class="btn" onclick="goPage('home')">Home</button>
+        <button class="btn" onclick="goPage('table')">Tabelle</button>
+        <button class="btn" onclick="goPage('roles')">Rollen</button>
+        <button class="btn" onclick="goPage('stress')">Stress</button>
+        <button class="btn" onclick="goPage('fair')">Fair Preis</button>
+        <button class="btn" onclick="goPage('tools')">Rechner</button>
+        <button class="btn primary" onclick="openNutzenOverlay()">Nutzen Overlay</button>
+      </nav>
+  </header>
+    <!-- ===== PAGES ===== -->
+    <main class="grid">
+
+      <!-- LEFT: Main content (ALLE pages bleiben IN dieser Section!) -->
+      <section class="card">
+
+        <!-- ✅ GLOBAL: Excel Paste (sichtbar auf ALLEN Seiten) -->
+        <div style="padding:14px 16px; border-bottom:1px solid var(--line)">
+          <div class="muted" style="font-size:12px;margin-bottom:6px">Excel Paste (Copy → Paste)</div>
+
+          <textarea id="excelPaste"
+            placeholder="Excel markieren → Cmd+C → hier einfügen (Tab-getrennt)"
+            style="width:100%;min-height:140px;padding:12px;border-radius:16px;border:1px solid var(--line);background:rgba(0,0,0,.20);color:var(--text);outline:none;resize:vertical"></textarea>
+
+          <div class="row" style="margin-top:10px">
+            <button class="btn primary" id="btnParseExcel" style="flex:1">In Tabelle übernehmen</button>
+            <button class="btn" id="btnClearExcel">Leeren</button>
+          </div>
+        </div>
+
+        <!-- ===== HOME ===== -->
+        <div id="page-home" class="page isActive">
+          <h2><span>Home</span></h2>
+
+          <div class="body">
+            <div class="split">
+
+              <!-- LEFT: Quick Controls -->
+              <div class="card" style="box-shadow:none">
+                <h2>Quick Controls</h2>
+                <div class="body">
+
+<div class="row">
+  <div class="field">
+    <label for="nutzenHeaderSet">Modi</label>
+    <select id="nutzenHeaderSet"></select>
+  </div>
+
+  <div class="field">
+    <label for="nutzenCagrYear">CAGR Jahr</label>
+    <select id="nutzenCagrYear"></select>
+  </div>
+
+  <div class="field">
+    <label for="nutzenVolYear">Volatilität Jahr</label>
+    <select id="nutzenVolYear"></select>
+  </div>
+</div>
+
+<div class="row" style="margin-top:10px">
+  <div class="field" style="min-width:260px">
+    <label for="nutzenPreset">Unternehmens-Preset</label>
+    <select id="nutzenPreset"></select>
+  </div>
+</div>
+
+                  <div class="row" style="margin-top:10px">
+                    <button class="btn" id="nutzenBtnRecalc">Recalc</button>
+                    <button class="btn" id="nutzenBtnExport">Export</button>
+                    <button class="btn" onclick="goPage('table')">Zur Tabelle</button>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- RIGHT: DCF Einstellungen -->
+              <div class="card" style="box-shadow:none">
+                <h2>DCF Einstellungen</h2>
+                <div class="body">
+
+                  <div class="row">
+                    <div class="field" style="flex:1">
+                      <label for="ovDcfPreset">Preset</label>
+                      <select id="ovDcfPreset">
+                        <option value="eu">EU</option>
+                        <option value="usa">USA</option>
+                        <option value="middleeast">Middle East</option>
+                        <option value="china">China</option>
+                        <option value="defensive">Defensiv</option>
+                        <option value="normal">Normal</option>
+                        <option value="aggressive">Aggressiv</option>
+                        <option value="custom">Custom</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="field">
+                      <label for="ovRf">rf (Risk-free) %</label>
+                      <input id="ovRf" type="text" value="3,00" />
+                    </div>
+                    <div class="field">
+                      <label for="ovErp">ERP %</label>
+                      <input id="ovErp" type="text" value="5,00" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="field">
+                      <label for="ovGt">gT (Terminal) %</label>
+                      <input id="ovGt" type="text" value="2,50" />
+                    </div>
+                    <div class="field">
+                      <label for="ovYears">Years</label>
+                      <input id="ovYears" type="number" min="1" max="30" step="1" value="5" />
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- /.split -->
+          </div><!-- /.body -->
+        </div><!-- /#page-home -->
+
+
+   
+        <!-- ===== TABLE ===== -->
+        <div id="page-table" class="page">
+          <h2>
+            <span>Tabelle</span>
+            <span class="chip"><span class="dot"></span> Header-Reihenfolge egal (Mapping über Namen)</span>
+          </h2>
+
+          <div class="body">
+<div class="row" style="margin-bottom:12px">
+  <div class="field" style="min-width:220px">
+    <label for="nutzenHeaderSetTable">Modi</label>
+    <select id="nutzenHeaderSetTable"></select>
+  </div>
+
+  <div class="field" style="min-width:160px">
+    <label for="nutzenCagrYearTable">CAGR Jahr</label>
+    <select id="nutzenCagrYearTable"></select>
+  </div>
+
+  <div class="field" style="min-width:160px">
+    <label for="nutzenVolYearTable">Vol Jahr</label>
+    <select id="nutzenVolYearTable"></select>
+  </div>
+
+  <div class="field" style="min-width:240px">
+    <label for="nutzenPresetTable">Unternehmens-Preset</label>
+    <select id="nutzenPresetTable"></select>
+  </div>
+</div>
+
+            <div class="tableWrap" aria-label="Nutzen Tabelle">
+              <table id="nutzenTable">
+                <thead>
+                  <tr id="nutzenTableHeadRow">
+                    <th>Header</th>
+                    <th>Wert</th>
+                    <th class="muted">Notizen</th>
+                  </tr>
+                </thead>
+                <tbody id="nutzenTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="row" style="margin-top:12px">
+              <span class="chip"><span class="dot"></span> Visible-Indices: CAGR/Vol Filter</span>
+              <span class="chip"><span class="dot"></span> Missing-Handling: “– / n/a”</span>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- ===== ROLES ===== -->
+  <div id="page-roles" class="page">
+  <h2>
+    <span>Rollen</span>
+    <span class="chip"><span class="dot"></span> Base + Health</span>
+  </h2>
+
+  <div class="body">
+
+    <!-- OBEN: links 12 breit, rechts 8 breit -->
+    <div class="rolesTopGrid">
+
+      <!-- LINKS -->
+      <div class="rolesLeftCol">
+
+
+             <div class="card" style="box-shadow:none">
+          <h2>Aktive Rollen</h2>
+          <div class="body">
+            <div id="nutzenRolesActive" class="row" style="gap:10px;align-items:stretch">–</div>
+          </div>
+        </div>
+
+        <div class="card" style="box-shadow:none">
+          <h2>Taxonomy</h2>
+          <div class="body">
+            <div id="taxonomyRolesList">–</div>
+          </div>
+        </div>
+
+
+
+      </div>
+
+      <!-- RECHTS -->
+      <div class="card" style="box-shadow:none">
+        <h2>Rollen Erklärung</h2>
+        <div class="body">
+          <div class="muted" style="font-size:12px;margin-bottom:6px">Base</div>
+          <div id="nutzenRoleWhyBase">–</div>
+
+          <div class="muted" style="font-size:12px;margin:12px 0 6px">Health</div>
+          <div id="nutzenRoleWhyHealth">–</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- UNTEN: volle Breite -->
+    <div class="rolesBottomFull">
+      <div class="card" style="box-shadow:none">
+        <h2>Kategorien (Standard) · mit Erklärung</h2>
+        <div class="body">
+          <div id="nutzenCategoriesBox">–</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+        <!-- ===== STRESS ===== -->
+        <div id="page-stress" class="page">
+          <div class="body">
+            <div class="split">
+
+              <!-- Card 1: aktueller Stress + Warum -->
+              <div class="card" style="box-shadow:none">
+                <h2>Aktueller Stress</h2>
+                <div class="body">
+
+                  <div class="row" style="gap:8px">
+                    <span class="chip">
+                      <span class="dot" id="stressPageDot"></span>
+                      <span id="stressPageLabel">Stress: –</span>
+                    </span>
+                  </div>
+
+                  <div class="muted" style="font-size:12px;margin:12px 0 6px">Warum diese Farbe?</div>
+                  <div id="stressWhyNow">–</div>
+
+                </div>
+              </div>
+
+              <!-- Card 2: Farben-Erklärung -->
+              <div class="card" style="box-shadow:none">
+                <h2>Farben Erklärung</h2>
+                <div class="body">
+                  <div id="stressLegendAll">–</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+                <!-- ===== FAIR VALUE PAGE ===== -->
+        <div id="page-fair" class="page">
+          <h2>
+            <span>Fair Preis</span>
+            <span class="chip"><span class="dot"></span> Intrinsisch (DCF) + Kurs-Vergleich</span>
+          </h2>
+
+          <div class="body">
+            <div class="split">
+
+              <!-- Links: Kurzfazit -->
+              <div class="card" style="box-shadow:none">
+                <h2>Ergebnis</h2>
+                <div class="body">
+                  <div id="fairSummary">–</div>
+                </div>
+              </div>
+
+              <!-- Rechts: DCF Breakdown -->
+              <div class="card" style="box-shadow:none">
+                <h2>Wie kommt der intrinsische Wert zustande?</h2>
+                <div class="body">
+                  <div id="fairExplain">–</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TOOLS PAGE ===== -->
+        <div id="page-tools" class="page">
+          <h2>
+            <span>Rechner</span>
+          </h2>
+
+          <div class="body">
+            <div class="split">
+
+              <!-- LEFT: Währungsrechner -->
+              <div class="card" style="box-shadow:none">
+                <h2>Währungsrechner</h2>
+                <div class="body">
+
+                  <div class="row">
+                    <div class="field" style="min-width:180px">
+                      <label for="fxMode">Richtung</label>
+                      <select id="fxMode">
+                        <option value="USD_EUR">USD → EUR</option>
+                        <option value="EUR_USD">EUR → USD</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="min-width:180px">
+                      <label for="fxRate">Wechselkurs</label>
+                      <input id="fxRate" type="text" placeholder="z.B. 0,92 oder 1,09" />
+                    </div>
+
+                    <div class="field" style="min-width:160px; max-width:220px">
+                      <label>&nbsp;</label>
+                      <button class="btn" id="btnFxRefresh" type="button" style="width:100%">Aktualisieren</button>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top:10px">
+                    <div class="field">
+                      <label for="fxAmount" id="fxAmountLabel">Betrag (USD)</label>
+                      <input id="fxAmount" type="text" placeholder="z.B. 100" />
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top:10px">
+                    <button class="btn primary" id="btnFxConvert">Umrechnen</button>
+                    <div class="chip" style="flex:1">
+                      <span class="dot"></span>
+                      <span id="fxOut">–</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- RIGHT: CAGR Rechner -->
+              <div class="card" style="box-shadow:none">
+                <h2>CAGR Rechner</h2>
+                <div class="body">
+
+                  <div class="row">
+                    <div class="field" style="min-width:220px">
+                      <label for="cagrMode">Modus</label>
+                      <select id="cagrMode">
+                        <option value="revenue" selected>CAGR Revenue</option>
+                        <option value="eps">CAGR EPS</option>
+                        <option value="dps">CAGR DPS</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="min-width:260px">
+                      <label for="cagrCalcMode">Berechnung</label>
+                      <select id="cagrCalcMode">
+                        <option value="rate" selected> Rate</option>
+                        <option value="end"> Ende </option>
+                        <option value="start"> Start </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top:10px">
+                    <div class="field">
+                      <label for="cagrStart" id="cagrStartLabel">Startwert (Revenue)</label>
+                      <input id="cagrStart" type="text" placeholder="z.B. 100" />
+                    </div>
+
+                    <div class="field">
+                      <label for="cagrEnd" id="cagrEndLabel">Endwert (Revenue)</label>
+                      <input id="cagrEnd" type="text" placeholder="z.B. 180" />
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top:10px">
+                    <div class="field">
+                      <label for="cagrYears">Jahre</label>
+                      <input id="cagrYears" type="number" min="0.1" step="0.1" placeholder="z.B. 4" />
+                    </div>
+
+                    <div class="field">
+                      <label for="cagrRate" id="cagrRateLabel">CAGR (%)</label>
+                      <input id="cagrRate" type="text" placeholder="z.B. 12,5%" />
+                    </div>
+
+                    <div class="field" style="min-width:180px">
+                      <label>&nbsp;</label>
+                      <button class="btn primary" id="btnCagrCalc" type="button" style="width:100%">Berechnen</button>
+                    </div>
+                  </div>
+
+                  <div class="row" style="margin-top:10px">
+                    <div class="chip" style="flex:1">
+                      <span class="dot"></span>
+                      <span id="cagrOut">–</span>
+                    </div>
+                  </div>
+
+                  <div class="muted" id="cagrMeta" style="margin-top:10px;font-size:12px;line-height:1.4">–</div>
+
+                </div>
+              </div>
+
+              <!-- ✅ Vola Rechner (simpel) -->
+
+<div class="card" style="box-shadow:none; grid-column: 1 / -1; width:100%;">
+  <h2>Volatilität Rechner</h2>
+  <div class="body">
+
+    <div class="row">
+      <div class="field" style="min-width:180px">
+        <label for="volMode">Zeitraum</label>
+<select id="volMode">
+  <option value="1">1Y</option>
+  <option value="2">2Y</option>
+  <option value="3">3Y</option>
+  <option value="4">4Y</option>
+  <option value="5">5Y</option>
+  <option value="6">6Y</option>
+  <option value="7">7Y</option>
+  <option value="8">8Y</option>
+  <option value="9">9Y</option>
+  <option value="10">10Y</option>
+</select>
+      </div>
+
+      <div class="field" style="min-width:220px">
+        <label for="volFreq">Frequency</label>
+        <select id="volFreq">
+          <option value="daily" selected>Täglich (252)</option>
+          <option value="weekly">Wöchentlich (52)</option>
+          <option value="monthly">Monatlich (12)</option>
+        </select>
+      </div>
+
+      <div class="field" style="min-width:260px">
+        <label for="volInputType">Art</label>
+        <select id="volInputType">
+          <option value="prices" selected>Kurs (nimmt Adj. Close, sonst Close)</option>
+          <option value="returns">Rendite (nimmt Change %, sonst berechnet aus Kurs)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <div class="field">
+        <label for="volData">Daten (mit Header erlaubt)</label>
+        <textarea id="volData"
+          placeholder="Date  Open  High  Low  Close  Adj. Close  Change  Volume
+Feb 27, 2026  24.87  25.86  24.82  25.60  25.60  3.14%  6,075,302
+..."
+          style="width:100%;min-height:180px;padding:12px;border-radius:16px;border:1px solid var(--line);background:rgba(0,0,0,.20);color:var(--text);outline:none;resize:vertical"></textarea>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <button class="btn primary" id="btnVolCalc" type="button">Vola berechnen</button>
+      <div class="chip" style="flex:1">
+        <span class="dot"></span>
+        <span id="volOut">Volatilität: –</span>
+      </div>
+    </div>
+
+    <div class="muted" id="volMeta" style="margin-top:10px;font-size:12px;line-height:1.4">–</div>
+
+  </div>
+</div>
+
+ <!-- Dividenden Rechner -->
+
+<div class="card" style="box-shadow:none; grid-column: 1 / -1; width:100%;">
+  <h2>Dividenden-Rechner</h2>
+  <div class="body">
+
+<div class="divCtrlGrid" style="margin-bottom:14px">
+
+  <div class="divCtrlBox">
+    <div class="divCtrlLabel">Berechnen</div>
+    <div class="divOptionGroup" id="divCalcMode">
+      <button type="button" class="divOptionBtn isActive" data-value="dividends">Dividenden</button>
+      <button type="button" class="divOptionBtn" data-value="capital">Kapital benötigt</button>
+      <button type="button" class="divOptionBtn" data-value="yield">Dividendenrendite</button>
+    </div>
+  </div>
+
+  <div class="divCtrlBox">
+    <div class="divCtrlLabel">Steuern</div>
+    <div class="divOptionGroup divOptionGroup--binary" id="divTaxMode">
+      <button type="button" class="divOptionBtn isActive" data-value="off">
+        <span class="divStateDot"></span> Aus
+      </button>
+      <button type="button" class="divOptionBtn" data-value="on">
+        <span class="divStateDot"></span> An
+      </button>
+    </div>
+
+    <div id="divChurchTaxWrap" style="display:none; margin-top:10px;">
+      <div class="divCtrlLabel">Kirchensteuer</div>
+      <div class="divOptionGroup divOptionGroup--binary" id="divChurchTax">
+        <button type="button" class="divOptionBtn isActive" data-value="off">
+          <span class="divStateDot"></span> Aus
+        </button>
+        <button type="button" class="divOptionBtn" data-value="on">
+          <span class="divStateDot"></span> An
+        </button>
+      </div>
+    </div>
+
+    <div id="divChurchRateWrap" style="display:none; margin-top:10px;">
+      <div class="divCtrlLabel">Kirchensteuersatz</div>
+      <div class="divOptionGroup" id="divChurchRate">
+        <button type="button" class="divOptionBtn isActive" data-value="9">9%</button>
+        <button type="button" class="divOptionBtn" data-value="8">8%</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divCtrlBox">
+    <div class="divCtrlLabel">Freibetrag</div>
+    <div class="divOptionGroup" id="divAllowanceMode">
+      <button type="button" class="divOptionBtn isActive" data-value="off">
+        <span class="divStateDot"></span> Kein Freibetrag
+      </button>
+      <button type="button" class="divOptionBtn" data-value="single">
+        <span class="divStateDot"></span> Ledig (1.000 €)
+      </button>
+      <button type="button" class="divOptionBtn" data-value="married">
+        <span class="divStateDot"></span> Verheiratet (2.000 €)
+      </button>
+    </div>
+  </div>
+
+</div>
+
+
+<div id="divDesiredWrap" class="row" style="margin:12px 0; display:none; gap:10px; flex-wrap:wrap;">
+  <div class="field" style="min-width:220px;">
+    <label for="divDesiredTotal" id="divDesiredTotalLabel">Gewünschte Gesamtdividende</label>
+    <input id="divDesiredTotal" class="js-capital-autoformat" type="text" placeholder="z. B. 1.000" />
+  </div>
+
+  <div class="field" style="min-width:220px;">
+    <label for="divDesiredAvgYield" id="divDesiredSecondLabel">Gesamt-Rendite</label>
+    <input id="divDesiredAvgYield" type="text" placeholder="z. B. 3,5%" />
+  </div>
+
+  <div class="field" style="min-width:220px; align-self:end;">
+    <label>&nbsp;</label>
+    <button class="btn primary" id="btnDividendDistribute" type="button" style="width:100%">
+      Auf Zeilen verteilen
+    </button>
+  </div>
+</div>
+
+    <div id="dividendRows"></div>
+
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="btnDividendAddRow" type="button">＋ Zeile hinzufügen</button>
+    </div>
+
+    <div id="dividendSummary" style="margin-top:14px">–</div>
+    <div id="dividendMeta" class="muted" style="margin-top:8px">–</div>
+
+  </div>
+</div>
+
+
+ <!-- Zinsrechner -->
+
+<div class="card" style="box-shadow:none; grid-column: 1 / -1; width:100%;">
+  <h2>Zinsrechner</h2>
+  <div class="body">
+
+<div class="divCtrlGrid" style="margin-bottom:14px">
+
+  <div class="divCtrlBox">
+    <div class="divCtrlLabel">Berechnen</div>
+    <div class="divOptionGroup" id="interestCalcMode">
+      <button type="button" class="divOptionBtn isActive" data-value="capital">Endkapital</button>
+      <button type="button" class="divOptionBtn" data-value="rate">Zins</button>
+      <button type="button" class="divOptionBtn" data-value="years">Jahre</button>
+      <button type="button" class="divOptionBtn" data-value="target">Startkapital</button>
+    </div>
+  </div>
+
+  <div class="divCtrlBox">
+    <div class="divCtrlLabel">Steuern</div>
+    <div class="divOptionGroup divOptionGroup--binary" id="interestTaxMode">
+      <button type="button" class="divOptionBtn" data-value="on">An</button>
+      <button type="button" class="divOptionBtn isActive" data-value="off">Aus</button>
+    </div>
+  </div>
+
+  <div class="divCtrlBox" id="interestFieldCompoundingFrequency">
+    <div class="divCtrlLabel">Verzinsung</div>
+    <div class="divOptionGroup" id="interestCompoundFrequency">
+      <button type="button" class="divOptionBtn isActive" data-value="yearly">Jährlich</button>
+      <button type="button" class="divOptionBtn" data-value="quarterly">Quartal</button>
+      <button type="button" class="divOptionBtn" data-value="monthly">Monatlich</button>
+    </div>
+
+    <div id="interestFieldChurchTax" style="display:none; margin-top:10px;">
+      <div class="divCtrlLabel">Kirchensteuer</div>
+      <div class="divOptionGroup divOptionGroup--binary" id="interestChurchTaxMode">
+        <button type="button" class="divOptionBtn isActive" data-value="off">Aus</button>
+        <button type="button" class="divOptionBtn" data-value="on">An</button>
+      </div>
+    </div>
+
+    <div id="interestFieldChurchRate" style="display:none; margin-top:10px;">
+      <div class="divCtrlLabel">Kirchensteuersatz</div>
+      <div class="divOptionGroup" id="interestChurchRateMode">
+        <button type="button" class="divOptionBtn isActive" data-value="9">9%</button>
+        <button type="button" class="divOptionBtn" data-value="8">8%</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="divCtrlBox" id="interestFieldTaxTiming">
+    <div class="divCtrlLabel">Steuern fällig</div>
+    <div class="divOptionGroup" id="interestTaxTiming">
+      <button type="button" class="divOptionBtn isActive" data-value="yearly">Jährlich</button>
+      <button type="button" class="divOptionBtn" data-value="quarterly">Quartal</button>
+      <button type="button" class="divOptionBtn" data-value="monthly">Monatlich</button>
+      <button type="button" class="divOptionBtn" data-value="end">Am Ende</button>
+    </div>
+  </div>
+
+  <div class="divCtrlBox">
+  <div class="divCtrlLabel">Startdatum</div>
+  <div class="divOptionGroup divOptionGroup--binary" id="interestStartDateMode">
+    <button type="button" class="divOptionBtn isActive" data-value="today">Heute</button>
+    <button type="button" class="divOptionBtn" data-value="custom">Eigenes Datum</button>
+  </div>
+</div>
+
+
+</div>
+
+
+    <div class="divGrid">
+<div class="row" style="gap:10px; flex-wrap:wrap;">
+
+  <label class="field" id="interestFieldStart" style="min-width:220px; flex:1 1 220px;">
+    <span>Startkapital</span>
+    <input id="interestStartCapital" class="js-capital-autoformat" type="text" placeholder="z. B. 10.000">
+  </label>
+
+  <label class="field" id="interestFieldStartDate" style="min-width:220px; flex:1 1 220px; display:none;">
+  <span>Startdatum</span>
+  <input id="interestStartDate" type="date">
+</label>
+
+  <label class="field" id="interestFieldMonthlyContribution" style="min-width:220px; flex:1 1 220px;">
+    <span>Monatliche Sparrate</span>
+    <input id="interestMonthlyContribution" class="js-capital-autoformat" type="text" placeholder="z. B. 250">
+  </label>
+
+  <label class="field" id="interestFieldRate" style="min-width:180px; flex:1 1 180px;">
+    <span>Zinssatz p.a. (%)</span>
+    <input id="interestRate" type="text" class="js-percent-autoformat" placeholder="z. B. 7%">
+  </label>
+
+  <label class="field" id="interestFieldYears" style="min-width:120px; flex:0 1 120px;">
+    <span>Jahre</span>
+    <input id="interestYears" type="number" min="0" step="0.01" placeholder="z. B. 10">
+  </label>
+
+  <label class="field" id="interestFieldTarget" style="min-width:220px; flex:1 1 220px;">
+    <span>Zielkapital</span>
+    <input id="interestTargetCapital" class="js-capital-autoformat" type="text" placeholder="z. B. 20.000">
+  </label>
+
+</div>
+
+    <div class="card" style="margin-top:14px; box-shadow:none;">
+      <div class="body" style="padding:14px;">
+        <div class="kpiGrid">
+
+          <div class="kpiBox">
+            <div class="kpiLabel" id="interestMainResultLabel">Ergebnis</div>
+            <div class="kpiValue" id="interestMainResult">–</div>
+          </div>
+<div class="kpiBox">
+  <div class="kpiLabel" id="interestLabel1">Brutto-Endkapital</div>
+  <div class="kpiValue" id="interestGrossEnd">–</div>
+</div>
+
+<div class="kpiBox">
+  <div class="kpiLabel" id="interestLabel2">Netto-Endkapital</div>
+  <div class="kpiValue" id="interestNetEnd">–</div>
+</div>
+
+<div class="kpiBox">
+  <div class="kpiLabel" id="interestLabel3">Zinsen gesamt</div>
+  <div class="kpiValue" id="interestTotalInterest">–</div>
+</div>
+
+<div class="kpiBox">
+  <div class="kpiLabel" id="interestLabel4">Steuern gesamt</div>
+  <div class="kpiValue" id="interestTotalTax">–</div>
+</div>
+        </div>
+
+        <div id="interestResultHint" style="margin-top:10px; font-size:13px; opacity:.8;">
+          –
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+            </div> <!-- /.split -->
+          </div>   <!-- /.body -->
+        </div>     <!-- /#page-tools -->
+      </section>
+      <!-- ✅ RIGHT: Side panel (bleibt IMMER rechts, weil es als 2. Spalte von <main class="grid"> sitzt) -->
+      <aside class="card">
+
+        <h2>
+          <span class="chip"><span class="dot"></span> IDs ready </span>
+        </h2>
+
+        <div class="body">
+          <div class="row">
+            <div class="field">
+              <label for="nutzenTicker">Ticker / Company (geht nicht)</label>
+              <input id="nutzenTicker" placeholder="z.B. KO / AAPL / MSFT" />
+            </div>
+          </div>
+
+
+
+          <div class="row" style="margin-top:10px">
+            <span class="chip"><span class="dot"></span> Overlay: Erklärungen</span>
+            <span class="chip"><span class="dot"></span> Table: Mapping</span>
+          </div>
+
+          <div style="margin-top:14px">
+            <button class="btn primary" style="width:100%" type="button" onclick="openNutzenOverlay()">Overlay öffnen</button>
+          </div>
+
+          <div style="margin-top:12px">
+            <div class="muted" style="font-size:12px;margin-bottom:6px">Debug / Output</div>
+            <pre id="nutzenDebug" style="margin:0;padding:12px;border-radius:16px;border:1px solid var(--line);background:rgba(0,0,0,.20);overflow:auto;max-height:240px">{
+  "headerset": "standard",
+  "stress": "green",
+  "roles": []
+}</pre>
+          </div>
+        </div>
+      </aside>
+
+    </main>
+  </div>
+
+  <!-- ===== OVERLAY ===== -->
+  <div id="nutzenOverlayBackdrop"
+       class="backdrop"
+       aria-hidden="true"
+       onclick="closeNutzenOverlay()"></div>
+
+  <div id="nutzenOverlay" class="overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="overlayTop">
+      <strong>Nutzen Overlay</strong>
+      <button class="btn" type="button" onclick="closeNutzenOverlay()">Schließen</button>
+    </div>
+
+      <!-- Preis-Ranges: volle Breite -->
+      <div class="card overlaySpan2" style="box-shadow:none">
+        <h2>Preis Ranges</h2>
+
+        <div class="body">
+          <div class="row" style="gap:10px;flex-wrap:wrap">
+            <div class="field" style="min-width:160px">
+              <label for="ovFair">Fairer Preis manuell</label>
+              <input id="ovFair" class="js-capital-autoformat" type="text" placeholder="leer = aus Tabelle" />
+            </div>
+            <div class="field" style="min-width:120px">
+              <label for="ovStrongBuyMult">Strong Buy</label>
+              <input id="ovStrongBuyMult" placeholder="0,75" />
+            </div>
+            <div class="field" style="min-width:120px">
+              <label for="ovBuyMult">Buy</label>
+              <input id="ovBuyMult" placeholder="0,90" />
+            </div>
+            <div class="field" style="min-width:120px">
+              <label for="ovHoldMult">Hold</label>
+              <input id="ovHoldMult" placeholder="1,10" />
+            </div>
+            <div class="field" style="min-width:120px">
+              <label for="ovExpensiveMult">Expensive</label>
+              <input id="ovExpensiveMult" placeholder="1,25" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px; gap:12px; align-items:flex-end; flex-wrap:wrap">
+            <button class="btn" id="ovBuyReset" type="button">Reset</button>
+
+            <!-- ✅ DCF Einstellungen EXTRA im Overlay -->
+            <div class="card"
+                 style="box-shadow:none; padding:10px; border:1px solid var(--line); border-radius:16px; background:rgba(0,0,0,.10); flex:1; min-width:320px">
+              <div class="muted" style="font-size:12px; margin-bottom:6px">DCF Einstellungen</div>
+
+              <div class="row" style="gap:10px; flex-wrap:wrap">
+                <div class="field" style="min-width:160px">
+                  <label for="ovDcfPresetOv">Preset</label>
+                  <select id="ovDcfPresetOv">
+                    <option value="eu">EU</option>
+                    <option value="usa">USA</option>
+                    <option value="middleeast">Middle East</option>
+                    <option value="china">China</option>
+                    <option value="defensive">Defensiv</option>
+                    <option value="normal">Normal</option>
+                    <option value="aggressive">Aggressiv</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </div>
+
+                <div class="field" style="min-width:110px">
+                  <label for="ovRfOv">rf %</label>
+                  <input id="ovRfOv" type="text" placeholder="3,00" />
+                </div>
+
+                <div class="field" style="min-width:110px">
+                  <label for="ovErpOv">ERP %</label>
+                  <input id="ovErpOv" type="text" placeholder="5,00" />
+                </div>
+
+                <div class="field" style="min-width:110px">
+                  <label for="ovGtOv">gT %</label>
+                  <input id="ovGtOv" type="text" placeholder="2,50" />
+                </div>
+
+                <div class="field" style="min-width:90px">
+                  <label for="ovYearsOv">Years</label>
+                  <input id="ovYearsOv" type="number" min="1" max="30" step="1" placeholder="5" />
+                </div>
+
+
+
+  
+
+                <div class="row" style="gap:10px; flex-wrap:wrap; margin-top:8px">
+  <div class="field" style="min-width:160px">
+    <label for="ovCapital">Kapital (€)</label>
+    <input id="ovCapital" class="js-capital-autoformat" type="text" placeholder="z. B. 10.000" />
+  </div>
+
+  <div class="field" style="min-width:190px">
+    <label for="ovDivYield">Dividendenrendite (%)</label>
+    <input id="ovDivYield" class="js-percent-autoformat" type="text" placeholder="z. B. 3,5% / auto" />
+    <div class="row" style="gap:8px; margin-top:6px; align-items:center; flex-wrap:wrap">
+      <button class="btn" id="ovDivYieldClear" type="button">Reset</button>
+    </div>
+  </div>
+
+  <div class="field" style="min-width:220px">
+    <label for="ovDivAnnual">Jährliche Dividende (auto)</label>
+    <input id="ovDivAnnual" type="text" placeholder="–" disabled />
+  </div>
+</div>
+
+                    <div class="field" style="min-width:80px">
+    <label for="ovPriceNow">Aktueller Kurs (aus Tabelle)</label>
+    <input id="ovPriceNow" type="text" placeholder="–" disabled />
+  </div>
+
+  <div class="field" style="min-width:80px">
+  <label for="ovDivFreq">Dividenden Frequency (aus Tabelle)</label>
+  <input id="ovDivFreq" type="text" placeholder="–" disabled />
+</div>
+
+
+
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+
+        <div style="margin-top:10px" class="miniGrid" id="ovBuyBandsBoxes">
+  <div class="miniCard">
+    <div class="miniLabel">Fair</div>
+    <div class="miniValue" id="ovBoxFair">–</div>
+  </div>
+  <div class="miniCard">
+    <div class="miniLabel">Strong Buy ≤</div>
+    <div class="miniValue" id="ovBoxStrong">–</div>
+  </div>
+  <div class="miniCard">
+    <div class="miniLabel">Buy ≤</div>
+    <div class="miniValue" id="ovBoxBuy">–</div>
+  </div>
+  <div class="miniCard">
+    <div class="miniLabel">Hold ≤</div>
+    <div class="miniValue" id="ovBoxHold">–</div>
+  </div>
+  <div class="miniCard">
+    <div class="miniLabel">Expensive &gt;</div>
+    <div class="miniValue" id="ovBoxExp">–</div>
+  </div>
+</div>
+          <div style="margin-top:8px" id="nutzenOverlayBuyDecision" class="chip">
+            <span class="dot"></span> Aktion: –
+          </div>
+        </div>
+      </div>
+
+
+<!-- Rollen + Kategorien -->
+
+
+<div class="card ovRoleCatCard" style="box-shadow:none">
+  <h2>Rollen, Stress & Kategorien</h2>
+  <div class="body">
+    <div class="ovRoleCatRow">
+      <div class="ovBlock">
+        <div class="muted ovMiniLabel">Rollen</div>
+        <div id="nutzenOverlayRolesExplain">–</div>
+
+        <div class="muted ovMiniLabel" style="margin-top:14px">Stress</div>
+        <div id="nutzenOverlayStressExplain">–</div>
+      </div>
+
+      <div class="ovBlock">
+        <div class="muted ovMiniLabel">Kategorien</div>
+        <div id="nutzenOverlayCategoriesExplain">–</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+
+
+
+    
